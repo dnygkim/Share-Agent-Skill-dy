@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="revision" content="{YYYYMMDD}">
+<!-- ═══ 수정 이력 ═══
+[{YYYYMMDD}] {작성자} · 수정 페이지: 전체(§0 – §{N} · 출처) · 내역: 최초 작성 v0.1, {RFP 정본 파일} 요건 구조화(FR {n} · KT {n} · NFR {n} · CON {n}) + 공개 자료 리서치, 고객사 CI 적용 — Primary {#HEX}({출처})
+-->
+<meta name="author" content="{작성자}">
+<title>RFP 분석 · 리서치 보고서 — {클라이언트명}</title>
+
+<!-- ============================================================================
+     S1 RFP 분석 · 리서치 보고서 골격 — agent/proposal
+     기준본 : 삼성자산운용FunETF유지보수제안-RFP분석리서치보고서-v0.3-20261111.html
+              (드라이브 22. [제안] 삼성자산운용 Fun ETF 운영 유지보수/02. Work/)
+     작성 규칙 : references/rfp-report-format.md  ← 구성 · CI · 그래프 · 검수는 거기가 정본
+
+     ★ 자기완결 단일 파일. 아래 @@HOUSE_STYLE@@ 자리에 ~/.claude/house-style/house-style.css
+       (= ../../global-house-style/house-style.css) 전문을 그대로 붙여 넣는다. link 금지.
+     ★ {중괄호}는 전부 치환한다. 남은 { } 자리표시자는 검수에서 0건이어야 한다.
+     ★ 섹션 안 컴포넌트는 견본이다 — 내용 성격에 맞는 것만 골라 쓰고 통째로 나열하지 않는다.
+     ============================================================================ -->
+<style>
+/* ▼▼▼ ~/.claude/house-style/house-style.css 전문 삽입 ▼▼▼ */
+@@HOUSE_STYLE@@
+/* ▲▲▲ 삽입 끝 ▲▲▲ */
+
+/* 문서 전용 — PART 구분 · LNB 2단 (RFP 분석 보고서 공통 구성) */
+.part-title{display:flex;align-items:center;gap:12px;margin:56px 0 26px;padding-bottom:12px;border-bottom:2px solid var(--ink);}
+.part-title .pno{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:0 0 38px;
+  background:var(--ink);color:var(--paper);font-family:var(--font-title);font-weight:800;font-size:18px;}
+.part-title h2{margin:0;padding:0;border:0;font-size:27px;font-weight:900;}
+.part-title .pdesc{margin-left:auto;font-family:var(--font-title);font-weight:500;font-size:12.5px;color:var(--ink-3);letter-spacing:.04em;}
+.lnb li.part{margin-top:8px;}
+.lnb li.part:first-child{margin-top:0;}
+.lnb li.part a{font-weight:700;color:var(--ink);}
+.lnb li.part a.active{color:var(--paper);}
+.lnb li.sub a{font-size:11.5px;font-weight:400;padding:5px 10px 5px 20px;}
+.lnb li.sub a b{font-weight:500;margin-right:6px;}
+.toc li.tpart{margin:4px 0 8px !important;}
+.toc li.tpart a{font-family:var(--font-title);font-weight:600 !important;font-size:11.5px !important;letter-spacing:.08em !important;color:var(--ink-3) !important;}
+code{font-size:.9em;background:var(--paper-2);padding:0 4px;border-radius:2px;}
+@media print{.part-title .pno{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+@media (max-width:960px){.lnb li.part{margin-top:0;} .lnb li.sub a{padding:6px 9px;}}
+@media (max-width:640px){.part-title h2{font-size:22px;} .part-title .pdesc{display:none;}}
+
+/* ===== 2b. CI 오버라이드 — {클라이언트명} ({YYYY-MM-DD} · 고객사 로고 Primary 기본 적용) =====
+   값: {출처 — 예) 공식 사이트 {도메인} 공통 CSS :root --color-primary 실측 · 헤더 로고 SVG fill}
+   Primary {#HEX} · 바탕 · 선 · 보조 글자는 {같은 사이트의 그레이 값 | Primary 색상 계열(쿨/웜) 저채도 중립색}.
+   ink(본문)는 거의 검정 유지. 로고는 사이트 헤더 워드마크 SVG를 흰색 단색(#FFFFFF)으로 변환.
+   쿨 계열 예(삼성자산운용 #1454FF): paper #F1F3F8 · paper-2 #E5E9F2 · ink-2 #4D4D4D · ink-3 #767676 · line #D6DAE4 · line-2 #E6E9F0 */
+:root{--accent:{PRIMARY};--warn:{PRIMARY};
+  --paper:{PAPER};--paper-2:{PAPER_2};--surface:#FFFFFF;
+  --ink:#111111;--ink-2:{INK_2};--ink-3:{INK_3};
+  --line:{LINE};--line-2:{LINE_2};}
+/* 정본에 웜 페이퍼 rgba(241,237,229,…)로 박힌 반전 글자 · 반투명 바탕 → 흰색 rgba */
+.logo .divider{color:rgba(255,255,255,.5);}
+.logo .sub{color:rgba(255,255,255,.86);}
+.topbar-meta{color:rgba(255,255,255,.74);}
+.topbar-meta .divider{color:rgba(255,255,255,.4);}
+.lnb a.active b{color:rgba(255,255,255,.7);}
+.thead .no{color:rgba(255,255,255,.6);}
+.rb.inv{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.9);}
+.closing .sub{color:rgba(255,255,255,.8);}
+.node.key a.ext,.flow .fnode.key a.ext,.closing a.ext{text-decoration-color:rgba(255,255,255,.4);}
+@media (max-width:960px){.lnb{background:{PAPER_RGBA_96};}}  /* --paper 를 rgba(…,.96)으로 */
+/* 반전 블록 · 강조선을 ink 대신 Primary 로 */
+.topbar{background:var(--accent);}
+h2{border-bottom-color:var(--accent);}
+header.cover{border-bottom-color:var(--accent);}
+.concept{border-left-color:var(--accent);}
+thead th{border-top-color:var(--accent);}
+tr.grp td{border-top-color:var(--accent);}
+.findings li:before{background:var(--accent);}
+.node.key,.flow .fnode.key,.closing,.thead,.totop{background:var(--accent);border-color:var(--accent);}
+.totop:hover{background:var(--surface);color:var(--accent);}
+.tag.pick{border-color:var(--accent);color:var(--accent);}
+.lnb a.active{background:var(--accent);}
+a.ext:hover,a.ext:focus-visible{background:var(--accent);}
+.note.key{border-left-color:var(--accent);}
+.part-title{border-bottom-color:var(--accent);}
+.part-title .pno{background:var(--accent);}
+.logo .lg{display:inline-block;height:17px;width:auto;vertical-align:-3px;margin-right:7px;}
+@media print{.topbar,.part-title .pno{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style>
+</head>
+<body id="top">
+
+<!-- ===== 상단 토프바 — 고객사 워드마크(흰색 단색 SVG) + 서비스명 · 문서명 =============
+     로고를 확보하지 못했으면 SVG 대신 클라이언트명 텍스트. 로고 · 대표 사이트 미확인은 추출 전에 묻는다(format §2-1) -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="logo">{<svg class="lg" role="img" aria-label="{클라이언트명}" viewBox="…">… fill="#FFFFFF" …</svg>} {서비스명}<span class="divider">-</span><span class="sub">RFP 분석 · 리서치 보고서</span></span>
+    <span class="topbar-meta">{YYYYMMDD}<span class="divider">/</span><b>{작성자}</b></span>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- ===== LNB 2단 — PART(로마 숫자) + 섹션(번호) =========================== -->
+<aside class="lnb" aria-label="섹션 이동">
+  <ul>
+    <li><a href="#s00"><b>0</b>요약</a></li>
+    <li class="part"><a href="#p1"><b>Ⅰ</b>RFP 분석</a></li>
+    <li class="sub"><a href="#s01"><b>1</b>사업 개요</a></li>
+    <li class="sub"><a href="#s02"><b>2</b>일정</a></li>
+    <li class="sub"><a href="#s03"><b>3</b>범위 · 시스템</a></li>
+    <li class="sub"><a href="#s04"><b>4</b>업무 · 기능 요건</a></li>
+    <li class="sub"><a href="#s05"><b>5</b>중점 요구 과제</a></li>
+    <li class="sub"><a href="#s06"><b>6</b>비기능 · 인력 · 계약</a></li>
+    <li class="sub"><a href="#s07"><b>7</b>평가 기준</a></li>
+    <li class="sub"><a href="#s08"><b>8</b>제안서 구성 · 제출</a></li>
+    <li class="sub"><a href="#s09"><b>9</b>리스크 요인</a></li>
+    <li class="sub"><a href="#s10"><b>10</b>보완 필요 · 질의</a></li>
+    <li class="part"><a href="#p2"><b>Ⅱ</b>현황 · 시장</a></li>
+    <li class="sub"><a href="#s11"><b>11</b>클라이언트 현황</a></li>
+    <li class="sub"><a href="#s12"><b>12</b>산업 트렌드 · 규제</a></li>
+    <li class="part"><a href="#p3"><b>Ⅲ</b>중점 과제 {N}종 심층</a></li>
+    <li class="sub"><a href="#s13"><b>13</b>KT-1 {과제명}</a></li>
+    <!-- 과제 수만큼 반복 -->
+    <li class="part"><a href="#p4"><b>Ⅳ</b>제안 전략 · 실행</a></li>
+    <li class="sub"><a href="#s{a}"><b>{a}</b>제안 시사점</a></li>
+    <li class="sub"><a href="#s{b}"><b>{b}</b>수행 이력 · 실적</a></li>
+    <li class="sub"><a href="#s{c}"><b>{c}</b>메시지 · 컨셉 후보</a></li>
+    <li class="sub"><a href="#s{d}"><b>{d}</b>실행 체계 초안</a></li>
+    <li class="sub"><a href="#s{e}"><b>{e}</b>{연도} 로드맵</a></li>
+    <li class="sub"><a href="#s{f}"><b>{f}</b>지면 배분 · 확정</a></li>
+    <li><a href="#ssrc"><b>·</b>출처</a></li>
+  </ul>
+</aside>
+
+<div class="doc">
+
+<!-- ===== 표지 — eyebrow = 클라이언트 · 사업명 / lead = 사업 성격 한 줄(거버닝) ===== -->
+<header class="cover">
+  <p class="eyebrow">{클라이언트명} · {사업명}</p>
+  <h1>
+    <span class="lead">{사업 성격을 한 줄로 — 예) 국내 · 미국 ETF 정보 플랫폼, 1년 상주 운영과 성장 과제를 함께 묻는 입찰}</span>
+    RFP 분석 · 리서치 보고서
+  </h1>
+  <p class="muted" style="margin:0;max-width:680px;">
+    {제안요청서(공고일 · 장 수) 요건 구조화와 공개 자료 리서치. 중점 요구 과제를 과제별로 분해(PART Ⅲ)하고 수행 이력 · 제안 메시지 · 실행 체계 초안(PART Ⅳ)까지}
+    <strong>제안 목차 · 과제별 산출물 · 인력안 · 질의서의 기준 자료</strong>
+  </p>
+  <div class="meta">
+    <span><b>대상</b> {제안요청서 정본 · 내부 브리핑 · 공개 자료(확인일 YYYY-MM-DD)}</span>
+    <span><b>작성일</b> {YYYY-MM-DD}</span>
+    <span><b>버전</b> v0.1</span>
+    <span><b>작성</b> {작성자}</span>
+  </div>
+</header>
+
+<!-- ===== 목차 — PART 구분(tpart) + 섹션 + h3 하위 ========================== -->
+<nav class="toc" id="s0" aria-label="목차">
+  <h2>구성내용 (목차)</h2>
+  <ol>
+    <li><a href="#s00"><span class="n">0</span>요약</a><ul><li><a href="#s00-1">핵심 판단 {n}가지</a></li><li><a href="#s00-2">바로 확인할 것</a></li></ul></li>
+    <li class="tpart"><a href="#p1">PART Ⅰ · RFP 분석</a></li>
+    <li><a href="#s01"><span class="n">1</span>사업 개요</a></li>
+    <li><a href="#s02"><span class="n">2</span>일정</a><ul><li><a href="#s02-1">발주 일정 · D-day</a></li><li><a href="#s02-2">내부 작업 일정 초안</a></li></ul></li>
+    <!-- … 섹션마다 h3 하위를 같은 방식으로 … -->
+    <li class="tpart"><a href="#p2">PART Ⅱ · 현황 · 시장</a></li>
+    <li class="tpart"><a href="#p3">PART Ⅲ · 중점 과제 {N}종 심층 분석 · 레퍼런스</a></li>
+    <li class="tpart"><a href="#p4">PART Ⅳ · 제안 전략 · 실행 초안</a></li>
+  </ol>
+  <p class="small muted" style="margin:12px 0 0">
+    부속 — <a class="jump" href="#ssrc">출처</a> · 표기 — <span class="tag chk">보완 필요</span> RFP 미기재 · <span class="tag chk">추정</span> 근거 기반 해석 · <span class="tag chk">미검증</span> 1차 출처 미확인 · <span class="tag">벤더 주장</span> 업체 자체 발표 · <span class="tag chk">Q번호</span> 발주처 질의 · <span class="tag chk">내부 확인</span> 사내 결정 필요
+  </p>
+</nav>
+
+<!-- ===== 0. 요약 — 거버닝 + 스탯 5 + 핵심 판단 + 바로 확인할 것 + 자료 위계 ===== -->
+<section>
+  <h2 id="s00"><span class="num">0</span>요약</h2>
+  <div class="concept">
+    <p>{보고서 전체 결론 한 줄 — 「현상, 결론」 / 「A가 아니라 B」}</p>
+    <p class="sub">{배점 · 규모 등 근거 수치 한 줄}</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="v">{12}<span class="u">개월</span></div><div class="l">{사업 기간}</div></div>
+    <div class="stat"><div class="v">{70+30}<span class="u">점</span></div><div class="l">{기술 · 가격 배점}</div></div>
+    <div class="stat"><div class="v">{30}<span class="u">점</span></div><div class="l">{최대 배점 영역}</div></div>
+    <div class="stat"><div class="v">{19}<span class="u">종</span></div><div class="l">{필수 산출물}</div></div>
+    <div class="stat"><div class="v">{MM/DD}<span class="u">{HH:MM}</span></div><div class="l">제안서 제출 · D-{n}</div></div>
+  </div>
+  <h3 id="s00-1">핵심 판단 {n}가지</h3>
+  <div class="findings">
+    <ul>
+      <li><b>사업 성격</b> {…}</li>
+      <li><b>수행 이력</b> {이트라이브 실적표 대조 결과 — 고객사 · 유사 업종 수행 여부}</li>
+      <li><b>평가 구조</b> {…}</li>
+    </ul>
+  </div>
+  <h3 id="s00-2">바로 확인할 것</h3>
+  <div class="findings alert">
+    <ul>
+      <li><b>{확인 항목}</b> {이유 · 영향 섹션} <span class="tag chk">Q{n}</span></li>
+    </ul>
+  </div>
+  <p class="note"><b>자료 위계</b> {정본 = 제안요청서 … · 해석 자료 = 내부 브리핑 … · 외부 자료 확인일 …}</p>
+</section>
+
+<!-- ===== PART Ⅰ ========================================================== -->
+<div class="part-title" id="p1"><span class="pno">Ⅰ</span><h2>RFP 분석</h2><span class="pdesc">STEP 1 · 요건 구조화</span></div>
+
+<section>
+  <h2 id="s01"><span class="num">1</span>사업 개요</h2>
+  <div class="concept"><p>{거버닝}</p><p class="sub">{근거}</p></div>
+  <div class="table-scroll">
+    <table>
+      <caption>{RFP 장 · 절}</caption>
+      <thead><tr><th class="col-n">#</th><th>항목</th><th>내용</th></tr></thead>
+      <tbody><tr><td class="col-n">1</td><td>{…}</td><td>{…}</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 2. 일정 — 견본: 발주 일정 D-day 마일스톤(.ms) + 같은 수치 표 + 내부 작업 간트(§21 · .gbar.mk = 발주처 마감) -->
+<section>
+  <h2 id="s02"><span class="num">2</span>일정</h2>
+  <div class="concept"><p>{거버닝}</p><p class="sub">{제출까지 영업일 · 동시 마감 항목}</p></div>
+  <h3 id="s02-1">발주 일정 · D-day</h3>
+  <div class="chart">
+    <p class="chart-cap">{RFP 장 · 절} · D-day는 {YYYY-MM-DD(요일)} 기준</p>
+    <div class="ms">
+      <div class="done"><div class="d">{MM/DD}</div><div class="w">{진행 중}</div><div class="e">{입찰 공고}</div></div>
+      <div class="key"><div class="d">{MM/DD}</div><div class="w">{요일 HH:MM · D-n}</div><div class="e">{제안서 제출}</div></div>
+      <div><div class="d">{MM/DD}</div><div class="w">{요일 · D-n}</div><div class="e">{PT}</div></div>
+    </div>
+    <p class="chart-note">{수치에서 읽을 함의 한 줄}</p>
+  </div>
+  <!-- 같은 일정을 표로도 남긴다(표 = 정본) -->
+  <h3 id="s02-2">내부 작업 일정 초안</h3>
+  <p class="chart-cap">{주 단위 · 배점별 작업 줄 · 짧은 표시 = 발주처 마감 · PM 확정 전 안}</p>
+  <div class="gantt">
+    <div class="gantt-grid">
+      <div class="gantt-head"><span>{주1}</span><span>{주2}</span><span>{주3}</span><span>{주4}</span></div>
+      <div class="gantt-row"><div class="gantt-label">{작업 줄}</div><div class="gantt-track"><div class="gbar" style="left:{x}%;width:{w}%" title="{기간 · 내용}"></div><div class="gbar mk" style="left:{x}%;width:1.2%" title="{발주처 마감}"></div></div></div>
+    </div>
+    <div class="gantt-legend"><span><i></i>제출 필수 작업</span><span class="t2"><i></i>PT 준비</span><span class="mk"><i></i>발주처 마감</span></div>
+  </div>
+</section>
+
+<!-- 3 – 10 : 같은 패턴(h2 + concept + 표/그래프 + h3). 견본 그래프 — 4. 업무 구성 2개(.chart-pair + .hbars) · 7. 배점 막대(.hbars, 최대 배점 .key) + 가격 시나리오 -->
+<section>
+  <h2 id="s07"><span class="num">7</span>평가 기준</h2>
+  <div class="concept"><p>{거버닝}</p><p class="sub">{근거}</p></div>
+  <div class="chart">
+    <p class="chart-cap">{평가 항목별 배점 · 출처}</p>
+    <div class="hbars">
+      <div class="hbar key" title="{세부}"><span class="lb">{최대 배점 항목}</span><span class="tr"><i style="--v:100"></i></span><span class="vl">{15}<small>점</small></span></div>
+      <div class="hbar" title="{세부}"><span class="lb">{항목}</span><span class="tr"><i style="--v:{0-100}"></i></span><span class="vl">{n}<small>점</small></span></div>
+    </div>
+    <p class="chart-note">{배점에서 읽을 함의}</p>
+  </div>
+</section>
+
+<section>
+  <h2 id="s10"><span class="num">10</span>보완 필요 · 질의 후보</h2>
+  <h3 id="s10-1">발주처 질의</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th class="col-n">Q</th><th>질의</th><th>이유 · 영향</th></tr></thead>
+      <tbody><tr><td class="col-n">1</td><td>{…}</td><td>{…}</td></tr></tbody>
+    </table>
+  </div>
+  <h3 id="s10-2">내부 확인 · 결정</h3>
+  <div class="findings"><ul><li><b>{…}</b> {…} <span class="tag chk">내부 확인</span></li></ul></div>
+</section>
+
+<!-- ===== PART Ⅱ ========================================================== -->
+<div class="part-title" id="p2"><span class="pno">Ⅱ</span><h2>현황 · 시장</h2><span class="pdesc">STEP 2 · 공개 자료 조사 — 클라이언트 · 산업 · 규제</span></div>
+
+<!-- 11. 클라이언트 현황 · 12. 산업 트렌드 · 규제 — 견본: 시장 추이(.cols, 최대 · 최신 .key) · 점유율(.hbars) -->
+<section>
+  <h2 id="s12"><span class="num">12</span>산업 트렌드 · 규제</h2>
+  <div class="concept"><p>{거버닝}</p><p class="sub">{근거}</p></div>
+  <div class="chart">
+    <p class="chart-cap">{지표 · 단위 · 기준일 · 출처 a.ext}</p>
+    <div class="cols">
+      <div class="col" title="{시점 값}"><span class="vl">{시작값}</span><i style="--v:{0-86}"></i></div>
+      <div class="col key" title="{시점 값}"><span class="vl">{최대 · 최신값}</span><i style="--v:86"></i></div>
+    </div>
+    <p class="chart-note">{함의}</p>
+  </div>
+</section>
+
+<!-- ===== PART Ⅲ — RFP 중점 과제 수만큼 섹션을 만든다 ======================= -->
+<div class="part-title" id="p3"><span class="pno">Ⅲ</span><h2>중점 과제 {N}종 심층 분석 · 레퍼런스</h2><span class="pdesc">STEP 2 · 과제별 요구 해석 → 외부 근거 → 산출물 구성안</span></div>
+
+<section>
+  <h2 id="s13"><span class="num">13</span>KT-1 {과제명}</h2>
+  <div class="concept"><p>{과제별 거버닝}</p><p class="sub">{배점 · 평가 문항 · 중첩 요인}</p></div>
+  <h3 id="s13-1">요구 해석 · 평가 포인트</h3>
+  <div class="table-scroll">
+    <table>
+      <caption>{RFP 장 · 절 · 평가 문항 대조}</caption>
+      <thead><tr><th style="width:170px">RFP 요구</th><th>해석</th><th style="width:230px">제안서 대응</th></tr></thead>
+      <tbody><tr><td><b>{…}</b></td><td>{…}</td><td>{…}</td></tr></tbody>
+    </table>
+  </div>
+  <h3 id="s13-2">{시장 · 수요 | 효과} 근거</h3>
+  <h3 id="s13-3">레퍼런스 — {영역}</h3>
+  <h3 id="s13-4">산출물 구성안 · 제안 방향</h3>
+</section>
+
+<!-- ===== PART Ⅳ ========================================================== -->
+<div class="part-title" id="p4"><span class="pno">Ⅳ</span><h2>제안 전략 · 실행 초안</h2><span class="pdesc">STEP 3 · 시사점에서 실적 · 메시지 · 실행 · 로드맵 · 지면까지</span></div>
+
+<section><h2 id="s{a}"><span class="num">{a}</span>제안 시사점</h2></section>
+<section><h2 id="s{b}"><span class="num">{b}</span>수행 이력 · 실적 연결</h2><!-- 이트라이브 실적표 → 평가 문항 연결 표 · 현 운영 구도별 전략 차이 --></section>
+<section><h2 id="s{c}"><span class="num">{c}</span>제안 메시지 · 컨셉 후보</h2><!-- 메시지 ↔ 배점 표 · 컨셉 한 문장 후보 3안(1안 추천) --></section>
+<section><h2 id="s{d}"><span class="num">{d}</span>실행 체계 초안</h2><!-- 선투입(인수) 간트 · 운영 절차 플로우 · 직무 구성 --></section>
+<section><h2 id="s{e}"><span class="num">{e}</span>{연도} 연간 로드맵 초안</h2><!-- 분기 · 월 간트 --></section>
+<section><h2 id="s{f}"><span class="num">{f}</span>제안서 지면 배분 · 확정할 것</h2><!-- 지면 배분 막대(.hbars) + 표 · 리뷰에서 확정할 것(번호 · 기한) --></section>
+
+<!-- ===== 출처 — 증거로 인용한 URL만 · 본문에 모두 연결 ======================= -->
+<section>
+  <h2 id="ssrc"><span class="num">·</span>출처</h2>
+  <p class="small muted">외부 자료 확인일 {YYYY-MM-DD}. 표의 모든 URL은 본문 해당 항목에 연결</p>
+  <div class="table-scroll">
+    <table class="src">
+      <thead><tr><th class="col-n">#</th><th style="width:60px">섹션</th><th>자료</th><th>경로 · URL</th></tr></thead>
+      <tbody>
+        <tr><td class="col-n">1</td><td>§1 – 10</td><td>{제안요청서 정본 · 쪽수 · 작성일}</td><td class="path">{input/… 경로}</td></tr>
+        <tr><td class="col-n">2</td><td>§{n}</td><td><a class="ext" href="{URL}" target="_blank" rel="noopener">{매체 &#183; 제목(YYYY-MM-DD)}</a></td><td><a href="{URL}" target="_blank" rel="noopener">{URL}</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  {클라이언트명} · RFP 분석 · 리서치 보고서 — {작성자}, {YYYY-MM-DD} (v0.1)<br>
+  본 문서는 내부 검토용이며 외부 배포 시 별도 승인이 필요하다.
+</footer>
+
+</div><!-- /doc -->
+</div><!-- /layout -->
+
+<a class="totop" href="#top" aria-label="맨 위로">↑</a>
+
+<script>
+/* LNB 현재 위치 하이라이트 (스크롤스파이) */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.lnb a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var heads = Object.keys(map)
+    .map(function(id){ return document.getElementById(id); })
+    .filter(Boolean);
+  function onScroll(){
+    var cur = null;
+    for (var i = 0; i < heads.length; i++){
+      if (heads[i].getBoundingClientRect().top <= 96) cur = heads[i];
+    }
+    if (!cur) cur = heads[0];
+    links.forEach(function(a){ a.classList.remove('active'); });
+    if (cur && map[cur.id]) map[cur.id].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>

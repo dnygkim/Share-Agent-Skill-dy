@@ -4,6 +4,7 @@
 
 | <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
 |:---|:---:|:---:|
+| <sub>S1 분석 보고서 양식 표준화 + 고객사 CI 기본 적용 — 삼성자산운용 FunETF v0.3 보고서를 기준본으로 골격(`template/rfp_report_template.html`)과 작성 규칙(`references/rfp-report-format.md`) 신설: PART Ⅰ RFP 분석 · Ⅱ 현황 · 시장 · Ⅲ 중점 과제 심층 · Ⅳ 제안 전략 · 실행 초안, LNB 2단 · 기본 그래프(D-day · 작업 간트 · 배점 · 시장 추이 · 로드맵 · 지면 배분)와 같은 수치 표. HTML 산출물(보고서 · 덱 · 변경분)은 고객사 로고 Primary 컬러를 기본 적용 — 대표 사이트 · 로고 확인 → 미확인 · 후보 복수면 먼저 질문 → Primary 실측 → 추출 전 한 줄 확인. `CLAUDE.md` ③ · `ORCHESTRATOR.md` · `rfp-analyst` · `design-system.md` · `slide-tokens.css` · `qa` 반영</sub> | <sub>2026.11.11</sub> | <sub>김단영</sub> |
 | <sub>작업단계 7단계 재편 + README 전면 보강 — ① RFP 분석 · 리서치(제안 키워드 · 방향성) ② 컨셉 · 스토리텔링 ③ 목차(페이지별 삽입내용) ④ 초안 · 1차 추출 ⑤ 피드백 반영 ⑥ 2차 추출 + 변경분 HTML ⑦ 최종본. 컨셉 승인 후 목차로 넘어가는 경쟁입찰형 골격을 기본으로(`references/skeleton-bid.md`), 견적형은 유지. 에이전트 4종 신설(`concept-planner` · `reference-collector` · `feedback-integrator` · `release-packager`), 문체 공통지침(`references/writing-style.md` · 기준 덱 = 메리츠화재 2027 발표본), 문체 점검 · 변경분 비교 스크립트(`check_style.pl` · `diff_deck.pl`), 차수 폴더(`r{n}/`)와 버전 연결, 산출물 파일명을 전역 규칙으로 통일. README는 처음 쓰는 사람 기준으로 배경 · 활용 목적 · 용어 · 단계별 설명 · 예시 대화 · 자주 묻는 질문 추가. 문체: 거버닝 메시지는 명사구가 기본이고 약속형(~하겠습니다)은 일부 허용하는 예외로 확정, 기준 덱(메리츠) 예문은 지침에 그대로 유지</sub> | <sub>2026.11.10</sub> | <sub>김단영</sub> |
 | <sub>HTML 문서 외부링크 규칙 추가(`CLAUDE.md` 5a) — 출처뿐 아니라 본문 고유명사(사이트 · 서비스 · 기관 · 도구)도 `a.ext`로 연결, 아이콘은 텍스트 우측 끝 블랙 라인(정본 §22), URL 열림 검증 · 링크 전후 화면 텍스트 동일 검수. `rfp-analyst` · `qa` 에이전트 반영 (삼성자산운용 FunETF RFP 분석 보고서에 적용)</sub> | <sub>2026.11.10</sub> | <sub>김단영</sub> |
 | <sub>Dan Jr. 등급 조회 추가 — 인테이크·GATE 직전 `persona.md` 확인(A 진행·B 보고·C 질문), 건너뛴 게이트는 완료 보고에 ID 표기</sub> | <sub>2026.10.22</sub> | <sub>김단영</sub> |
@@ -131,7 +132,7 @@ agent/proposal/input/261110. [제안] ACME보험 홈페이지 운영/
 | <sub>①</sub> | <sub>클라이언트명 · 사업명 · 업무명(파일명 앞머리)</sub> | <sub>`ACME보험운영제안`</sub> | <sub>처음 쓰는 업무명은 반드시 확인</sub> |
 | <sub>②</sub> | <sub>입력 자료 정본</sub> | <sub>「RFP.pdf가 정본, 기능목록은 참고」</sub> | <sub>폴더의 자료 목록을 보여 주고 확인</sub> |
 | <sub>③</sub> | <sub>골격</sub> | <sub>「경쟁입찰」 · 「견적형」</sub> | <sub>경쟁입찰형 (RFP에 평가 항목 · 배점 · 발표가 있으면 경쟁입찰형)</sub> |
-| <sub>④</sub> | <sub>HTML 스타일</sub> | <sub>「기본으로」 · 「CI 적용」</sub> | <sub>하우스 스타일. CI는 요청했을 때만</sub> |
+| <sub>④</sub> | <sub>HTML 스타일 (고객사 CI)</sub> | <sub>「네」 · 「이 색으로」 · 「기본으로」</sub> | <sub>고객사 로고 Primary 컬러 적용. 대표 사이트 · 로고를 확인하지 못하면 먼저 질문</sub> |
 | <sub>⑤</sub> | <sub>대상 범위 · 제출 기한</sub> | <sub>「전체 · 11/30 제출」</sub> | <sub>전체</sub> |
 
 > 제출 포맷 · 기본양식 · 작업 사이즈 · 분량은 여기서 묻지 않는 항목. 분량은 목차 승인(GATE ②)에서, 나머지는 1차 추출 직전(S4)에 확인
@@ -170,7 +171,9 @@ S5 피드백 대장 ─[승인 ③]─▶ S6 n차 추출 + 변경분 HTML ─▶
   - 결과 머리에 **제안 주요 키워드 5–7개**와 **제안 방향성 후보 2–3안** 정리 (S2의 재료)
   - 구축 · 리뉴얼처럼 화면이 본론인 사업은 사용자 여정 · 메뉴 구조 분석 추가(선택)
 - **사용자가 할 일**: 자료 제공 · 인테이크 답변
-- **받는 것**: 분석 보고서 HTML(하우스 스타일) · `01_rfp.md`
+- **받는 것**: 분석 보고서 HTML · `01_rfp.md`
+  - 보고서 양식 = 삼성자산운용 FunETF v0.3(2026-11-11): PART Ⅰ RFP 분석 · Ⅱ 현황 · 시장 · Ⅲ 중점 과제 심층 · Ⅳ 제안 전략 · 실행 초안, 일정 D-day · 배점 · 시장 추이 · 로드맵 등 그래프와 같은 수치 표
+  - 색은 고객사 로고의 Primary 컬러(토프바 · 강조선 · 반전 블록 · 강조 막대)와 흰색 로고. 정본 `references/rfp-report-format.md` · 골격 `template/rfp_report_template.html`
 
 ### S2 — 제안 컨셉 · 스토리텔링 → 승인 ①
 
@@ -371,8 +374,9 @@ Claude: 현재 10시 05분입니다. 작업 시작합니다.
 Claude: ② RFP.pdf를 정본으로, 기능목록.xlsx는 참고 자료로 보겠습니다. 맞을까요?
 사용자: 맞아
 Claude: ③ RFP에 평가 항목과 발표가 있어 경쟁입찰형 골격으로 진행합니다.
-        ④ 분석 보고서 HTML은 기본 스타일로 추출할까요?
-사용자: 기본으로
+        ④ ACME보험 대표 사이트 로고 기준 CI Primary #0A5CFF(사이트 공통 CSS)로 추출할까요?
+사용자: 응
+        ※ 대표 사이트 · 로고를 확인하지 못했다면 여기서 URL · 로고 파일을 먼저 묻는다
         ※ ⑤ 범위 · 기한은 RFP에서 확인돼 재질문 생략
 
 Claude: [S1 완료] 분석 보고서를 만들었습니다.
@@ -429,7 +433,7 @@ Claude: [S7] 제출 조건을 확인하겠습니다. RFP 기준 PDF 1부 · 40�
 | <sub>피드백끼리 상충하는 경우</sub> | <sub>Claude가 임의로 고르지 않고 승인 ③에서 질문</sub> |
 | <sub>문장 하나 · 장표 하나만 고치려는 경우</sub> | <sub>「A07 헤드라인을 이 문장으로」처럼 지정 → 지정한 곳만 수정, 대장 생략, 비교 스크립트로 수정 범위 확인</sub> |
 | <sub>2차 추출 뒤 또 피드백이 온 경우</sub> | <sub>같은 방식으로 3차(`r3`) 진행. 버전 +0.1, 변경분 간략본은 2차 대비로 작성</sub> |
-| <sub>클라이언트 CI 색을 입히려는 경우</sub> | <sub>「CI 적용」이라고 요청했을 때만 적용. HEX를 확정하지 못하면 기본 스타일 + `[CI 확인 필요]`</sub> |
+| <sub>클라이언트 CI 색</sub> | <sub>기본으로 고객사 로고의 Primary 컬러를 입힘. 대표 사이트 · 로고를 확인하지 못하면 먼저 질문하고, 확인 없이 진행하면 기본 스타일 + `[CI 확인 필요]`. CI 없이 뽑으려면 「기본으로」</sub> |
 | <sub>Python이 없는 PC</sub> | <sub>7단계와 perl 스크립트 2종은 그대로 동작. 덱 편집 · 피그마 PDF 취합 등 보조 스크립트만 실행 불가</sub> |
 | <sub>고객 자료가 깃에 올라갈 염려</sub> | <sub>`input/` · `output/` · `_workspace/`는 `.gitignore`로 제외. 리포에는 규칙과 도구만 보관</sub> |
 | <sub>사용자가 확정한 문장에 [주의]가 뜨는 경우</sub> | <sub>고치지 않고 보고만 진행. 확정 문장 유지가 우선</sub> |
@@ -457,8 +461,9 @@ agent/proposal/
 │   ├── skeleton-bid.md             # 경쟁입찰형 골격 (기본)
 │   ├── section-prompts.md          # 견적형 골격 (10섹션)
 │   ├── design-system.md            # 레이아웃 · CI 변수 · 포맷
+│   ├── rfp-report-format.md        # S1 분석 보고서 양식 · 고객사 CI · 구성 · 검수
 │   └── deck-production-playbook.md # HTML 최종본 취합 절차
-├── template/            # base_template.html(1280×720) · deck_1600_template.html(1600×900) · slide-tokens.css
+├── template/            # base_template.html(1280×720) · deck_1600_template.html(1600×900) · slide-tokens.css · rfp_report_template.html(S1 보고서)
 ├── scripts/             # check_style.pl · diff_deck.pl · deck_lib.pl (perl) / check_slides.py · deck_edit.py · fig2svg.py · codebox_overlay.py · deck_toc.py · build_compressed_pdf.py (Python) / render_pages.sh
 ├── examples/            # 과거 예시 + INDEX.md
 ├── input/{프로젝트 폴더}/            # 입력 자료 · feedback/r{n}/ 회의록 (깃 제외)
