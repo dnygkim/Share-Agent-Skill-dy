@@ -63,7 +63,7 @@ if [ -f "$rules" ]; then
     skip { next }
     /^- Dan Jr\. 등급:/ { next }
     { print }
-  ' "$rules" | sed 's#dykim-claude-agents-skills/agent/#dykim-claude-agents-skills-share/agent/#g' > "$rules.tmp"
+  ' "$rules" | sed 's#dykim-claude-agents-skills/agent/#Share-Agent-Skill-dy/agent/#g' > "$rules.tmp"
   mv "$rules.tmp" "$rules"
 fi
 

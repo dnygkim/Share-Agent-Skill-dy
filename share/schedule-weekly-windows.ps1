@@ -16,7 +16,7 @@ $action   = New-ScheduledTaskAction -Execute $bash -Argument "-lc `"$cmd`""
 $trigger  = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9am
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 Register-ScheduledTask -TaskName 'dykim-share-update' -Action $action -Trigger $trigger -Settings $settings `
-  -Description 'dykim-claude-agents-skills-share 주간 업데이트' -Force | Out-Null
+  -Description 'Share-Agent-Skill-dy 주간 업데이트' -Force | Out-Null
 
 Write-Host "등록 완료: 매주 월 09:00 · 작업 이름 dykim-share-update"
 Write-Host "기록: $env:USERPROFILE\.claude\dykim-share-update.log"

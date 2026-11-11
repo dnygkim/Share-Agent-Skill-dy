@@ -70,7 +70,7 @@ cp "$repo/global-house-style/CLAUDE.md" "$dest/house-style/global-rules.md"
 line='@~/.claude/house-style/global-rules.md'
 touch "$dest/CLAUDE.md"
 if ! grep -qxF "$line" "$dest/CLAUDE.md"; then
-  printf '\n# 공유 규칙 (dykim-claude-agents-skills-share · share/update.sh 가 추가)\n%s\n' "$line" >> "$dest/CLAUDE.md"
+  printf '\n# 공유 규칙 (Share-Agent-Skill-dy · share/update.sh 가 추가)\n%s\n' "$line" >> "$dest/CLAUDE.md"
   echo "CLAUDE.md 에 공유 규칙 불러오기 한 줄 추가"
 fi
 echo "house-style -> $dest/house-style/"

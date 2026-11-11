@@ -1,4 +1,4 @@
-# dykim-claude-agents-skills-share
+# Share-Agent-Skill(dy)
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포.
 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지가 1:1로 들어 있고, 원본이 바뀌면 이 리포도 같이 바뀐다.
@@ -13,8 +13,8 @@
 ```bash
 # 1) 받기 — 처음 한 번 GitHub 로그인 창이 뜬다
 cd ~/Documents
-git clone https://github.com/dnygkim/dykim-claude-agents-skills-share.git
-cd dykim-claude-agents-skills-share
+git clone https://github.com/dnygkim/Share-Agent-Skill-dy.git
+cd Share-Agent-Skill-dy
 
 # 2) 내 Claude Code 에 반영
 bash share/update.sh
@@ -296,5 +296,6 @@ bash share/schedule-weekly-mac.sh
 
 | <sub>공유 리포 운영 이력</sub> | <sub>일자</sub> |
 |:---|:---:|
+| <sub>리포 이름 변경 — `dykim-claude-agents-skills-share` → `Share-Agent-Skill-dy` (예전 주소는 GitHub 이 자동 연결)</sub> | <sub>2026.11.11</sub> |
 | <sub>릴리즈노트 자동 생성 추가 — 일자별 업데이트 항목 · 월별 상세 · 공통 반영 사항</sub> | <sub>2026.11.11</sub> |
 | <sub>공유 리포 개설 — 원본 1:1 미러(단이bot · Dan Jr. · 페르소나 · 메모리 제외), 받는 쪽 주간 업데이트</sub> | <sub>2026.11.11</sub> |
