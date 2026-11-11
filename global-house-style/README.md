@@ -4,6 +4,7 @@
 
 | <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
 |:---|:---:|:---:|
+| <sub>막대 · 마일스톤 그래프 컴포넌트 추가(`house-style.css` §23) — 수치 비교 `.hbars` · 시점 추이 `.cols` · 발주 일정 D-day `.ms` · 간트 마감 표시 `.gbar.mk`. 계열 하나 · 강조 막대만 `.key`(CI 문서는 포인트 색) · 같은 수치는 표로도 남김 · 인쇄 시 막대 색 유지. `base_template_doc.html` 팔레트에 견본 추가 — 2026.11.11 「그래프로 표현」 지시, 삼성자산운용 FunETF RFP 분석 v0.3에 첫 적용</sub> | <sub>2026.11.11</sub> | <sub>김단영</sub> |
 | <sub>외부링크 아이콘을 블랙 라인(투명도 제거)으로 변경하고, 본문 고유명사(사이트 · 서비스 · 기관 · 도구)도 같은 `a.ext`로 연결하는 규칙을 `house-style.css` §22에 명시 — 2026.11.10 지시, `~/.claude/house-style/` 사본과 동일 유지</sub> | <sub>2026.11.10</sub> | <sub>김단영</sub> |
 | <sub>전역 규칙 3종 동기화 — 산출물 파일명 원문 대조 보강(단계코드 · 문서번호 · 확정본 보존 · 개정이력 · 적용 제외)·자동화 창은 서브모니터로·HTML 산출물 수정 이력 메타정보(모두 2026.10.28 지시). Windows PC `~/.claude/CLAUDE.md` 기준 반영 — Dan Jr. 절의 리포 전용 문구(전역 규칙 없는 환경 · 클라우드 세션 안내) 유지</sub> | <sub>2026.11.06</sub> | <sub>김단영</sub> |
 | <sub>출처 외부링크 규칙 추가 — 리서치·분석 문서는 출처 URL을 항목 타이틀(1건)·해당 구절(2건 이상)에 직접 연결. `house-style.css` §22 `a.ext`(옅은 밑줄 · 끝 외부링크 아이콘 · hover 반전 · 인쇄 시 아이콘 숨김) · `.src-tag`, `base_template_doc.html` 팔레트 · 출처 표 예시, 전역 규칙 「출처 외부링크」 절 — 메리츠화재 RFP 분석 보고서에서 확정</sub> | <sub>2026.10.19</sub> | <sub>김단영</sub> |

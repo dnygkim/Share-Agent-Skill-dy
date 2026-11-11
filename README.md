@@ -68,7 +68,7 @@ bash share/schedule-weekly-mac.sh
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 모아 일자별로 정리한 것 (총 126건 · 최신 2026.11.10). 상세는 항목 이름을 눌러 해당 README 에서 본다.
+원본 각 폴더 README 의 릴리즈노트를 모아 일자별로 정리한 것 (총 127건 · 최신 2026.11.11). 상세는 항목 이름을 눌러 해당 README 에서 본다.
 
 ### 공통 반영 사항
 
@@ -86,6 +86,7 @@ bash share/schedule-weekly-mac.sh
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
+| <sub>2026.11.11</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> |  |  |
 | <sub>2026.11.10</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[rfp-analysis-research](skills/rfp-analysis-research/README.md)</sub> |
 | <sub>2026.11.06</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> |  |  |
 | <sub>2026.11.04</sub> |  | <sub>[test-runner](agent/test-runner/README.md)</sub> | <sub>[qa-master](skills/qa-master/README.md)</sub> |
@@ -114,10 +115,11 @@ bash share/schedule-weekly-mac.sh
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 8건</summary>
+<summary><b>2026.11</b> · 9건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
+| <sub>2026.11.11</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>막대 · 마일스톤 그래프 컴포넌트 추가(`house-style.css` §23) — 수치 비교 `.hbars` · 시점 추이 `.cols` · 발주 일정 D-day `.ms` · 간트 마감 표시 `.gbar.mk`. 계열 하나 · 강조 막대만 `.key`(CI 문서는 포인트 색) · 같은 수치는 표로도 남김 · 인쇄 시 막대 색 유지. `base_template_doc.html` 팔레트에 견본 추가 — 2026.11.11 「그래프로 표현」 지시, 삼성자산운용 FunETF RFP 분석 v0.3에 첫 적용</sub> | <sub>김단영</sub> |
 | <sub>2026.11.10</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>외부링크 아이콘을 블랙 라인(투명도 제거)으로 변경하고, 본문 고유명사(사이트 · 서비스 · 기관 · 도구)도 같은 `a.ext`로 연결하는 규칙을 `house-style.css` §22에 명시 — 2026.11.10 지시, `~/.claude/house-style/` 사본과 동일 유지</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>작업단계 7단계 재편 + README 전면 보강 — ① RFP 분석 · 리서치(제안 키워드 · 방향성) ② 컨셉 · 스토리텔링 ③ 목차(페이지별 삽입내용) ④ 초안 · 1차 추출 ⑤ 피드백 반영 ⑥ 2차 추출 + 변경분 HTML ⑦ 최종본. 컨셉 승인 후 목차로 넘어가는 경쟁입찰형 골격을 기본으로(`references/skeleton-bid.md`), 견적형은 유지. 에이전트 4종 신설(`concept-planner` · `reference-collector` · `feedback-integrator` · `release-packager`), 문체 공통지침(`references/writing-style.md` · 기준 덱 = 메리츠화재 2027 발표본), 문체 점검 · 변경분 비교 스크립트(`check_style.pl` · `diff_deck.pl`), 차수 폴더(`r{n}/`)와 버전 연결, 산출물 파일명을 전역 규칙으로 통일. README는 처음 쓰는 사람 기준으로 배경 · 활용 목적 · 용어 · 단계별 설명 · 예시 대화 · 자주 묻는 질문 추가. 문체: 거버닝 메시지는 명사구가 기본이고 약속형(~하겠습니다)은 일부 허용하는 예외로 확정, 기준 덱(메리츠) 예문은 지침에 그대로 유지</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>HTML 문서 외부링크 규칙 추가(`CLAUDE.md` 5a) — 출처뿐 아니라 본문 고유명사(사이트 · 서비스 · 기관 · 도구)도 `a.ext`로 연결, 아이콘은 텍스트 우측 끝 블랙 라인(정본 §22), URL 열림 검증 · 링크 전후 화면 텍스트 동일 검수. `rfp-analyst` · `qa` 에이전트 반영 (삼성자산운용 FunETF RFP 분석 보고서에 적용)</sub> | <sub>김단영</sub> |

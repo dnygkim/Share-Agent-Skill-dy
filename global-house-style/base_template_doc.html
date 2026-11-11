@@ -90,7 +90,7 @@
      ★ 아래를 통째로 복제/나열하지 않는다. 표로 보여줄 데이터면 표만, 흐름이면
      .flow/.tree/.loop 중 실제 구조에 맞는 도식 하나만, 수치 없으면 .stats 생략 —
      추출한 내용의 성격이 곧 구성을 결정한다. 섹션마다 쓰는 컴포넌트 조합이 달라도 된다.
-     전체 클래스 목록·용도는 house-style.css 안 섹션별 주석(§1~22)을 정본으로 본다.
+     전체 클래스 목록·용도는 house-style.css 안 섹션별 주석(§1~23)을 정본으로 본다.
      GNB(topbar)·LNB·표지·목차·footer 는 이 팔레트와 무관하게 항상 고정 구조로 유지한다.
      ============================================================================ -->
 <section>
@@ -129,6 +129,18 @@
   <div class="stats">
     <div class="stat"><div class="v">{값}<span class="u">{단위}</span></div><div class="l">{라벨}</div></div>
     <div class="stat"><div class="v">{값}<span class="u">{단위}</span></div><div class="l">{라벨}</div></div>
+  </div>
+
+  <!-- 그래프 — 수치 비교 · 시점 추이 · 발주 일정 D-day를 보여줄 때만 (house-style.css §23)
+       가로 막대 .hbars · 세로 막대 .cols · 마일스톤 .ms 중 하나. 막대 길이 = --v(최댓값 대비 0~100),
+       강조 막대만 .key, 같은 수치는 표로도 남긴다. 작업 일정 · 로드맵은 §21 간트(마감 표시 .gbar.mk) -->
+  <div class="chart">
+    <p class="chart-cap">{무엇 · 출처 · 기준일}</p>
+    <div class="hbars">
+      <div class="hbar key"><span class="lb">{항목}<small>{보조 설명}</small></span><span class="tr"><i style="--v:100"></i></span><span class="vl">{값}</span></div>
+      <div class="hbar"><span class="lb">{항목}</span><span class="tr"><i style="--v:60"></i></span><span class="vl">{값}</span></div>
+    </div>
+    <p class="chart-note">{수치에서 읽을 함의 한 줄}</p>
   </div>
 
   <!-- 가로 플로우 — 단계가 순서대로 진행될 때 (§12) -->
