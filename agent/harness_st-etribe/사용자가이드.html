@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA·공수 HTML 산출물 자동화 하네스 — 사용 가이드</title>
+<style>
+  :root{
+    --bg:#141414; --panel:#1b1b1b; --head:#202020; --border:#333333;
+    --txt:#d4d4d4; --muted:#8a8a8a; --dim:#6a6a6a;
+    --green:#4ec9b0; --blue:#7fd3ff; --user:#0e4a6e; --user-txt:#e6f4ff;
+    --ai:#262626; --ai-bd:#343434;
+    --amber:#e2c08d; --amber-bg:#332b16; --amber-bd:#6b5a2a;
+    --cap:#9aa4b0;
+    --mono:"Cascadia Code","Consolas","D2Coding",ui-monospace,monospace;
+    --sans:"Pretendard","Segoe UI","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#0c0c0c;color:var(--txt);font-family:var(--sans);font-size:14px;line-height:1.6;padding:22px 14px 40px;}
+  .shell{max-width:1120px;margin:0 auto;background:var(--panel);border:1px solid var(--border);
+    border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  /* header */
+  .head{background:var(--head);padding:12px 16px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);}
+  .head .logo{color:var(--green);font-size:15px;font-weight:700;}
+  .head .sub{margin-left:auto;color:var(--muted);font-size:11.5px;}
+  /* intro */
+  .intro{padding:14px 16px;border-bottom:1px solid var(--border);background:#181818;color:#bfc7d0;font-size:12.5px;line-height:1.65;}
+  .intro b{color:var(--blue);}
+  .intro .row{display:flex;gap:7px;margin-top:6px;flex-wrap:wrap;}
+  .chip{background:#23303b;border:1px solid #2f4351;color:#9fd0ee;border-radius:14px;padding:2px 10px;font-size:11px;}
+  /* chat body */
+  .body{padding:16px 14px;display:flex;flex-direction:column;gap:12px;background:var(--panel);}
+  .msg{font-size:13px;line-height:1.6;max-width:90%;}
+  .msg.user{align-self:flex-end;background:var(--user);color:var(--user-txt);
+    padding:9px 13px;border-radius:13px 13px 3px 13px;}
+  .msg.user .att{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11.5px;
+    background:rgba(255,255,255,.12);padding:2px 8px;border-radius:8px;}
+  .msg.ai{align-self:flex-start;background:var(--ai);border:1px solid var(--ai-bd);
+    padding:11px 13px;border-radius:13px 13px 13px 3px;}
+  .msg.ai .who{color:var(--green);font-weight:700;font-size:11.5px;display:flex;align-items:center;gap:5px;margin-bottom:5px;}
+  .msg.ai p{margin:5px 0;}
+  .msg.ai b{color:#fff;}
+  /* agent step lines */
+  .step{display:flex;gap:8px;align-items:flex-start;margin:5px 0;font-size:12.5px;}
+  .step .i{flex-shrink:0;width:18px;text-align:center;}
+  .step .ag{color:var(--blue);font-weight:700;}
+  .step .ok{color:var(--green);font-weight:700;}
+  .result{margin-top:7px;background:#1d2a22;border:1px solid #2f5043;border-radius:8px;padding:7px 11px;font-size:12.5px;color:#bfe9d8;}
+  .result b{color:#7fe7c4;}
+  .file{color:var(--green);font-family:var(--mono);font-size:12px;}
+  /* GATE box */
+  .gate{align-self:stretch;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:10px;
+    padding:11px 13px;font-size:12.5px;color:var(--amber);}
+  .gate .g-t{font-weight:700;color:#f0d59a;display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+  /* caption (가이드 안내) */
+  .cap{align-self:center;max-width:92%;text-align:center;color:var(--cap);font-size:12px;
+    background:#15191e;border:1px dashed #2c3640;border-radius:9px;padding:7px 13px;}
+  .cap b{color:#cfe6ff;font-weight:600;}
+  .cap .k{color:var(--green);}
+  code{font-family:var(--mono);background:#2d2d2d;color:#d7ba7d;padding:1px 6px;border-radius:4px;font-size:12px;}
+  kbd{font-family:var(--mono);background:#2a2a2a;border:1px solid #444;border-bottom-width:2px;border-radius:4px;padding:1px 6px;font-size:11px;color:#ddd;}
+  /* input bar */
+  .inputbar{display:flex;align-items:center;gap:9px;padding:11px 14px;border-top:1px solid var(--border);background:var(--head);}
+  .inputbar .box{flex:1;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:9px;padding:8px 12px;color:#777;font-size:12.5px;}
+  .inputbar .send{color:var(--blue);font-size:16px;}
+  /* divider */
+  .day{align-self:center;color:var(--dim);font-size:11px;margin:2px 0;}
+  .foot{max-width:1120px;margin:14px auto 0;color:var(--dim);font-size:11.5px;text-align:center;line-height:1.6;}
+  .foot b{color:#9aa4b0;}
+  /* 질문 선택지 카드 (실제 AskUserQuestion UI 모사) */
+  .qcard{align-self:flex-start;background:#1d1d1d;border:1px solid #3a3a3a;border-radius:11px;padding:12px 13px;max-width:94%;}
+  .qcard .qhead{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted);margin-bottom:2px;}
+  .qcard .qhead .chip2{background:#2a2f37;border:1px solid #3a424d;border-radius:10px;padding:1px 8px;color:#9fb6cc;}
+  .qcard .qq{font-size:12.5px;color:#e8e8e8;font-weight:700;margin:4px 0 9px;}
+  .qopt{display:flex;gap:9px;align-items:flex-start;padding:8px 10px;border:1px solid #333;border-radius:8px;margin:6px 0;background:#262626;}
+  .qopt.sel{border-color:var(--blue);background:#11202c;}
+  .qopt .qr{flex-shrink:0;font-size:13px;color:#6a6a6a;line-height:1.5;}
+  .qopt.sel .qr{color:var(--blue);}
+  .qopt .ql{font-size:12px;color:#e6e6e6;font-weight:600;}
+  .qopt .qbadge{background:#1a6b4a;color:#bff3dd;font-size:9.5px;border-radius:8px;padding:1px 7px;margin-left:5px;font-weight:700;}
+  .qopt .qd{display:block;font-size:11px;color:#8a8a8a;margin-top:2px;line-height:1.45;}
+  .qopt .qother{color:#6a6a6a;font-size:11.5px;}
+</style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Header -->
+    <div class="head">
+      <span class="logo">✦ Claude Code</span>
+      <span class="sub">harness_st · 에이전트 팀</span>
+    </div>
+
+    <!-- Intro -->
+    <div class="intro">
+      <b>이렇게 쓰면 됩니다.</b> VSCode에서 <code>harness_st</code> 폴더를 열고(자동으로 규칙이 로딩됩니다), 좌측 <b>✦ Claude Code</b> 패널에서 아래처럼 대화하세요. 아래는 실제 사용 흐름을 단계별로 보여주는 예시입니다.
+      <div class="row">
+        <span class="chip">① 폴더 열기 <kbd>Ctrl</kbd>+<kbd>K</kbd> <kbd>Ctrl</kbd>+<kbd>O</kbd></span>
+        <span class="chip">② input/에 자료 드롭</span>
+        <span class="chip">③ 패널에서 대화</span>
+      </div>
+    </div>
+
+    <!-- 폴더 구조 -->
+    <div class="intro">
+      <b>📁 폴더 구조 — 딱 두 곳만 보면 됩니다.</b>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">
+        <tr style="border-bottom:1px solid #3a3a3a;color:#9ab;"><td style="padding:4px 6px;width:140px;">폴더</td><td style="padding:4px 6px;">용도</td></tr>
+        <tr><td style="padding:3px 6px;"><span class="path">input/</span></td><td style="padding:3px 6px;"><b>여기에 자료를 넣습니다</b> — RFP·요건서(.docx/.pdf/.md)·기능목록(.xls)·사이트 URL(.txt) 등. (또는 대화로 경로·URL을 줘도 됩니다.)</td></tr>
+        <tr><td style="padding:3px 6px;"><span class="path">output/</span></td><td style="padding:3px 6px;"><b>결과 HTML이 여기 나옵니다</b> — <code>{NN}_{주제}_v{버전}.html</code>. 더블클릭하거나 Live Server로 브라우저에서 엽니다.</td></tr>
+        <tr><td style="padding:3px 6px;color:var(--muted);"><span class="path">_workspace/</span></td><td style="padding:3px 6px;color:var(--muted);">(자동) 작업 중간물 — 분석·spec·검수 기록. 보통 신경 안 써도 됩니다.</td></tr>
+        <tr><td style="padding:3px 6px;color:var(--muted);">corpus (KB)</td><td style="padding:3px 6px;color:var(--muted);">(자동) 완성본이 git에 누적·버전 저장 → 다음 비슷한 산정에 참고. 여러 사람이 함께 씁니다.</td></tr>
+      </table>
+      <div style="margin-top:7px;color:var(--cap);font-size:11.5px;">💡 핵심: <b>input/에 자료 넣고 → 대화로 요청 → output/에서 결과 확인.</b> 자료는 항상 <b>input/을 가장 먼저</b> 보므로, 워크스페이스 전체를 뒤지지 않습니다.</div>
+    </div>
+
+    <!-- Chat -->
+    <div class="body">
+
+      <div class="cap">💬 <b>시작</b> — <span class="path">input/</span> 폴더에 RFP를 끌어다 놓고, 무엇을 원하는지 한 문장으로 말합니다.</div>
+
+      <div class="msg user">
+        input에 파일 넣었어. 작업 시작해줘
+        <span class="att">📎 input/[RFI]GS칼텍스…리뉴얼.docx · 기능목록.xls · 사이트 url.txt</span>
+      </div>
+
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <p><span class="path">input/</span>의 자료를 먼저 읽었습니다 — <b>GS칼텍스 기업 홈페이지 리뉴얼 RFI</b>(기능목록·요청서·사이트 URL)군요. <b>공수산정 리포트(IA + 공수 6표 + 인프라)</b>로 만들겠습니다.</p>
+        <p><b>현재 13시 30분입니다. 작업 시작합니다.</b> 확인 몇 가지를 <b>하나씩 선택지로</b> 여쭐게요. (모르면 표준 가정)</p>
+      </div>
+
+      <div class="cap">⏱️ 자료는 <b>input/을 가장 먼저</b> 봅니다(워크스페이스를 뒤지지 않음). 착수·완료 시 <b>현재 시각</b>을 한 줄로 표시합니다.</div>
+
+      <div class="qcard">
+        <div class="qhead"><span class="chip2">개발 방법</span> 선택 · 공수 핵심 분기</div>
+        <div class="qq">AS-IS는 Java/Spring(.do·JSP·MyBatis) 2019년 사이트. 개발 방법은?</div>
+        <div class="qopt sel"><span class="qr">◉</span><span><span class="ql">부분 재개발(하이브리드)</span><span class="qd">안정 백오피스 일부 재사용 + 프론트·메인 신규</span></span></div>
+        <div class="qopt"><span class="qr">○</span><span><span class="ql">기존 소스 그대로</span><span class="qd">재스킨 중심</span></span></div>
+        <div class="qopt"><span class="qr">○</span><span><span class="ql">전면 신규</span><span class="qd">전 영역 재구축</span></span></div>
+      </div>
+      <div class="msg user">부분 재개발</div>
+
+      <div class="cap">💡 질문은 <b>선택지(설명·추천·Other)</b>로 <b class="k">하나씩</b> 제시됩니다. 추론 가능한 건 안 묻고, 답에 따라 공수가 자동 조정됩니다.</div>
+
+      <div class="qcard">
+        <div class="qhead"><span class="chip2">디자인 수준</span> 선택 · 디자인/퍼블·기획 동반</div>
+        <div class="qq">디자인 수준은? (창립 60주년 대표 홈페이지)</div>
+        <div class="qopt sel"><span class="qr">◉</span><span><span class="ql">하이엔드 (60주년 플래그십)</span><span class="qd">브랜딩·인터랙션 최상 → 디자인·퍼블·기획 동반 상향</span></span></div>
+        <div class="qopt"><span class="qr">○</span><span><span class="ql">높음</span><span class="qd">기업 홈페이지 세련도</span></span></div>
+        <div class="qopt"><span class="qr">○</span><span><span class="ql">보통</span><span class="qd">정보 전달 중심</span></span></div>
+      </div>
+      <div class="msg user">하이엔드로</div>
+
+      <div class="qcard">
+        <div class="qhead"><span class="chip2">범위</span> 선택 · <b class="k">공수 최대 분기</b></div>
+        <div class="qq">기능목록에 GSC 홈페이지(Admin 79+Front 15≈97)와 VAN社 결제계열(승인·결제·정산 174)이 섞여 있습니다. 어디까지 포함?</div>
+        <div class="qopt sel"><span class="qr">◉</span><span><span class="ql">전체 (VAN 결제계열 포함)</span><span class="qd">≈271 기능 · 대형 SI · 결제/승인 도메인 전환이 핵심 리스크</span></span></div>
+        <div class="qopt"><span class="qr">○</span><span><span class="ql">홈페이지만 (GSC 97)</span><span class="qd">결제계열 제외</span></span></div>
+      </div>
+      <div class="msg user">전체로 (VAN社 포함)</div>
+
+      <div class="cap">💡 <b>고정 5개</b>(디자인·개발방법·인프라·상주/비상주·기간) + <b>이 RFP에서 도출한 동적 질문</b>(범위·다국어·아카이브)을 하나씩 확인합니다. 나머지: <b>인프라=구성도+Sizing+비용 제시(실구축 별도)</b> · <b>상주</b> · <b>기간 추정(60주년 연계)</b> · <b>다국어 국·영·중</b> · 아카이브=표준 가정.</div>
+
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <p>인테이크 완료. 확정 입력입니다 — 이걸로 파이프라인을 돌립니다.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;">
+          <tr style="border-bottom:1px solid #3a3a3a;color:#9ab;"><td style="padding:4px 6px;">항목</td><td style="padding:4px 6px;">확정값</td></tr>
+          <tr><td style="padding:3px 6px;color:#9ab;">디자인</td><td style="padding:3px 6px;">하이엔드(60주년 플래그십)</td></tr>
+          <tr><td style="padding:3px 6px;color:#9ab;">개발 방법</td><td style="padding:3px 6px;">부분 재개발(하이브리드)</td></tr>
+          <tr><td style="padding:3px 6px;color:#9ab;">인프라</td><td style="padding:3px 6px;">On-Premise 구성도+Sizing+비용 제시(실구축 별도)·TO-BE 포함</td></tr>
+          <tr><td style="padding:3px 6px;color:#9ab;">투입</td><td style="padding:3px 6px;">상주</td></tr>
+          <tr><td style="padding:3px 6px;color:#9ab;">기간</td><td style="padding:3px 6px;">추정(60주년 연계)</td></tr>
+          <tr><td style="padding:3px 6px;color:#9ab;">범위</td><td style="padding:3px 6px;"><b>전체 — GSC 97 + VAN社 174 ≈ 271 기능</b></td></tr>
+          <tr><td style="padding:3px 6px;color:#9ab;">다국어</td><td style="padding:3px 6px;">국·영·중 등 확장</td></tr>
+        </table>
+      </div>
+
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <div class="step"><span class="i">📚</span><span><span class="ag">corpus 검색</span> — 유사 선례 4건 연결(밴드 보정): 웅진홈 57·롯데 75·웅진다이렉트 32(결제계열)·아너 148(대형SI/인프라). <b>VAN 포함 대형 스코프라 단순 앵커링 X — 차이를 근거로 독립 산정</b></span></div>
+        <div class="step"><span class="i">🌐</span><span><span class="ag">site-analyst</span> — 실사이트(gscaltex.com) IA 추출: GNB 6(company·future·business·sustainability·IR·recruit)+고객지원, PR룸(보도자료·매거진·홍보영상)·미디어허브·국영문</span></div>
+        <div class="step"><span class="i">📋</span><span><span class="ag">analyst</span> — RFI+기능목록(자료 기반) 분석: Front/Admin IA·VAN 결제 도메인·재사용vs신규·데이터갭·케이스 판별 (병렬)</span></div>
+        <div class="step"><span class="i">🏗️</span><span><span class="ag">solution-architect</span> — On-Premise <b>AS-IS + TO-BE 2개 인프라 도식</b>(이중화·백업·개발/Staging) delta 제시</span></div>
+        <div class="step"><span class="i">📐</span><span><span class="ag">architect</span> — 02_spec 공수 산정. <b class="k">VAN 결제계열 포함 대형 SI → 선례(57) 앵커링 X, 271기능 독립 산정</b>. analyst 권고대로 결제/승인 트랙 분리</span></div>
+        <div class="step"><span class="i">🏗️</span><span><span class="ag">solution-architect</span> — On-Premise AS-IS(도식 미첨부→추정 명시)+TO-BE 3환경 HA·Sizing·구축비용 ~10-22억 <b>제시</b>(우리 공수 아님)</span></div>
+        <div class="result">1차 산정 · <b>112.0 M/M · 16명 · 8개월 · 상주</b> &nbsp;|&nbsp; PM/기획 31.0 · 디자인 10.5 · 퍼블 10.5 · 개발 60.0</div>
+      </div>
+
+      <div class="cap">🛡️ <b>자동 방어가 실제로 동작</b> — 렌더 시 <code>[WARN] IA '메인'·'로그인/인증' 하위가 한 셀에 압축</code> → architect가 <b>스스로 children[]로 분해(1노드=1행)</b> 재렌더. 합계 검산이 <code>월별 112.0 ≠ 영역 114.5</code> 불일치를 잡아 area 재정합 → check_consistency (a-h) PASS.</div>
+
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <div class="step"><span class="i">👥</span><span><span class="ag">persona-review</span>(estimate) — GATE 전 5개 페르소나 다관점 검토 결과 <b>P0 1건 + P1 4건 → 조건부 GO</b></span></div>
+        <div class="step"><span class="i">🚫</span><span><b class="k">P0</b> — "VAN 결제 23.5 M/M가 인원 역산뿐, <b>난이도 분포·건당 환산·무중단 버퍼로 분해 필요</b>" → architect 반려·재산정</span></div>
+        <div class="step"><span class="i">↩️</span><span><span class="ag">architect</span> 재산정 — 결제 트랙을 난이도·건당으로 분해 후 GATE 재상정</span></div>
+      </div>
+
+      <div class="cap">💡 <b>persona-review는 qa(숫자 정합)가 못 보는 "설득력·현실성"을 봅니다</b> — "16명이니까 23.5"식 뭉뚱그린 산정을 P0로 막아 <b>비싼 렌더·제출 전에</b> 결제 도메인을 제대로 쪼개게 합니다.</div>
+
+      <div class="gate">
+        <div class="g-t">⏸ GATE · 최종 렌더 직전 확인</div>
+        총 <b>112.0 M/M · 16명 · 8개월</b> · VAN 결제계열 174 전환개발 포함 · On-Premise 인프라 구축비용 ~14억. 이대로 렌더할까요, 조정할 부분이 있나요?
+      </div>
+
+      <div class="cap">💡 GATE는 <b>비싼 최종 렌더 전</b> 방향 확정 지점입니다 — 범위·전제가 틀렸으면 여기서 잡습니다.</div>
+
+      <div class="msg user">VAN에 대한 이해가 잘못된 것 같아. 그건 사이트가 <b>연동(I/F)</b>하는 외부 결제 시스템이지, 사이트에서 결제를 하는 게 아냐. 인프라 구축 비용도 제시하지 말자.</div>
+
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <p>중요한 정정 감사합니다 — 범위를 크게 잘못 잡았습니다. <b>01(분석)부터 바로잡아 재산정</b>합니다.</p>
+        <div class="step"><span class="i">🔁</span><span><b>VAN社 174 = 외부 시스템(범위 외)</b> → 결제 전환개발 트랙 삭제, 홈페이지측 <b>연계 I/F 정합·안정만</b> 반영</span></div>
+        <div class="step"><span class="i">🏗️</span><span>인프라 = 구성도·Sizing 제시 유지, <b>구축비용 제거</b></span></div>
+        <div class="result">정정 재산정 · <b>77.0 M/M · 13명 · 7개월</b> &nbsp;|&nbsp; PM/기획 25.5 · 디자인 10.5 · 퍼블 9.0 · 개발 32.0 &nbsp;<span style="color:var(--muted)">(112 → −35)</span></div>
+        <div class="step"><span class="i">📚</span><span>밴드 근거: <b>웅진 홈페이지 57(최근접) + 하이엔드·3개국어·CMS·I/F 178 정비로 +20 = 77</b> — 선례 복붙이 아니라 차이를 근거로</span></div>
+      </div>
+
+      <div class="cap">💡 <b>GATE 한 번이 112 → 77을 잡았습니다.</b> 범위 오인(외부 시스템을 우리 구축으로)을 <b>최종 렌더·제출 전에</b> 사용자가 정정 → 분석(01)부터 다시 → 전 표·제외범위·확인질문에 일관 반영. 이게 GATE의 존재 이유입니다.</div>
+
+      <div class="msg user">
+        공수를 하나하나 직접 고치긴 힘들어. 내가 만든 투입표(샘플) 줄 테니, 이걸 기준으로 <b>산출물 전체가 서로 모순 없도록</b> 맞춰줘.
+        <span class="att">📎 manpower.xlsx</span>
+      </div>
+
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <p>받은 <b>투입표를 최우선 정본</b>으로 삼아, 영역별 공수·역할 매트릭스·WBS·간트·핵심요약·히어로 카드를 거기에 맞춰 <b>역산·정렬</b>했습니다. <b>표 간 합계·인원·개월이 모두 일치(모순 0)</b>하도록 check_consistency까지 통과시켰습니다.</p>
+      </div>
+
+      <div class="cap">💡 공수를 셀 단위로 일일이 고칠 필요 없습니다 — <b>기준 투입표(샘플) 하나만 주면</b> 그게 정본이 되어 <b>산출물 전체 표가 그에 맞춰 자동 정렬·정합</b>됩니다(서로 모순 없게).</div>
+
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <div class="step"><span class="i">🎨</span><span><span class="ag">builder</span> — 스크립트 결정적 렌더(IA·공수6표·On-Premise AS-IS/TO-BE 인프라·개념도, GS 그린 팔레트)</span></div>
+        <div class="step"><span class="i">✅</span><span><span class="ok">qa</span> PASS — 정합 21·발명클래스 0(73종 정의)·간트 28주 정합·VAN 외부표기·인프라비용 제외 확인</span></div>
+        <div class="step"><span class="i">⚡</span><span>최종 persona-review(5b)는 <b>조건부 skip</b>(결정적 렌더+3c 해소+표준 규모) — 불필요한 opus 절약</span></div>
+        <div class="result">📄 <span class="file">output/01_GS칼텍스_기업홈페이지리뉴얼_공수산정_v1.0.html</span> &nbsp;|&nbsp; <b>77.0 M/M · 13명 · 7개월</b></div>
+        <p><b>현재 14시 30분입니다. 작업 완료했습니다.</b> (착수 13:30 → 완료 14:30, 약 1시간) 최종 HTML은 git 자동 버전 저장(태그 <code>kb/gscaltex-homepage-renewal</code>), 완성본은 KB에 섹션 원자(estimate·scope·ia·decision…)로 쌓여 다음 유사 산정을 더 정확하게 만듭니다. 실제 공수를 알게 되면 알려주세요 — 누적 보정됩니다. 🙌</p>
+      </div>
+
+      <div class="cap">💡 최종 HTML은 만들거나 고칠 때마다 <b>git에 자동 버전 저장</b>됩니다. 여러 사람이 작업하니, "<b>최신본 보여줘</b>"라고 하면 로컬이 아니라 <b>git에서 최신본을 받아</b> 보여줍니다(과거 버전도 가능).</div>
+
+      <div class="day">— 사용자가 더 짚으면, 그것도 근거로 갱신·재버전 —</div>
+
+      <div class="msg user">RFP를 보니 홈페이지·VAN·I/F가 "현행 무장애시스템" 한 우산으로 묶여 있어. 그 무장애시스템이 뭔지, 홈페이지에 어떻게 걸리는지 정확히 물어봐야 공수가 견고해질 것 같은데 — 관련 질문이 들어가 있나?</div>
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <p>날카로운 지적입니다. 확인 필요 질문이 <b>I/F 규격은 묻지만 "무장애 등급이 홈페이지에 전이되나"는 빠져</b> 있었습니다(관련 1건뿐). 4건 보강합니다.</p>
+        <div class="step"><span class="i">A</span><span>"현행 무장애시스템" 정의·경계 (97/174 범위 재확정)</span></div>
+        <div class="step"><span class="i">B</span><span>무장애 등급 상속 여부 — 무중단·이중화·RTO/RPO 요구 시 <b>개발·QA 大 가산</b></span></div>
+        <div class="step"><span class="i">C</span><span>전환(대응) 개발 vs 현행 유지 경계</span></div>
+        <div class="step"><span class="i">D</span><span>연계 I/F 무단절(병행운영) 요구</span></div>
+        <div class="result">확인 필요 질문 <b>9 → 12개</b> · 수치 무변동(77/13명/7개월) · build_report WARN 0 · put-html로 <b>재버전(태그 이동)</b></div>
+      </div>
+
+      <div class="cap">💡 사용자가 더 정확히 짚으면 <b>그걸 근거로 산출물을 갱신</b>하고 git에 새 버전으로 올립니다(수치 변동 없으면 정합 그대로). 표·질문이 늘어도 한 곳만 고치면 정합이 자동 유지됩니다.</div>
+
+      <div class="day">— 에이전트 자체를 개선하고 싶을 때 (담당자용) —</div>
+
+      <div class="msg user">이번에 고친 것들, 에이전트 개선 피드백으로 정리해줘.</div>
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <p>이번 세션에서 방향을 고친 게 여러 건이라 <b>어느 것에 대한 피드백인지</b> 골라주세요(복수 선택). 저는 <b>에이전트를 직접 고치지 않고</b> 담당자 검토용 제안만 만듭니다.</p>
+        <div class="step"><span class="i">1️⃣</span><span>VAN社 범위 오인 — 외부 시스템을 구축 범위로 <span class="k">(객관 개선)</span></span></div>
+        <div class="step"><span class="i">2️⃣</span><span>인프라 구축비용 제거 — 프로젝트마다 다른 정책 판단 <span style="color:var(--muted)">(취향/일회성)</span></span></div>
+        <div class="step"><span class="i">3️⃣</span><span>현행 무장애시스템 확인질문 누락 <span class="k">(객관 개선)</span></span></div>
+      </div>
+      <div class="msg user">1번, 3번.</div>
+      <div class="msg ai">
+        <div class="who">✦ Claude</div>
+        <p>검토 큐(<code>feedback/proposals.md</code>)에 2건 작성했습니다(객관 개선만 — 2번 인프라 비용은 정책성이라 제외).</p>
+        <div class="step"><span class="i">①</span><span><b>외부사 별도 시스템</b>(VAN·PG·기간계) 기능표는 기본 <code>scope_out</code> + 연계 I/F만 — analyst/architect 가드 격상</span></div>
+        <div class="step"><span class="i">②</span><span><b>"무장애/SLA" 우산 표현</b> 감지 시 등급 상속·전환경계·I/F 무단절 확인질문 자동 도출 — playbook/analyst</span></div>
+        <div class="step"><span class="i">▸</span><span><b>이 제안은 담당자가 직접 수정하셔도 되고</b>, "①(또는 ②) 반영하자" 하시면 제가 <code>/harness</code>로 반영합니다.</span></div>
+      </div>
+
+      <div class="cap">💡 이 하네스는 <b>한 사람(담당자)의 판단 기준</b>으로 출발 → <b>feedback-curator</b>가 수정들을 1·2·3으로 열거하고 <b>객관 개선만 골라</b> 제안(취향·정책은 거름). <b>에이전트 수정은 담당자가 — 직접 편집 또는 반영 지시</b>, 자동 반영 없음.</div>
+
+    </div>
+
+    <!-- Input bar -->
+    <div class="inputbar">
+      <span class="box">메시지를 입력하세요…  (예: "○○ 부분만 다시", "브랜드 색을 빨강으로")</span>
+      <span class="send">➤</span>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>준비물</b> — VSCode · Claude Code 확장 · 사내 GitLab 접근 권한 &nbsp;|&nbsp;
+    <b>보안</b> — corpus는 사내 전용(고객 단가 포함), 토큰은 <code>.env</code>에만(커밋 금지)<br>
+    상세 규칙은 <code>README.md</code> · <code>ORCHESTRATOR.md</code> 참고
+  </div>
+</body>
+</html>

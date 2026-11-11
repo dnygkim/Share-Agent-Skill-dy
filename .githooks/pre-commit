@@ -1,0 +1,13 @@
+#!/bin/sh
+# pre-commit — 민감자료 스테이징 차단 (에이전트 공통)
+# 활성화: git config core.hooksPath .githooks   (clone 직후 1회)
+# 차단 대상: agent/*/input|output|_workspace, agent/*/examples/*.html(과거 고객 완성본), .env, .corpus/
+blocked=$(git -c core.quotepath=off diff --cached --name-only --diff-filter=ACMR | grep -E \
+  '^agent/[^/]+/(input|Input|output|Output|_workspace)/|^agent/[^/]+/examples/.*\.html?$|(^|/)\.env$|(^|/)\.corpus/')
+if [ -n "$blocked" ]; then
+  echo "✗ 커밋 차단 — 민감자료(고객 원자료·산출물·과거 완성본 샘플·토큰)가 스테이징됨:" >&2
+  echo "$blocked" | sed 's/^/    /' >&2
+  echo "  → git restore --staged <파일> 로 내리고 .gitignore 를 확인한다. (--no-verify 우회 금지: agent/harness_st-etribe/CLAUDE.md 민감자료 정책)" >&2
+  exit 1
+fi
+exit 0

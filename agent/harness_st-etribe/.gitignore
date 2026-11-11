@@ -1,0 +1,36 @@
+# 런타임 산출물은 추적하지 않되, 폴더 구조는 유지
+_workspace/*
+!_workspace/.gitkeep
+_workspace_prev*/
+output/*
+!output/.gitkeep
+input/*
+!input/.gitkeep
+
+# 시크릿 — 절대 커밋 금지(corpus 접근 토큰)
+.env
+
+# corpus 데이터 브랜치 클론(런타임 생성, etribe 코드 브랜치와 분리)
+.corpus/
+
+# 파이썬 캐시
+__pycache__/
+*.pyc
+
+# Playwright MCP 런타임 산출(스냅샷·콘솔 로그) — cwd(root)에 생김
+.playwright-mcp/
+
+# 루트에 떨어지는 사이트 캡처 이미지(원래 _workspace/{slug}/로 가야 함). 루트만 차단(examples/template 이미지는 보존)
+/*.png
+/*.jpg
+/*.jpeg
+/*.gif
+/*.webp
+
+# corpus 데이터는 별도 `corpus` 브랜치에 있음(이 etribe 코드 브랜치엔 없음).
+
+# ★ 과거 완성본 샘플(examples/) — 실제 고객 공수·견적·단가 포함. 사내 로컬 전용, 저장소 추적 금지.
+#   INDEX.md(목록·사용 규칙)만 추적한다. 샘플은 형식·구성 참고용이며 다른 문서에 재사용·적용 금지(CLAUDE.md "민감자료 정책").
+examples/*
+!examples/INDEX.md
+!examples/.gitkeep

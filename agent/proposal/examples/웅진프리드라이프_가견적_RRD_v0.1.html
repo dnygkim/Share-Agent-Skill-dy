@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>웅진프리드라이프 가견적·공수·일정 산정서 (RRD v0.4)</title>
+<style>
+  :root{
+    --wj-blue:#00A6E2; --wj-deep:#1B3A6B; --wj-navy:#16315a;
+    --ink:#1f2733; --muted:#5d6b7a; --line:#e3e8ef; --line2:#e6ebf1;
+    --bg:#f5f8fb; --card:#ffffff; --soft:#eef5fb;
+    --ok:#1a9d6a; --warn:#e08a1e; --high:#d64545; --mid:#e0a020; --low:#3d8b40;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Pretendard","Malgun Gothic","나눔스퀘어",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;font-size:14px}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 22px 80px}
+  header.top{background:linear-gradient(120deg,var(--wj-deep),var(--wj-blue));color:#fff;border-radius:16px;padding:26px 30px;box-shadow:0 8px 24px rgba(27,58,107,.18)}
+  header.top .ey{font-size:12.5px;letter-spacing:.12em;opacity:.85;font-weight:600}
+  header.top h1{margin:6px 0 4px;font-size:24px;font-weight:800;letter-spacing:-.01em}
+  header.top .sub{font-size:14px;opacity:.92}
+  header.top .meta{margin-top:14px;font-size:12.5px;opacity:.9;display:flex;gap:18px;flex-wrap:wrap}
+  .note{background:#fff6e9;border:1px solid #f3d9a6;color:#7a5510;border-radius:10px;padding:12px 16px;margin:18px 0;font-size:13px}
+  .note b{color:#5a3d06}
+  h2.sec{font-size:18px;font-weight:800;margin:34px 0 12px;padding-left:12px;border-left:5px solid var(--wj-blue);color:var(--wj-navy)}
+  h3.sub{font-size:14.5px;font-weight:700;margin:18px 0 8px;color:var(--wj-deep)}
+  h3.sub .plan{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;background:var(--wj-blue);border-radius:6px;padding:2px 8px;margin-right:7px;vertical-align:1px}
+  h3.sub .plan.p2{background:var(--wj-deep)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:8px 0 6px}
+  .stat{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 16px;box-shadow:0 2px 8px rgba(20,49,90,.04)}
+  .stat.a1{border-top:3px solid var(--wj-blue)} .stat.a2{border-top:3px solid var(--wj-deep)}
+  .stat .k{font-size:11.5px;color:var(--muted);font-weight:600}
+  .stat .v{font-size:17px;font-weight:800;color:var(--wj-deep);margin-top:3px}
+  .stat .v small{font-size:12px;font-weight:600;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,49,90,.04)}
+  table{width:100%;border-collapse:collapse;font-size:12.8px;background:#fff;border-radius:10px;overflow:hidden}
+  th,td{border:1px solid var(--line2);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:var(--soft);color:var(--wj-deep);font-weight:700}
+  td.c,th.c{text-align:center}
+  tr:nth-child(even) td{background:#fbfdff}
+  tfoot td{background:#eef5fb;font-weight:800;color:var(--wj-deep)}
+  .mm th,.mm td{padding:6px 6px;font-size:12px}
+  .mm td.r{font-weight:600}
+  .mm .grp{background:#eaf4fb;font-weight:800;color:var(--wj-deep)}
+  .mm .tot{font-weight:800;color:var(--wj-deep);background:#f4f9fd}
+  .tag{display:inline-block;padding:1.5px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .t-ok{background:#e3f6ec;color:var(--ok)} .t-chk{background:#fff2dc;color:#b9760a} .t-ex{background:#fbe6e6;color:var(--high)}
+  .t-1{background:#e1f2fb;color:#0a6ea0} .t-2{background:#e6ebf5;color:var(--wj-deep)} .t-both{background:#e9f7ef;color:var(--ok)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:6px;font-size:11px;font-weight:800;color:#fff}
+  .p-high{background:var(--high)} .p-mid{background:var(--mid)} .p-low{background:var(--low)}
+  .msg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:8px}
+  .msg .m{border:1px solid var(--line2);border-radius:10px;padding:12px 14px;background:#fff}
+  .msg .m.adv{border-left:4px solid var(--ok)} .msg .m.risk{border-left:4px solid var(--high)}
+  .msg .m .lab{font-size:11px;font-weight:800;letter-spacing:.04em}
+  .msg .m.adv .lab{color:var(--ok)} .msg .m.risk .lab{color:var(--high)}
+  /* gantt */
+  .gantt{overflow-x:auto;border:1px solid var(--line2);border-radius:10px;background:#fff;margin-top:8px}
+  .gantt table{border-radius:0;font-size:11.5px}
+  .gantt th,.gantt td{text-align:center;padding:5px 4px;border-color:#eef2f7}
+  .gantt th.task,.gantt td.task{text-align:left;white-space:nowrap;font-weight:600;min-width:210px;position:sticky;left:0;background:#fff;z-index:2}
+  .gantt th.task{background:var(--soft)}
+  .gantt .mhead{background:var(--wj-deep);color:#fff;font-weight:700}
+  .bar{height:15px;border-radius:4px;display:block}
+  .b-an{background:#7c9bd1} .b-de{background:#34b3e6} .b-dev{background:#1f6fb2} .b-test{background:#46c08a} .b-crit{background:#d64545} .b-tbd{background:repeating-linear-gradient(45deg,#c3cdd9,#c3cdd9 5px,#d9e0e8 5px,#d9e0e8 10px)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11.5px;color:var(--muted)}
+  .legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+  ul.q{margin:6px 0 0;padding-left:18px;font-size:12.8px} ul.q li{margin:3px 0}
+  .foot{margin-top:30px;font-size:12px;color:var(--muted);border-top:1px dashed var(--line2);padding-top:14px}
+  .chkrow .v-ok{color:var(--ok);font-weight:800}.chkrow .v-w{color:var(--warn);font-weight:800}.chkrow .v-x{color:var(--high);font-weight:800}
+  code{background:#eef2f7;padding:1px 5px;border-radius:4px;font-size:11.5px;color:#b9760a;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="ey">가견적 · 투입공수 · 일정 기초 산정서 (RRD 초안)</div>
+    <h1>웅진프리드라이프 신규 다이렉트 플랫폼 구축 및 홈페이지 리뉴얼</h1>
+    <div class="sub">1안(대표홈페이지 리뉴얼 + 다이렉트 상품 가입프로세스) · 2안(다이렉트 상품소개 및 가입프로세스) 택일 산정 / 반응형웹 · 금액 보류 · MM·일정 중심</div>
+    <div class="meta"><span>작성일 2026-06-10</span><span>버전 v0.4 (1안/2안 개정)</span><span>수신 웅진프리드라이프</span><span>수행 이트라이브 PM팀</span></div>
+  </header>
+
+  <div class="note"><b>읽는 법.</b> 본 산정서는 <b>1안·2안 2개 구축안</b>을 택일하는 구조로 재편되었습니다. 단가·예산 미제공으로 <b>금액은 산정 보류</b>이며, 본 산정서는 <b>투입공수(MM)·일정</b> 중심입니다. 섹션 5의 MM은 <b>기획·디자인 파트 확정 투입</b> 기준이며, 퍼블리싱·개발·QA 파트는 <b>후속 산정(공란)</b>입니다. 자료에서 도출 불가능한 기술 정보는 본문에서 <code>확인 필요</code>로 표기하고 <b>섹션 9(사전 확인사항·리스크)</b>에 집약했습니다.</div>
+
+  <!-- 1 -->
+  <h2 class="sec">1. 안건 개요</h2>
+  <div class="cards">
+    <div class="stat a1"><div class="k">1안 기획·디자인 합계</div><div class="v">66.00 <small>MM</small></div></div>
+    <div class="stat a1"><div class="k">1안 PM·기획</div><div class="v">37.75 <small>MM</small></div></div>
+    <div class="stat a1"><div class="k">1안 UI/UX 디자인</div><div class="v">28.25 <small>MM</small></div></div>
+    <div class="stat a1"><div class="k">1안 기간</div><div class="v">7 <small>개월(M~M+6)</small></div></div>
+    <div class="stat a2"><div class="k">2안 기획·디자인 합계</div><div class="v">35.00 <small>MM</small></div></div>
+    <div class="stat a2"><div class="k">2안 PM·기획</div><div class="v">22.00 <small>MM</small></div></div>
+    <div class="stat a2"><div class="k">2안 UI/UX 디자인</div><div class="v">13.00 <small>MM</small></div></div>
+    <div class="stat a2"><div class="k">2안 기간</div><div class="v">6 <small>개월(M~M+5)</small></div></div>
+    <div class="stat"><div class="k">퍼블·개발·QA</div><div class="v" style="color:#b9760a">후속 산정</div></div>
+    <div class="stat"><div class="k">단가·금액</div><div class="v" style="color:#b9760a">보류</div></div>
+  </div>
+
+  <div class="grid2" style="margin-top:12px">
+    <div class="panel">
+      <h3 class="sub">구축안 정의</h3>
+      <ul class="q">
+        <li><b>1안</b> — <b>대표홈페이지 리뉴얼 + 다이렉트 상품 가입프로세스 구축</b> (반응형웹). 노후 홈페이지를 모바일 퍼스트 라이프케어 플랫폼으로 리뉴얼하고, 온라인 직접 가입·결제 완결형 다이렉트 채널을 함께 신규 구축.</li>
+        <li><b>2안</b> — <b>다이렉트 상품소개 및 가입프로세스 구축</b> (반응형웹). 대표홈페이지 리뉴얼은 제외하고, 다이렉트 <b>상품 소개 + 가입 프로세스</b> 중심으로 경량 구축.</li>
+        <li>두 안은 <b>택일</b> 구조 — 1안은 홈페이지+다이렉트 풀스코프, 2안은 다이렉트 단독 스코프.</li>
+        <li>초기 <b>다이렉트 상품 1종</b> 단독 → 이후 순차 확장. 내부 신규 ERP(TLP) 연계 전제.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 class="sub">범위 요약</h3>
+      <ul class="q">
+        <li><b>공통(1·2안)</b>: 다이렉트 사용자/관리자 페이지, 가입 프로세스, 외부 연동 5종(인증·PG·전자청약·전자서명·ERP) 연동 개발.</li>
+        <li><b>1안 추가</b>: 대표 홈페이지 리뉴얼(4대 개선), 공통영역 디자인 가이드.</li>
+        <li><b>2안 특성</b>: 다이렉트 <b>상품 소개</b> 영역 포함, 홈페이지 리뉴얼 제외.</li>
+        <li><b>제외</b>: 솔루션 라이선스·이용료, 인프라·서버, ERP 자체 개발/ERP측 API, 네이티브 앱, 콘텐츠 원본 제작, 장기 운영. <span style="color:var(--muted)">(사유 → 섹션 2-6)</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">핵심 메시지</h3>
+  <div class="msg">
+    <div class="m adv"><div class="lab">유리</div>RFP에 다이렉트 가입 10단계가 명확 → 범위 구조화 용이. 1안·2안 모두 다이렉트 코어 공통.</div>
+    <div class="m risk"><div class="lab">협상 부담</div><b>ERP(TLP) 연동이 크리티컬 패스</b> — 실연동 테스트 일정에 양 안 모두 의존. 오픈 일정 압축 리스크 High.</div>
+    <div class="m risk"><div class="lab">협상 부담</div>개발환경·연동 벤더·관리자 범위·홈페이지 화면수 등 <b>기술 기준 미제공</b> → 가정 기반 가산정. 퍼블·개발·QA 공수는 후속.</div>
+    <div class="m adv"><div class="lab">선택지</div>예산·일정 여건에 따라 <b>1안(풀스코프)/2안(다이렉트 단독)</b> 택일 — 2안은 1안 대비 기획·디자인 31 MM 경량.</div>
+  </div>
+
+  <!-- 2 -->
+  <h2 class="sec">2. 요구사항 정의 및 범위 확정</h2>
+  <h3 class="sub">2-1. 다이렉트 영역 <span class="tag t-both">1·2안 공통</span></h3>
+  <table>
+    <thead><tr><th style="width:60px">#</th><th>항목</th><th>상세</th><th style="width:170px">상태 / 적용 안</th></tr></thead>
+    <tbody>
+      <tr><td>A-1</td><td>메인 / 상품 소개</td><td>다이렉트 진입 메인, 상품 소개·핵심 CTA <span class="tag t-2">2안 상품소개 강화</span></td><td><span class="tag t-ok">수용</span></td></tr>
+      <tr><td>A-2</td><td>상품 리스트/상세</td><td>월납입금·납입횟수·총액, 구성품 팝업</td><td><span class="tag t-ok">수용</span></td></tr>
+      <tr><td>A-3</td><td>상품 비교</td><td>상품 간 보장/납입금 비교</td><td><span class="tag t-ok">수용</span></td></tr>
+      <tr><td>A-4</td><td>간편가입 10단계</td><td>상품선택→약관→정보입력→본인인증→계약확인→전자청약→전자서명→결제등록→계약생성→완료</td><td><span class="tag t-ok">수용</span></td></tr>
+      <tr><td>A-5</td><td>본인인증 연동</td><td>PASS/휴대폰/KCB·NICE</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">벤더 확인</span></td></tr>
+      <tr><td>A-6</td><td>PG 결제 연동</td><td>CMS·카드 자동결제, 결제일·자동납부</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">PG사 확인</span></td></tr>
+      <tr><td>A-7</td><td>전자청약 연동</td><td>청약서 생성·약관·문서저장</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">솔루션 확인</span></td></tr>
+      <tr><td>A-8</td><td>전자서명 연동</td><td>서명·인증값·계약 PDF</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">솔루션 확인</span></td></tr>
+      <tr><td>A-9</td><td>계약생성·ERP 연동</td><td>계약번호·저장·<b>ERP(TLP) 연동</b>·상태값</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">ERP API 확인</span></td></tr>
+      <tr><td>A-10</td><td>가입완료 안내</td><td>완료화면·계약서·알림톡/SMS/메일</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">발송 확인</span></td></tr>
+      <tr><td>A-11</td><td>FAQ·고객지원</td><td>FAQ·고객지원 페이지</td><td><span class="tag t-ok">수용</span></td></tr>
+      <tr><td>A-12~16</td><td>관리자 페이지</td><td>상품·가입현황·통계·콘텐츠(CMS)·이벤트팝업·상담메모·오류재처리·권한</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">권한정책 확인</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">2-2. 대표 홈페이지 리뉴얼 (4대 개선) <span class="tag t-1">1안 전용</span></h3>
+  <table>
+    <thead><tr><th style="width:60px">#</th><th>항목</th><th>상세</th><th style="width:170px">상태</th></tr></thead>
+    <tbody>
+      <tr><td>B-1</td><td>아름답게(비주얼)</td><td>컬러밸런스·폰트통일(또또사랑/나눔스퀘어)·메인 영상비주얼·모바일 퍼스트 UI</td><td><span class="tag t-ok">수용</span></td></tr>
+      <tr><td>B-2</td><td>액션하게(행동 UX)</td><td>고객 상황 기반 진입(미리준비/장례급함/기존회원/행사이후)·핵심 CTA</td><td><span class="tag t-ok">수용</span></td></tr>
+      <tr><td>B-3</td><td>머무르게(콘텐츠)</td><td>추모영상·메시지·1분 장례가이드·추모관 고도화·이용후기</td><td><span class="tag t-ok">수용(개발)</span> <span class="tag t-ex">콘텐츠 원본 제외</span></td></tr>
+      <tr><td>B-4</td><td>AI로 쉽게</td><td>AI 검색최적화(GEO)·AI 추천·빠른 검색/문의</td><td><span class="tag t-ok">수용</span> <span class="tag t-chk">AI 방식 확인</span></td></tr>
+      <tr><td>B-5</td><td>회원/마이페이지</td><td>납입조회·회원정보·가입상품조회·예약</td><td><span class="tag t-chk">이관/재구축 범위 확인</span></td></tr>
+      <tr><td>B-6</td><td>정보/미디어</td><td>회사소개·장례정보·미디어룸·공지/이벤트</td><td><span class="tag t-chk">화면수 확인</span></td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:11.5px;color:var(--muted);margin-top:6px">※ 2안 선택 시 B-1~B-6(대표 홈페이지 리뉴얼) 전 항목 제외. 다이렉트 상품소개·가입 프로세스만 구축.</div>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel">
+      <h3 class="sub">2-4. 실 작업 추정 화면본수 (반응형 1본 기준)</h3>
+      <table>
+        <thead><tr><th>구분</th><th>영역</th><th class="c">추정본수</th></tr></thead>
+        <tbody>
+          <tr><td>공통</td><td>다이렉트 사용자(메인·상품소개·가입·완료·FAQ)</td><td class="c">15~16</td></tr>
+          <tr><td>공통</td><td>다이렉트 관리자</td><td class="c">10~12</td></tr>
+          <tr><td>1안</td><td>홈페이지 메인·상황별·상품·라이프서비스</td><td class="c">12~15</td></tr>
+          <tr><td>1안</td><td>장례정보·추모·미디어·고객센터·MY <span class="tag t-chk">확인</span></td><td class="c">25~35</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2">1안 합계 (공통+홈페이지)</td><td class="c">62~78</td></tr>
+          <tr><td colspan="2">2안 합계 (공통만)</td><td class="c">25~28</td></tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="panel">
+      <h3 class="sub">2-6. 본 견적 범위 밖 (Out of Scope)</h3>
+      <table>
+        <thead><tr><th>제외 항목</th><th>사유</th></tr></thead>
+        <tbody>
+          <tr><td>솔루션 라이선스·이용료</td><td>제3자 유료, 고객 직접 계약</td></tr>
+          <tr><td>인프라·서버·도메인·SSL</td><td>환경 미정, 통상 고객 제공</td></tr>
+          <tr><td><b>ERP(TLP) 개발·ERP측 API</b></td><td>웅진/별도 SI 영역. 다이렉트측 연동만 포함</td></tr>
+          <tr><td>네이티브 앱 신규</td><td>RFP 웹 기반. APP은 2단계 중장기</td></tr>
+          <tr><td>콘텐츠 원본 제작</td><td>기획·촬영·편집 별도. 게시 기능만</td></tr>
+          <tr><td>장기 운영·유지보수</td><td>별도 계약</td></tr>
+          <tr><td>대량 데이터 마이그레이션</td><td>범위·데이터량 미정</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <h2 class="sec">3. 대응 전략 및 R&R 매트릭스</h2>
+  <div class="grid2">
+    <div class="panel">
+      <h3 class="sub">3-1. 핵심 가정</h3>
+      <ul class="q">
+        <li>개발 스택 미제공 — 신규 다이렉트는 <b>반응형 단일 소스</b> 가정 (AS-IS는 JAVA·PC/Mobile 분리). <code>확인 필요</code></li>
+        <li>다이렉트·홈페이지 <b>서버/소스 분리</b> 여부 미정. 1안은 통합, 2안은 다이렉트 단독.</li>
+        <li>인프라·발송 인프라 <b>고객사 제공</b> 가정.</li>
+        <li>연동 5종 <b>표준 API</b> 가정. ERP(TLP)를 회원/계약 마스터로 가정.</li>
+        <li>'대명 유사'는 <b>프로세스/기능 구조 참조</b>로 해석(소스 재사용 불가).</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 class="sub">3-2. 연동 흐름 (1·2안 공통)</h3>
+      <table>
+        <thead><tr><th>연동</th><th>책임</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>본인인증</td><td>벤더+수행사</td><td>벤더 확인</td></tr>
+          <tr><td>PG 결제</td><td>PG+수행사</td><td>CMS·카드</td></tr>
+          <tr><td>전자청약</td><td>솔루션+수행사</td><td>확인</td></tr>
+          <tr><td>전자서명</td><td>솔루션+수행사</td><td>확인</td></tr>
+          <tr><td><b>ERP(TLP)</b></td><td>웅진/SI+수행사</td><td><b>스펙·일정 확인</b></td></tr>
+          <tr><td>알림 발송</td><td>발송사+수행사</td><td>채널 확인</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3 class="sub">3-3. 책임 분리 (R&R)</h3>
+  <table>
+    <thead><tr><th>영역</th><th class="c">고객사</th><th class="c">제3자</th><th class="c">수행사</th></tr></thead>
+    <tbody>
+      <tr><td>요건 확정·의사결정</td><td class="c">● 주관</td><td class="c">-</td><td class="c">● 지원</td></tr>
+      <tr><td>디자인·UX / 화면·기능 개발</td><td class="c">● 컨펌</td><td class="c">-</td><td class="c">● 설계·개발</td></tr>
+      <tr><td>인증/PG/전자청약/전자서명</td><td class="c">● 계약·비용</td><td class="c">● API 제공</td><td class="c">● 연동 개발</td></tr>
+      <tr><td>ERP(TLP)</td><td class="c">● 주관·일정</td><td class="c">● API 개발</td><td class="c">● 연동 개발</td></tr>
+      <tr><td>인프라·서버·도메인</td><td class="c">● 제공·운영</td><td class="c">(호스팅)</td><td class="c">● 배포지원 <span class="tag t-chk">합의</span></td></tr>
+      <tr><td>콘텐츠(영상·추모·문구)</td><td class="c">● 원본</td><td class="c">(제작사)</td><td class="c">● 게시 기능</td></tr>
+      <tr><td>데이터 마이그레이션</td><td class="c">● 데이터</td><td class="c">(매스티지 협조)</td><td class="c">● 이관개발 <span class="tag t-chk">합의</span></td></tr>
+      <tr><td>운영·유지보수</td><td class="c">● 주관</td><td class="c">-</td><td class="c">● 별도계약 <span class="tag t-chk">합의</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- 4 -->
+  <h2 class="sec">4. 영향도 분석</h2>
+  <table>
+    <thead><tr><th>대상</th><th class="c">영향</th><th>회귀 테스트 범위</th><th class="c" style="width:90px">적용 안</th></tr></thead>
+    <tbody>
+      <tr><td>신규 다이렉트 플랫폼</td><td class="c">신규</td><td>전체 신규 테스트 (독립 구축)</td><td class="c"><span class="tag t-both">1·2안</span></td></tr>
+      <tr><td>AS-IS 홈페이지</td><td class="c"><span class="pill p-high">주요</span></td><td>전 영역 리뉴얼 검증</td><td class="c"><span class="tag t-1">1안</span></td></tr>
+      <tr><td>AS-IS 회원/조회</td><td class="c"><span class="pill p-high">주요</span></td><td>납입조회·회원정보·예약 회귀 <span class="tag t-chk">범위 확인</span></td><td class="c"><span class="tag t-1">1안</span></td></tr>
+      <tr><td>디지털 추모관</td><td class="c"><span class="pill p-mid">최소~주요</span></td><td>고도화 검증 (재사용 여부 확인)</td><td class="c"><span class="tag t-1">1안</span></td></tr>
+      <tr><td>ERP(TLP)</td><td class="c"><span class="pill p-high">주요(외부)</span></td><td>연동 인터페이스 검증 (오픈 후 실연동)</td><td class="c"><span class="tag t-both">1·2안</span></td></tr>
+      <tr><td>인증/결제</td><td class="c"><span class="pill p-low">최소</span></td><td>연동 스모크 테스트</td><td class="c"><span class="tag t-both">1·2안</span></td></tr>
+    </tbody>
+  </table>
+  <div class="note" style="background:#eef5fb;border-color:#cfe2f3;color:#1B3A6B"><b>핵심.</b> 다이렉트는 신규 구축으로 AS-IS 부담 최소(1·2안 공통). <b>1안</b>은 홈페이지 리뉴얼로 전 영역 영향 + AS-IS 자산(회원·추모) 연계 범위에 따라 공수 변동 폭이 큼 → <b>홈페이지 범위 확정이 1안 공수의 최대 변수</b>. <b>2안</b>은 다이렉트 단독으로 영향도·변동성이 작음. (소스 구조·DB 스키마·재사용 모듈은 <code>착수 후 분석 예정</code>)</div>
+
+  <!-- 5 -->
+  <h2 class="sec">5. 투입공수 산정 (견적 상세내역)</h2>
+  <div class="note" style="background:#eef5fb;border-color:#cfe2f3;color:#1B3A6B">1 MM = 1인 1개월(약 20인일). M = 착수월 기준 상대 월 표기(M, M+1 …). <b>금액은 단가 미제공으로 보류.</b></div>
+  <div class="note"><b>개정 v0.4.</b> 기획·디자인 파트 투입공수를 <b>1안·2안 견적상세내역 기준</b>으로 재작성(첨부 산정표 반영). <b>1안 = 대표홈페이지 + 다이렉트(7개월, M~M+6)</b>, <b>2안 = 다이렉트 상품소개·가입(6개월, M~M+5)</b>. 퍼블리싱·개발(프론트/백·연동)·QA 파트는 <b>후속 산정</b>. ※ 공수·금액 수치는 산정표 기준으로 임의 변경하지 않음.</div>
+
+  <!-- 5-1 1안 -->
+  <h3 class="sub"><span class="plan">1안</span>대표홈페이지 리뉴얼 + 다이렉트 상품 가입프로세스 구축 (반응형웹)</h3>
+  <div class="panel" style="padding:14px 16px">
+    <table class="mm">
+      <thead>
+        <tr><th>구분</th><th>역할</th><th>업무</th><th class="c" style="width:48px">등급</th>
+        <th class="c">M</th><th class="c">M+1</th><th class="c">M+2</th><th class="c">M+3</th><th class="c">M+4</th><th class="c">M+5</th><th class="c">M+6</th><th class="c" style="width:54px">Total</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="6" class="grp">PM / 기획</td><td>PM</td><td>프로젝트 총괄관리</td><td class="c">고급</td>
+          <td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c tot">7.00</td></tr>
+        <tr><td>기획PL</td><td>다이렉트 상품가입 — 서비스 정책 및 공통영역 정의, 일정/품질관리, QA</td><td class="c">고급</td>
+          <td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c tot">7.00</td></tr>
+        <tr><td>기획PA</td><td>다이렉트 상품가입 — 상품가입 프로세스 상세설계 및 QA</td><td class="c">고급</td>
+          <td class="c">·</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.75</td><td class="c tot">5.75</td></tr>
+        <tr><td>기획PA</td><td>다이렉트 상품가입 — 상품가입 프로세스 상세설계 및 QA</td><td class="c">초급</td>
+          <td class="c">·</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.50</td><td class="c tot">5.50</td></tr>
+        <tr><td>기획PL</td><td>대표 홈페이지 — 공통영역 정의 및 대표 홈페이지 상세설계 및 QA</td><td class="c">중급</td>
+          <td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c tot">7.00</td></tr>
+        <tr><td>기획PA</td><td>대표 홈페이지 — 대표 홈페이지 상세설계 및 QA</td><td class="c">초급</td>
+          <td class="c">·</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.50</td><td class="c tot">5.50</td></tr>
+        <tr class="tot"><td colspan="4" class="c">PM·기획 소계</td><td class="c">3.00</td><td class="c">6.00</td><td class="c">6.00</td><td class="c">6.00</td><td class="c">6.00</td><td class="c">6.00</td><td class="c">4.75</td><td class="c">37.75</td></tr>
+
+        <tr><td rowspan="5" class="grp">UI/UX 디자인</td><td>UI/UX</td><td>공통가이드 — 공통영역 디자인</td><td class="c">고급</td>
+          <td class="c">0.50</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.75</td><td class="c tot">6.25</td></tr>
+        <tr><td>UI/UX</td><td>다이렉트 상품가입 — 상품가입 프로세스 상세디자인</td><td class="c">중급</td>
+          <td class="c">0.50</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.50</td><td class="c tot">6.00</td></tr>
+        <tr><td>UI/UX</td><td>다이렉트 상품가입 — 상품가입 프로세스 상세디자인</td><td class="c">중급</td>
+          <td class="c">·</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">·</td><td class="c tot">5.00</td></tr>
+        <tr><td>UI/UX</td><td>대표 홈페이지 — 공통영역 및 대표 홈페이지 상세디자인</td><td class="c">고급</td>
+          <td class="c">0.50</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.50</td><td class="c tot">6.00</td></tr>
+        <tr><td>UI/UX</td><td>대표 홈페이지 — 대표 홈페이지 상세디자인</td><td class="c">중급</td>
+          <td class="c">·</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">·</td><td class="c tot">5.00</td></tr>
+        <tr class="tot"><td colspan="4" class="c">UI/UX 디자인 소계</td><td class="c">1.50</td><td class="c">5.00</td><td class="c">5.00</td><td class="c">5.00</td><td class="c">5.00</td><td class="c">5.00</td><td class="c">1.75</td><td class="c">28.25</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td colspan="4" class="c">1안 기획·디자인 합계</td><td class="c">4.50</td><td class="c">11.00</td><td class="c">11.00</td><td class="c">11.00</td><td class="c">11.00</td><td class="c">11.00</td><td class="c">6.50</td><td class="c">66.00</td></tr>
+      </tfoot>
+    </table>
+    <div style="font-size:11.5px;color:var(--muted);margin-top:6px">퍼블리싱·개발(프론트/백·연동)·QA 파트는 후속 산정(공란). 화면본수·연동 스펙 확정 후 추가 반영.</div>
+  </div>
+
+  <!-- 5-2 2안 -->
+  <h3 class="sub" style="margin-top:22px"><span class="plan p2">2안</span>다이렉트 상품소개 및 가입프로세스 구축 (반응형웹)</h3>
+  <div class="panel" style="padding:14px 16px">
+    <table class="mm">
+      <thead>
+        <tr><th>구분</th><th>역할</th><th>업무</th><th class="c" style="width:48px">등급</th>
+        <th class="c">M</th><th class="c">M+1</th><th class="c">M+2</th><th class="c">M+3</th><th class="c">M+4</th><th class="c">M+5</th><th class="c" style="width:54px">Total</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="4" class="grp">PM / 기획</td><td>PM</td><td>프로젝트 총괄관리</td><td class="c">고급</td>
+          <td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c tot">6.00</td></tr>
+        <tr><td>기획PL</td><td>다이렉트 상품가입 — 서비스 정책 및 공통영역 정의, 일정/품질관리, QA</td><td class="c">고급</td>
+          <td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c tot">6.00</td></tr>
+        <tr><td>기획PA</td><td>다이렉트 상품가입 — 상품 소개, 가입 프로세스 상세설계 및 QA</td><td class="c">고급</td>
+          <td class="c">0.75</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c tot">5.75</td></tr>
+        <tr><td>기획PA</td><td>다이렉트 상품가입 — 상품 소개, 가입 프로세스 상세설계 및 QA</td><td class="c">초급</td>
+          <td class="c">·</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.75</td><td class="c">1.00</td><td class="c">0.50</td><td class="c tot">4.25</td></tr>
+        <tr class="tot"><td colspan="4" class="c">PM·기획 소계</td><td class="c">2.75</td><td class="c">4.00</td><td class="c">4.00</td><td class="c">3.75</td><td class="c">4.00</td><td class="c">3.50</td><td class="c">22.00</td></tr>
+
+        <tr><td rowspan="3" class="grp">UI/UX 디자인</td><td>UI/UX</td><td>공통가이드 — 공통영역 디자인</td><td class="c">고급</td>
+          <td class="c">0.50</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c tot">5.50</td></tr>
+        <tr><td>UI/UX</td><td>다이렉트 상품가입 — 상품가입 프로세스 상세디자인</td><td class="c">중급</td>
+          <td class="c">0.50</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">0.50</td><td class="c tot">5.00</td></tr>
+        <tr><td>UI/UX</td><td>다이렉트 상품가입 — 상품가입 프로세스 상세디자인</td><td class="c">초급</td>
+          <td class="c">0.50</td><td class="c">1.00</td><td class="c">1.00</td><td class="c">·</td><td class="c">·</td><td class="c">·</td><td class="c tot">2.50</td></tr>
+        <tr class="tot"><td colspan="4" class="c">UI/UX 디자인 소계</td><td class="c">1.50</td><td class="c">3.00</td><td class="c">3.00</td><td class="c">2.00</td><td class="c">2.00</td><td class="c">1.50</td><td class="c">13.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td colspan="4" class="c">2안 기획·디자인 합계</td><td class="c">4.25</td><td class="c">7.00</td><td class="c">7.00</td><td class="c">5.75</td><td class="c">6.00</td><td class="c">5.00</td><td class="c">35.00</td></tr>
+      </tfoot>
+    </table>
+    <div style="font-size:11.5px;color:var(--muted);margin-top:6px">대표 홈페이지 리뉴얼 미포함. 다이렉트 상품소개·가입 프로세스 중심. 퍼블리싱·개발·QA 파트는 후속 산정(공란).</div>
+  </div>
+
+  <!-- 5-3 비교 -->
+  <h3 class="sub">5-3. 1안 vs 2안 비교 요약 (기획·디자인 MM)</h3>
+  <div class="grid2">
+    <div class="panel">
+      <table>
+        <thead><tr><th>구분</th><th class="c">1안</th><th class="c">2안</th><th class="c">차이</th></tr></thead>
+        <tbody>
+          <tr><td>PM·기획</td><td class="c">37.75</td><td class="c">22.00</td><td class="c">-15.75</td></tr>
+          <tr><td>UI/UX 디자인</td><td class="c">28.25</td><td class="c">13.00</td><td class="c">-15.25</td></tr>
+          <tr><td>기간(개월)</td><td class="c">7</td><td class="c">6</td><td class="c">-1</td></tr>
+        </tbody>
+        <tfoot><tr><td>합계 (기획+디자인)</td><td class="c">66.00</td><td class="c">35.00</td><td class="c">-31.00</td></tr></tfoot>
+      </table>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:6px">퍼블·개발·QA 제외 기준. 2안은 대표 홈페이지 리뉴얼 제외로 1안 대비 기획·디자인 31 MM 경량.</div>
+    </div>
+    <div class="panel">
+      <h3 class="sub" style="margin-top:0">선택 가이드</h3>
+      <ul class="q">
+        <li><b>1안</b>: 홈페이지 비주얼 혁신 + 다이렉트 채널을 <b>동시 확보</b>하려는 경우. 풀스코프·전사 브랜드 리뉴얼 지향.</li>
+        <li><b>2안</b>: 예산·일정 우선, <b>다이렉트 가입 채널 우선 오픈</b> 후 홈페이지는 후속 단계로 분리하려는 경우.</li>
+        <li>두 안 모두 다이렉트 코어(가입 10단계·연동 5종)는 동일 → <b>2안 후 1안 확장</b> 전환도 가능.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <h2 class="sec">6. 역할·단계별 업무 매트릭스</h2>
+  <table>
+    <thead><tr><th>역할</th><th>분석</th><th>설계</th><th>개발</th><th>테스트</th><th>안정화</th></tr></thead>
+    <tbody>
+      <tr><td><b>PM</b></td><td>요건정의·범위·일정</td><td>산출물표준·R&R</td><td>진척·연동 일정관리</td><td>검수조율·UAT</td><td>오픈대응·인수인계</td></tr>
+      <tr><td><b>기획/QA</b></td><td>요구분석·IA·프로세스</td><td>화면설계서·정책·시나리오</td><td>정책QA·기능검증</td><td>통합/회귀·결함관리</td><td>안정화검증·매뉴얼</td></tr>
+      <tr><td><b>디자인</b></td><td>벤치마크·톤앤매너</td><td>디자인시스템·키비주얼</td><td>전화면·반응형</td><td>디자인QA</td><td>미세보정</td></tr>
+      <tr><td><b>퍼블리셔</b> <span class="tag t-chk">후속</span></td><td>-</td><td>마크업가이드·컴포넌트</td><td>반응형 퍼블·인터랙션</td><td>크로스브라우징</td><td>보정</td></tr>
+      <tr><td><b>개발-프론트</b> <span class="tag t-chk">후속</span></td><td>기술검토</td><td>화면/상태 설계</td><td>가입UX·CMS·AI추천</td><td>단위/통합</td><td>핫픽스</td></tr>
+      <tr><td><b>개발-백/연동</b> <span class="tag t-chk">후속</span></td><td>연동 스펙검토</td><td>API/DB설계</td><td>인증·PG·청약·서명·ERP</td><td>연동/통합</td><td>모니터링·안정화</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:11.5px;color:var(--muted);margin-top:6px">※ 섹션 5 MM은 PM·기획·디자인 확정분. 퍼블리셔·개발 파트는 후속 산정 대상.</div>
+
+  <!-- 7 + 8 -->
+  <h2 class="sec">7~8. WBS · 주 단위 간트</h2>
+  <div class="note" style="background:#fbe9e9;border-color:#f0bcbc;color:#9a2b2b"><b>크리티컬 패스.</b> 연동 스펙 수령 → 연동 개발 → <b>ERP(TLP) 연동</b> → 통합 테스트 → 오픈. ERP API 제공·테스트 환경 시점이 오픈 일정을 좌우(1·2안 공통). 주차는 착수월(M) 기준 상대 주차이며, 퍼블·개발·QA(<b>후속 산정</b>) 라인은 잠정 배치입니다.</div>
+
+  <h3 class="sub"><span class="plan">1안</span>대표홈페이지 + 다이렉트 (7개월 / 약 28주)</h3>
+  <div class="gantt" id="gantt1"></div>
+
+  <h3 class="sub" style="margin-top:18px"><span class="plan p2">2안</span>다이렉트 상품소개·가입 (6개월 / 약 24주)</h3>
+  <div class="gantt" id="gantt2"></div>
+
+  <div class="legend">
+    <span><i class="b-an"></i>분석·설계(기획)</span>
+    <span><i class="b-de"></i>디자인</span>
+    <span><i class="b-dev"></i>개발·연동(후속)</span>
+    <span><i class="b-test"></i>테스트·안정화</span>
+    <span><i class="b-crit"></i>크리티컬(ERP)</span>
+    <span><i class="b-tbd"></i>후속 산정(공수 미확정)</span>
+  </div>
+
+  <!-- 9 -->
+  <h2 class="sec">9. 사전 확인 사항 및 리스크</h2>
+  <div class="grid2">
+    <div class="panel">
+      <h3 class="sub">A. 작업 범위</h3>
+      <ul class="q">
+        <li><b>1안/2안 택일 확정</b> — 홈페이지 리뉴얼 포함 여부?</li>
+        <li>(1안) 홈페이지 범위: 전 영역 vs 비주얼 우선? 정확 화면수?</li>
+        <li>(1안) 마이페이지/회원조회: 이관 vs 재구축 vs 신규?</li>
+        <li>관리자 상세 범위(권한·통계·오류 재처리)?</li>
+        <li>콘텐츠 원본 제작 포함 여부(현재 제외 가정)?</li>
+        <li>데이터 마이그레이션 범위·주체(36만 회원)?</li>
+        <li>다이렉트 상품 수(초기 1종 확정?)·확장 구조?</li>
+      </ul>
+      <h3 class="sub">C. 환경·일정</h3>
+      <ul class="q">
+        <li>계약/착수일(M 기준일)·다이렉트 오픈 목표 일자?</li>
+        <li>(1안) 홈페이지 오픈 목표일?</li>
+        <li>개발/테스트 서버 제공 주체·시점?</li>
+        <li>작업 방식(상주/비상주)?</li>
+        <li><b>ERP(TLP) 제공 시점 지연 시</b> 다이렉트 영향 시나리오?</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 class="sub">B. 기술·구조</h3>
+      <ul class="q">
+        <li>개발 언어/프레임워크(신규 지정? JAVA 승계?)</li>
+        <li>다이렉트·홈페이지 서버/소스 분리?</li>
+        <li><b>인증·PG·전자청약·전자서명 벤더·API</b> 확정·제공 시점?</li>
+        <li><b>ERP(TLP) API 스펙·제공·테스트 환경?</b></li>
+        <li>알림 발송사·계정? / AI 추천·검색 방식(자체 vs 솔루션)?</li>
+        <li>회원 마스터 주체(ERP vs 플랫폼)? 트래픽 목표치?</li>
+      </ul>
+      <h3 class="sub">D. 견적·공수</h3>
+      <ul class="q">
+        <li>직급별 월단가(미제공 → 금액 보류)</li>
+        <li><b>퍼블리싱·개발·QA 파트 투입 산정 기준</b>(현재 후속)</li>
+        <li>오픈 후 안정화 기간·범위?</li>
+        <li>유지보수 조건·비용(별도 협의)?</li>
+        <li>레퍼런스 2~3건(대명 포함) 제출 — 고객 요청사항</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">9-2. 리스크 매트릭스</h3>
+  <table>
+    <thead><tr><th class="c" style="width:70px">등급</th><th>항목</th><th>대응 방안</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><span class="pill p-high">High</span></td><td>ERP(TLP) 연동 제공 시점 의존 → 오픈 버퍼 부족(1·2안 공통)</td><td>TLP API 조기 제공 또는 Mock 선개발, 오픈일 조정 옵션 명시 합의</td></tr>
+      <tr><td class="c"><span class="pill p-high">High</span></td><td>(1안) 홈페이지 범위·화면수 미확정 → 공수 변동 큼</td><td>범위 확정 워크숍, 비주얼 우선 phased 합의 또는 2안 전환 검토</td></tr>
+      <tr><td class="c"><span class="pill p-high">High</span></td><td>외부 연동 5종 벤더·스펙 미확정</td><td>벤더 확정·스펙 수령 M 내 완료 전제 명문화</td></tr>
+      <tr><td class="c"><span class="pill p-mid">Mid</span></td><td>퍼블·개발·QA 공수 미산정 → 총 MM·금액 변동</td><td>화면본수·연동 스펙 확정 후 후속 산정, SOW 명문화</td></tr>
+      <tr><td class="c"><span class="pill p-mid">Mid</span></td><td>개발환경/언어/인프라 미정</td><td>착수 전 기술 기준 확정, SOW 명문화</td></tr>
+      <tr><td class="c"><span class="pill p-mid">Mid</span></td><td>데이터 마이그레이션 범위 불명</td><td>범위·주체 합의, 별도 산정</td></tr>
+      <tr><td class="c"><span class="pill p-low">Low</span></td><td>콘텐츠 원본 제작 책임 경계 / 브라우저 지원 범위</td><td>제외 명시, 게시 기능만 / 지원 기준 확인</td></tr>
+    </tbody>
+  </table>
+
+  <!-- self check -->
+  <h2 class="sec">자기 검증 체크리스트</h2>
+  <table class="chkrow">
+    <thead><tr><th class="c" style="width:36px">#</th><th>검증 항목</th><th>판정 기준</th><th class="c" style="width:90px">결과</th></tr></thead>
+    <tbody>
+      <tr><td class="c">1</td><td>요구사항 커버리지</td><td>RFP 사용자/관리자·4대 개선이 섹션2 반영(안별 구분)</td><td class="c"><span class="v-ok">통과</span></td></tr>
+      <tr><td class="c">2</td><td>공수 정합성</td><td>섹션5 1안 66.00 / 2안 35.00 ↔ 산정표 소계·합계 일치</td><td class="c"><span class="v-ok">통과</span></td></tr>
+      <tr><td class="c">3</td><td>파트 완결성</td><td>PM·기획·디자인 확정, 퍼블·개발·QA 후속 명시</td><td class="c"><span class="v-w">후속필요</span></td></tr>
+      <tr><td class="c">4</td><td>일정 실현성</td><td>오픈 역산 버퍼 존재</td><td class="c"><span class="v-x">미충족</span></td></tr>
+      <tr><td class="c">5</td><td>확인사항 반영</td><td>확인 필요 전수 섹션9 반영(1안/2안 택일 포함)</td><td class="c"><span class="v-ok">통과</span></td></tr>
+      <tr><td class="c">6</td><td>범위 밖 명확성</td><td>제외 항목 사유 기술</td><td class="c"><span class="v-ok">통과</span></td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>3번 후속필요</b>: 섹션5 MM은 기획·디자인 확정분이며 퍼블·개발·QA는 화면본수·연동 스펙 확정 후 산정. <b>4번 미충족</b>: ERP 제공 시점 의존으로 오픈 버퍼 부족 → 조기 연동/오픈일 조정으로 개선.</div>
+
+  <div class="foot">
+    본 문서는 범위·기술 기준 정보 미확정 상태의 <b>가산정(개정 v0.4)</b>입니다. 섹션 5 MM은 첨부 견적상세내역(1안/2안)의 <b>기획·디자인 파트</b> 기준이며, 확정 견적은 ① 1안/2안 택일 ② 홈페이지 범위(1안) ③ 연동 벤더·ERP 스펙 ④ 퍼블·개발·QA 파트 ⑤ 단가 기준 ⑥ 착수/오픈일 확정 후 재산정합니다. · 출처: RFP(다이렉트 가입 플랫폼 구축), 홈페이지 리뉴얼 전략 자료, 현업 견적요청 메일, 견적상세내역(1안/2안), AS-IS(www.wjpreedlife.com).
+  </div>
+</div>
+
+<script>
+// ---- Weekly Gantt builder (1안 / 2안 분리) ----
+// months: [{m:'M', w:['1','2','3','4']}, ...]  /  rows: {t, s(주 인덱스 0-base), l(주 길이), c(클래스)}
+function buildGantt(elId, months, rows){
+  const flat=[]; months.forEach(mo=>mo.w.forEach(wk=>flat.push(wk)));
+  const N=flat.length;
+  let html='<table><thead><tr><th class="task">작업 / 주차</th>';
+  months.forEach(mo=>{html+=`<th class="mhead" colspan="${mo.w.length}">${mo.m}</th>`;});
+  html+='</tr><tr><th class="task"></th>';
+  flat.forEach(wk=>{html+=`<th>${wk}</th>`;});
+  html+='</tr></thead><tbody>';
+  rows.forEach(r=>{
+    html+=`<tr><td class="task">${r.t}</td>`;
+    for(let i=0;i<N;i++){
+      if(i===r.s){ html+=`<td colspan="${r.l}"><span class="bar ${r.c}"></span></td>`; i+=r.l-1; }
+      else{ html+='<td></td>'; }
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById(elId).innerHTML=html;
+}
+
+// ===== 1안: 7개월 × 4주 = 28주 (대표홈페이지 + 다이렉트) =====
+const months1=[
+  {m:'M(M1)',  w:['1','2','3','4']},
+  {m:'M+1',w:['1','2','3','4']},
+  {m:'M+2',w:['1','2','3','4']},
+  {m:'M+3',w:['1','2','3','4']},
+  {m:'M+4',w:['1','2','3','4']},
+  {m:'M+5',w:['1','2','3','4']},
+  {m:'M+6',w:['1','2','3','4']}
+];
+const rows1=[
+  {t:'킥오프·요건 확정', s:0,l:2,c:'b-an'},
+  {t:'IA·프로세스·서비스 정책(기획)', s:0,l:8,c:'b-an'},
+  {t:'다이렉트 가입 화면설계(기획)', s:2,l:18,c:'b-an'},
+  {t:'대표 홈페이지 화면설계(기획) [1안]', s:2,l:20,c:'b-an'},
+  {t:'공통 디자인 가이드', s:2,l:8,c:'b-de'},
+  {t:'다이렉트 가입 상세디자인', s:5,l:17,c:'b-de'},
+  {t:'대표 홈페이지 상세디자인 [1안]', s:7,l:17,c:'b-de'},
+  {t:'반응형 퍼블리싱 (후속)', s:11,l:15,c:'b-tbd'},
+  {t:'가입 프로세스 개발 (후속)', s:11,l:15,c:'b-tbd'},
+  {t:'인증·PG·청약·서명 연동 (후속)', s:13,l:11,c:'b-tbd'},
+  {t:'ERP(TLP) 연동 ★ (후속)', s:19,l:7,c:'b-crit'},
+  {t:'통합·회귀 테스트 (후속)', s:23,l:4,c:'b-test'},
+  {t:'UAT·검수 / 오픈 ◆', s:27,l:1,c:'b-test'}
+];
+buildGantt('gantt1', months1, rows1);
+
+// ===== 2안: 6개월 × 4주 = 24주 (다이렉트 상품소개·가입) =====
+const months2=[
+  {m:'M(M1)',  w:['1','2','3','4']},
+  {m:'M+1',w:['1','2','3','4']},
+  {m:'M+2',w:['1','2','3','4']},
+  {m:'M+3',w:['1','2','3','4']},
+  {m:'M+4',w:['1','2','3','4']},
+  {m:'M+5',w:['1','2','3','4']}
+];
+const rows2=[
+  {t:'킥오프·요건 확정', s:0,l:2,c:'b-an'},
+  {t:'서비스 정책·공통영역 정의(기획)', s:0,l:6,c:'b-an'},
+  {t:'상품소개·가입 프로세스 화면설계(기획)', s:2,l:16,c:'b-an'},
+  {t:'공통 디자인 가이드', s:2,l:6,c:'b-de'},
+  {t:'다이렉트 상세디자인', s:4,l:14,c:'b-de'},
+  {t:'반응형 퍼블리싱 (후속)', s:8,l:14,c:'b-tbd'},
+  {t:'가입 프로세스 개발 (후속)', s:8,l:14,c:'b-tbd'},
+  {t:'인증·PG·청약·서명 연동 (후속)', s:10,l:10,c:'b-tbd'},
+  {t:'ERP(TLP) 연동 ★ (후속)', s:15,l:7,c:'b-crit'},
+  {t:'통합·회귀 테스트 (후속)', s:19,l:4,c:'b-test'},
+  {t:'UAT·검수 / 오픈 ◆', s:23,l:1,c:'b-test'}
+];
+buildGantt('gantt2', months2, rows2);
+</script>
+</body>
+</html>

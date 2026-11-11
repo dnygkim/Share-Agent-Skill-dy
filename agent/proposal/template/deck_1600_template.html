@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{사업명} 제안서 · {부문명}</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ============================================================================
+   슬라이드형 골격 B — 1600×900 스테이지 핏 덱 (HTML 이 최종 제출 포맷일 때)
+   · 1280×720 골격(base_template.html)은 하우스 스타일 미리보기용, 이 골격은
+     디자인파트/클라이언트 양식(피그마 장표 1600×900)과 1:1 로 맞춰 **제출본**을
+     HTML 로 만들 때 쓴다. GS칼텍스 홈페이지 재구축 제안(2026-09)에서 검증.
+   · 한 화면에 한 장만 보이고(.slide.active) 창 크기에 맞춰 축소된다(#stage scale).
+     ←/→·PgUp/PgDn·Home/End·Space, 터치 스와이프, F 전체화면, URL 해시 #pN.
+   · 슬라이드 종류 4가지 — cover(간지) / 일반(HTML 장표) / s-fig(피그마 벡터 SVG,
+     scripts/fig2svg.py 출력) / s-fig s-emb(발표용 HTML 을 iframe srcdoc 로 삽입).
+   · 페이지 번호는 .dfoot .pg(일반) · .figpg(벡터) · srcdoc 안 &lt;b&gt;NN&lt;/b&gt;(iframe).
+     삭제·삽입 후 재번호는 scripts/deck_edit.py 가 처리한다. 손으로 고치지 않는다.
+   · 팔레트 — 기본은 하우스 토큰(ink/paper 2톤, 강조는 반전·굵기). 디자인파트가
+     양식을 주면 아래 [양식 팔레트] 블록 주석을 풀어 그 값을 쓴다(예시 = GS칼텍스 양식).
+     박스 r=0 · 강조는 배지만 · 레드는 경고/결손에만(gscaltex-color-emphasis-rule).
+   ============================================================================ */
+:root{
+  /* [하우스 기본] 덱 이름 → house 토큰 */
+  --navy:#14130F; --navy2:#2A2823; --navy3:#56534C;
+  --blue:#14130F; --blue-d:#14130F; --blue-l:#E8E3D9; --blue-b:#D9D3C7;
+  --yellow:#E8E3D9; --red:#7A4A2C; --red-l:#F1EDE5;
+  --ink:#14130F; --ink2:#56534C; --gray:#8C887F; --gray2:#B0ACA3;
+  --line:#D9D3C7; --line2:#E6E1D7; --bg:#F1EDE5; --soft:#E8E3D9;
+  /* [양식 팔레트 예시 — 디자인파트 1600×900 양식 적용 시 위 값을 아래로 교체]
+  --navy:#1E2836; --navy2:#2B394C; --navy3:#3A4A60;
+  --blue:#0F62B5; --blue-d:#0A4A8C; --blue-l:#EAF2FB; --blue-b:#BFD8F0;
+  --yellow:#FFD24D; --red:#C0392B; --red-l:#FBEDEB;
+  --ink:#191C21; --ink2:#3D4550; --gray:#6E7681; --gray2:#9AA1AB;
+  --line:#D9DEE5; --line2:#EBEFF3; --bg:#FFFFFF; --soft:#F5F7FA;
+  */
+  --t11:11px; --t12:12px; --t13:13px; --t14:14px; --t15:15px; --t16:16px;
+  --t18:18px; --t20:20px; --t24:24px; --t28:28px; --t34:34px; --t44:44px; --t60:60px;
+  --sans:'Pretendard Variable',Pretendard,'Apple SD Gothic Neo',system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--sans);background:#DDE2E8;color:var(--ink);
+  line-height:1.5;word-break:keep-all;overflow:hidden;-webkit-font-smoothing:antialiased;letter-spacing:-.015em}
+svg.i{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block}
+
+/* ── 스테이지 1600×900 (창 크기에 맞춰 scale) ── */
+.stage{position:fixed;left:50%;top:50%;width:1600px;height:900px;transform-origin:50% 50%;
+  background:var(--bg);overflow:hidden;box-shadow:0 24px 80px -30px rgba(16,24,40,.45)}
+.deck{position:relative;width:1600px;height:900px}
+.slide{position:absolute;inset:0;padding:74px 64px 60px;opacity:0;visibility:hidden;
+  display:flex;flex-direction:column;transition:opacity .3s ease,visibility .3s}
+.slide.active{opacity:1;visibility:visible}
+
+/* ── 상단 바 (좌 목차 경로 / 우 로고 락업) ── */
+.ptop{position:absolute;top:20px;left:64px;right:64px;height:26px;
+  display:flex;align-items:center;justify-content:space-between;z-index:5}
+.crumb{display:flex;align-items:center;gap:9px;font-size:var(--t13);color:var(--gray2);letter-spacing:-.01em}
+.crumb b{font-weight:700;color:var(--ink2)}
+.crumb i{font-style:normal;color:var(--line)}
+.lockup{display:flex;align-items:center;gap:10px}
+.lockup img{display:block;width:auto}
+.lockup .lg-client{height:20px}   /* 워드마크 글자높이 기준 정렬 */
+.lockup .lg-et{height:16px}
+.lockup .x{font-size:11px;color:var(--gray2);font-weight:400;line-height:1}
+
+/* ── 슬라이드 헤더 (코드박스 + 태그라인 + 거버닝 메시지) ── */
+.shead{display:flex;align-items:stretch;gap:22px;flex:0 0 auto}
+.codebox{flex:0 0 auto;width:104px;background:var(--navy);color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 6px 14px}
+.codebox .ch{font-size:var(--t18);font-weight:600;line-height:1;opacity:.9}
+.codebox .cline{width:34px;height:1px;background:rgba(255,255,255,.5);margin:5px 0 4px}
+.codebox .cname{font-size:var(--t14);font-weight:600;letter-spacing:.02em;opacity:.92}
+.codebox .code{font-size:var(--t34);font-weight:800;letter-spacing:.01em;margin-top:7px;line-height:1}
+.htext{display:flex;flex-direction:column;justify-content:center;padding-top:2px}
+.tagline{font-size:var(--t16);color:var(--gray);font-weight:500;letter-spacing:.01em}
+.tagline b{color:var(--ink2);font-weight:600}
+.bigtitle{font-size:var(--t44);font-weight:800;letter-spacing:-.035em;line-height:1.16;color:var(--ink);margin-top:3px}
+.bigtitle .k{color:var(--blue)}
+.addbadge{display:inline-block;vertical-align:middle;margin-left:12px;background:var(--yellow);
+  color:#3A2E00;font-size:var(--t14);font-weight:700;border-radius:99px;padding:4px 14px;letter-spacing:-.01em}
+.sbody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;margin-top:24px}
+.subhead{font-size:var(--t20);font-weight:800;letter-spacing:-.025em;color:var(--ink);margin-bottom:12px}
+.subhead .k{color:var(--blue)}
+
+/* ── 푸터 (저작권 + 페이지 번호) ── */
+.dfoot{position:absolute;left:64px;right:64px;bottom:20px;display:flex;align-items:flex-end;
+  justify-content:space-between;gap:24px;font-size:9.5px;color:var(--gray2);
+  border-top:1px solid var(--line2);padding-top:8px;line-height:1.45}
+.dfoot .cr{max-width:70%}
+.dfoot .pg{font-size:var(--t12);color:var(--ink2);font-weight:700;white-space:nowrap}
+
+/* ── 간지(챕터 표지): 좌 챕터 타이틀 / 우 네이비 목차 ── */
+.slide.cover{padding:0;display:block}
+.covwrap{position:absolute;top:56px;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr 1fr}
+.covleft{padding:70px 56px 70px 64px;display:flex;flex-direction:column;justify-content:center}
+.covleft .cn3{font-size:var(--t20);color:var(--blue);font-weight:700;letter-spacing:.02em}
+.covleft .cn3 b{font-size:var(--t34);font-weight:800;margin-left:6px}
+.covleft .ct3{font-size:var(--t60);font-weight:800;letter-spacing:-.04em;line-height:1.2;margin-top:22px;color:var(--ink)}
+.covleft .ct3 .k{color:var(--blue)}
+.covright{background:var(--navy);padding:64px 56px;display:flex;flex-direction:column;justify-content:center}
+.navlist{display:flex;flex-direction:column;gap:2px;margin-bottom:26px}
+.navlist .nv{padding:11px 16px;font-size:var(--t18);font-weight:700;color:rgba(255,255,255,.34);letter-spacing:-.02em}
+.navlist .nv.on{background:var(--blue);color:#fff}
+.itemtbl{background:var(--navy);display:flex;flex-direction:column}
+.itemtbl .it2{display:grid;grid-template-columns:64px 1fr;align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.12);padding:9px 14px;color:#fff}
+.itemtbl .it2:last-child{border-bottom:0}
+.itemtbl .ic2{font-size:var(--t14);font-weight:800;color:var(--yellow);letter-spacing:.02em}
+.itemtbl .id2{font-size:var(--t15);font-weight:600;letter-spacing:-.015em}
+
+/* ── 피그마 벡터 슬라이드(s-fig): scripts/fig2svg.py 출력 ── */
+.slide.s-fig{padding:0;display:block}
+.slide.s-fig .figsvg{position:absolute;left:0;top:0;width:1600px;height:900px;display:block}
+.slide.s-fig .figpatch{position:absolute;left:1514px;top:862px;width:28px;height:20px;background:var(--bg);z-index:4} /* 피그마 쪽 페이지번호 가림 */
+.slide.s-fig .figpg{position:absolute;right:64px;top:862.6px!important;font-size:var(--t12);font-weight:700;color:var(--ink2);line-height:1.45;white-space:nowrap;z-index:5}
+.slide.s-fig .figcode{position:absolute;left:64px;top:75px;width:104px;height:117.3px;z-index:5}  /* scripts/codebox_overlay.py */
+/* 오버레이 패치 예시 — 원본 텍스트(피그마 Pretendard) 수정이 막혔을 때 같은 규격 바를 덮는다 */
+.slide.s-fig .figbar{position:absolute;height:34px;background:var(--navy2);color:#fff;font-size:14px;font-weight:700;line-height:20px;display:flex;align-items:center;justify-content:center;z-index:5}
+.slide.s-fig .figbar.on{background:var(--blue)}
+
+/* ── 발표용 HTML 삽입 슬라이드(s-emb): iframe srcdoc ── */
+.slide.s-emb{background:#000}
+.slide.s-emb .embdeck{position:absolute;left:0;top:0;width:1600px;height:900px;border:0;display:block;background:#000}
+
+/* ── 발표 모드 · 마우스 커서 ── */
+body,.stage,.stage *{cursor:default}
+body.nocursor,body.nocursor *{cursor:none !important}
+
+/* ── 인쇄(PDF): 장당 1페이지 ── */
+@media print{
+  body{overflow:visible;background:#fff}
+  .stage{position:static;transform:none!important;box-shadow:none;width:1600px;height:auto}
+  .deck{height:auto}
+  .slide{position:relative;opacity:1;visibility:visible;height:900px;page-break-after:always;break-after:page}
+  @page{size:1600px 900px;margin:0}
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+<div class="deck" id="deck">
+
+<!-- 1 · 간지 (챕터 표지) -->
+<section class="slide cover" data-part="1" data-chap="1. 제안사 소개">
+  <div class="ptop"><div class="crumb"><b>1. 제안사 소개</b></div><div class="lockup"><img class="lg-client" src="data:image/png;base64,{클라이언트_로고}" alt="{클라이언트명}"><span class="x">×</span><img class="lg-et" src="data:image/png;base64,{수주사_로고}" alt="{수주사명}"></div></div>
+  <div class="covwrap">
+    <div class="covleft">
+      <div class="cn3">Chapter <b>1</b></div>
+      <div class="ct3">{수주사명}<br><span class="k">제안사 소개</span></div>
+    </div>
+    <div class="covright">
+      <div class="navlist">
+        <div class="nv on">1. 제안사 소개</div>
+        <div class="nv">2. 프로젝트의 이해</div>
+        <div class="nv">3. 수행 방안</div>
+        <div class="nv">4. 관리 및 이행</div>
+        <div class="nv">5. 기타 제안</div>
+      </div>
+      <div class="itemtbl">
+        <div class="it2"><span class="ic2">1.1</span><span class="id2">일반 현황</span></div>
+        <div class="it2"><span class="ic2">1.2</span><span class="id2">연혁</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="dfoot"><span class="cr">© 2026 {수주사명} Inc. All rights reserved. This Document is copyrighted by {수주사명} and may not be reproduced without permission.</span><span class="pg">1</span></div>
+</section>
+
+<!-- 2 · 일반 HTML 장표 -->
+<section class="slide" data-part="1" data-chap="1.1 일반 현황">
+  <div class="ptop"><div class="crumb"><b>1. 제안사 소개</b><i>—</i><span>1.1. 일반 현황</span></div><div class="lockup"><img class="lg-client" src="data:image/png;base64,{클라이언트_로고}" alt="{클라이언트명}"><span class="x">×</span><img class="lg-et" src="data:image/png;base64,{수주사_로고}" alt="{수주사명}"></div></div>
+  <div class="shead">
+    <div class="codebox"><div class="ch">1</div><div class="cline"></div><div class="cname">일반 현황</div><div class="code">C01</div></div>
+    <div class="htext">
+      <div class="tagline">서브타이틀 — 무엇 · 범위 · 기준만</div>
+      <div class="bigtitle">거버닝 메시지 한 줄, <span class="k">핵심어 한 구절</span>만 강조</div>
+    </div>
+  </div>
+  <div class="sbody">
+    <!-- 콘텐츠 블록: design-system.md 레이아웃 패턴 중 1개. 박스 r=0, 강조는 배지·반전만 -->
+  </div>
+  <div class="dfoot"><span class="cr">© 2026 {수주사명} Inc. All rights reserved.</span><span class="pg">2</span></div>
+</section>
+
+<!-- 3 · 피그마 벡터 장표 (scripts/fig2svg.py 출력을 그대로 붙인다) -->
+<section class="slide s-fig" data-part="2" data-chap="2.2 핵심 이슈 분석">
+<svg class="figsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1600" height="900" viewBox="0 0 1600 900"><!-- fig2svg.py 가 만든 SVG 본문 --></svg> 
+  <div class="codebox figcode"><div class="ch">2</div><div class="cline"></div><div class="cname">핵심 이슈</div><div class="code">B06</div></div><span class="figpatch"></span><span class="pg figpg" style="top:865px">3</span>
+</section>
+
+<!-- 4 · 발표용 HTML 삽입 장표 (srcdoc = 발표용 HTML 전체를 HTML 이스케이프. 안쪽 푸터 번호는 &lt;b&gt;NN&lt;/b&gt; 로 두면 deck_edit.py 가 재번호) -->
+<section class="slide s-fig s-emb" data-part="3" data-chap="3.2 메인 타입A 발표용">
+<iframe class="embdeck" title="3.2 메인 타입A 발표용" srcdoc="&lt;!DOCTYPE html&gt;&lt;html lang=&quot;ko&quot;&gt;…&lt;b&gt;04&lt;/b&gt;…&lt;script&gt;document.addEventListener('keydown',function(e){var k=e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','PageDown','PageUp','Home','End'].indexOf(k)&gt;=0){e.preventDefault();e.stopImmediatePropagation();parent.postMessage({deckKey:k},'*')}},true)&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;"></iframe>
+</section>
+
+</div>
+</div>
+
+<script>
+/* 발표용 iframe: Space = 안쪽 재생/정지(toggle) · 방향키는 postMessage 로 덱에 전달 */
+document.addEventListener('keydown',function(e){var a=document.querySelector('.slide.active.s-emb');if(a&&(e.code==='Space'||e.key===' ')){e.preventDefault();e.stopImmediatePropagation();var f=a.querySelector('iframe');var w=f&&f.contentWindow;if(w&&typeof w.toggle==='function')w.toggle()}},true);
+window.addEventListener('message',function(e){if(e.data&&e.data.deckKey){var ae=document.activeElement;if(ae&&ae.tagName==='IFRAME')ae.blur();document.dispatchEvent(new KeyboardEvent('keydown',{key:e.data.deckKey}))}});
+/* 스테이지 핏 */
+(function(){var st=document.getElementById('stage');
+ function fit(){var s=Math.min(window.innerWidth/1600,window.innerHeight/900);
+  st.style.transform='translate(-50%,-50%) scale('+s+')';}
+ window.addEventListener('resize',fit);fit();})();
+/* 네비게이션: 키보드·터치·해시(#pN) */
+(function(){
+ var deck=document.getElementById('deck');
+ var S=[].slice.call(deck.querySelectorAll('.slide'));var N=S.length,i=0;
+ function go(n){n=Math.max(0,Math.min(N-1,n));
+  S.forEach(function(s,x){s.classList.toggle('active',x===n)});i=n;
+  try{location.hash='p'+(i+1)}catch(e){}}
+ document.addEventListener('keydown',function(e){
+  if(['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key)>=0){e.preventDefault();go(i+1)}
+  else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>=0){e.preventDefault();go(i-1)}
+  else if(e.key==='Home'){go(0)}else if(e.key==='End'){go(N-1)}
+  else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}});
+ var tx=0;deck.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+ deck.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-tx;
+  if(Math.abs(d)>50){d<0?go(i+1):go(i-1)}},{passive:true});
+ var ct;function hideCur(){document.body.classList.add('nocursor')}
+ function showCur(){document.body.classList.remove('nocursor');clearTimeout(ct);ct=setTimeout(hideCur,2500)}
+ ['mousemove','mousedown','wheel'].forEach(function(e){document.addEventListener(e,showCur,{passive:true})});
+ ct=setTimeout(hideCur,2500);
+ var m=(location.hash||'').match(/^#p(\d+)$/);go(m?Math.min(N,Math.max(1,+m[1]))-1:0);})();
+</script>
+</body>
+</html>

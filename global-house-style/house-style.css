@@ -1,0 +1,548 @@
+/* ============================================================================
+   하우스 스타일 (정본) — 하네스·스킬 밖 범용 HTML 산출물용
+   ----------------------------------------------------------------------------
+   기준본 : 신승-비즈니스AI플래너_권한정책매트릭스_초안(260810).html
+   갱신일 : 2026-11-10 (외부링크 아이콘 = 블랙 라인 · 투명도 제거, 본문 고유명사도 같은 a.ext 로 연결 — §22, 오너 지시)
+   이전   : 2026-10-22 (상세 텍스트 조금 크게 — 본문·표·노트·목록 글자 1px 확대, 오너 지시)
+           2026-09-17 (어절 단위 줄바꿈 keep-all · 제목 text-wrap:balance)
+           2026-08-27 (LNB 상단 정렬 · 앵커 목적지 보정)
+
+   ★ 이 파일은 특정 프로젝트 저장소가 아니라 ~/.claude/house-style/ 에 둔
+   전역 정본이다. 하네스·스킬을 거치지 않고 "분석/리포트/리서치를 HTML로
+   뽑아줘" 류로 바로 요청받았을 때, 골격 = base_template_doc.html(같은 폴더),
+   스타일 = 이 파일을 쓴다. 사용법·적용 조건은 ~/.claude/CLAUDE.md 참조.
+
+   (참고: agent/proposal·agent/prd 특정 하네스를 쓰는 세션은 각 하네스 자체
+   CLAUDE.md/design-system.md 규칙을 따른다 — 이 전역 파일과 무관하게 매
+   프로젝트 스타일을 먼저 확인한다. 이 파일을 그쪽 하네스에 재적용하지 않는다.)
+
+   §1-19 = 공통 컴포넌트(토프바·LNB·표지·목차·표·도식 등).
+   §20-21 = 확장 컴포넌트(요약 스탯 그리드·간트) — 수치 리포트에서 선택 사용.
+   ※ 서체·mermaid 는 CDN 을 탄다. 폐쇄망에서는 서체가 시스템 폰트로,
+     mermaid 도식이 정의 텍스트로 폴백된다(설계된 동작 · §17 참조).
+   ============================================================================ */
+
+
+/* ===== 1. 서체 =============================================================
+   본문 = Pretendard Variable / 타이틀 = Paperlogy (로컬 설치본 우선 → CDN)
+   ========================================================================= */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css');
+
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:300;font-display:swap;
+  src:local('Paperlogy 3Light'),local('Paperlogy-3Light'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:400;font-display:swap;
+  src:local('Paperlogy 4Regular'),local('Paperlogy-4Regular'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:500;font-display:swap;
+  src:local('Paperlogy 5Medium'),local('Paperlogy-5Medium'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:600;font-display:swap;
+  src:local('Paperlogy 6SemiBold'),local('Paperlogy-6SemiBold'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:700;font-display:swap;
+  src:local('Paperlogy 7Bold'),local('Paperlogy-7Bold'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:800;font-display:swap;
+  src:local('Paperlogy 8ExtraBold'),local('Paperlogy-8ExtraBold'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:900;font-display:swap;
+  src:local('Paperlogy 9Black'),local('Paperlogy-9Black'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');}
+
+
+/* ===== 2. 토큰 =============================================================
+   warm paper(cream) + near-black ink + white surface.
+   클라이언트 CI 컬러는 기본값이 아니다 — §2b 오버라이드로만 얹는다.
+   ========================================================================= */
+:root{
+  --paper:#F1EDE5;      /* 페이지 바탕 */
+  --paper-2:#E8E3D9;    /* 표 헤더 · 그룹행 · hover */
+  --surface:#FFFFFF;    /* 카드 · 표 · 박스 바탕 */
+  --ink:#14130F;        /* 본문 · 강조 · 다크 블록 */
+  --ink-2:#56534C;      /* 보조 텍스트 */
+  --ink-3:#8C887F;      /* 캡션 · 번호 · 비활성 */
+  --line:#D9D3C7;       /* 기본 테두리 */
+  --line-2:#E6E1D7;     /* 표 내부 구분선 */
+  --accent:#14130F;     /* 강조 (기본 = ink) */
+  --warn:#7A4A2C;       /* 주의 · 미확정 · 검토대기 */
+  --navh:52px;          /* 상단 토프바 높이 */
+
+  --font-title:'Paperlogy','Pretendard Variable','Pretendard','Malgun Gothic',sans-serif;
+  --font-body:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,system-ui,
+              'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
+}
+
+/* ----- 2b. CI 오버라이드 (선택) --------------------------------------------
+   클라이언트 CI 적용을 지시받은 경우에만 이 블록을 골격 <style> 끝에 추가한다.
+   기본 문서는 CI 를 쓰지 않는다 — 지시 없이 켜지 않는다.
+     :root{ --accent:{CI_포인트컬러}; --warn:{CI_포인트컬러}; }
+   ink(본문)는 거의 검정 범위를 벗어나지 않는다. 가독성 기준선이다.
+
+   콘텐츠 영역도 CI 톤으로 맞춘다(2026-10-22 지시) — 포인트 색만 바꾸고 웜 베이지 바탕을
+   그대로 두면 톤이 따로 논다. 바탕 · 선 · 보조 글자를 CI 색상 계열(쿨/웜)의 저채도
+   중립색으로 함께 바꾼다. 토프바 · 반전 블록(.node.key · .fnode.key · .closing · .thead ·
+   .totop · .part-title .pno · .lnb a.active)은 CI 메인색으로.
+     예) 네이비 계열 CI(교보자산운용 #003477)
+     :root{ --paper:#F2F5F9; --paper-2:#E6ECF3; --surface:#FFFFFF; --ink:#141A24;
+            --ink-2:#4A5466; --ink-3:#8790A0; --line:#D3DBE6; --line-2:#E5EAF1; }
+   아래 10곳은 웜 페이퍼 rgba(241,237,229,…)로 박혀 있어 토큰만 바꾸면 베이지가 남는다
+   — 흰색 rgba(255,255,255,…)로 함께 덮는다:
+     .logo .divider · .logo .sub · .topbar-meta · .topbar-meta .divider · .lnb a.active b ·
+     .thead .no · .rb.inv · .closing .sub · 모바일 .lnb 바탕(새 --paper 값 .96) ·
+     어두운 블록 안 a.ext 밑줄(.node.key/.fnode.key/.closing a.ext)
+   -------------------------------------------------------------------------- */
+
+
+/* ===== 3. 리셋 · 본문 ==================================================== */
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{
+  margin:0; padding:0;
+  font-family:var(--font-body);
+  font-size:16px; line-height:1.75; letter-spacing:-.003em;
+  color:var(--ink); background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  /* 줄바꿈은 어절 단위 — 한글이 글자 단위로 끊기지 않게 (2026-09-17 오너 지시) */
+  word-break:keep-all; overflow-wrap:break-word;
+}
+/* 두 줄로 떨어지는 제목·결론 문장은 양쪽 줄 길이를 맞춘다 (미지원 브라우저는 무시) */
+h1,h2,h3,.concept p,.closing p,.cover .lead{text-wrap:balance;}
+
+
+/* ===== 4. 상단 토프바 (다크) ============================================= */
+.topbar{position:sticky;top:0;z-index:50;background:var(--ink);}
+.topbar-inner{
+  max-width:1200px;margin:0 auto;padding:0 24px;height:var(--navh);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.logo{
+  font-family:var(--font-title);font-weight:700;font-size:13.5px;letter-spacing:.02em;
+  color:var(--paper);cursor:default;user-select:none;white-space:nowrap;
+}
+.logo .divider{font-weight:400;color:rgba(241,237,229,.5);margin:0 8px;}
+.logo .sub{font-weight:500;color:rgba(241,237,229,.82);}
+.topbar-meta{
+  font-family:var(--font-title);font-weight:500;font-size:12px;letter-spacing:.03em;
+  color:rgba(241,237,229,.72);white-space:nowrap;cursor:default;user-select:none;
+}
+.topbar-meta b{font-weight:600;color:var(--paper);}
+.topbar-meta .divider{color:rgba(241,237,229,.4);margin:0 7px;}
+
+
+/* ===== 5. 레이아웃 — 좌측 LNB + 콘텐츠 =================================== */
+.layout{max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;gap:36px;padding:0 24px;}
+/* LNB 상단 정렬 — margin-top 은 0 이다(2026-08-27 보정).
+   52px 을 주면 표지를 .doc 안에 두는 골격에서는 표지 텍스트에 맞지만,
+   표지를 .layout 위에 풀블리드로 빼는 골격에서는 콘텐츠 상단보다 52px 내려앉는다.
+   0 이면 sticky top(= navh + 24) 이 두 골격 모두에서 위치를 결정한다. */
+.lnb{
+  position:sticky;top:calc(var(--navh) + 24px);
+  flex:0 0 186px;max-height:calc(100vh - var(--navh) - 48px);overflow-y:auto;
+  border:1px solid var(--line);background:var(--surface);
+  padding:12px 8px;margin-top:0;scrollbar-width:thin;
+}
+.lnb::-webkit-scrollbar{width:3px;}
+.lnb::-webkit-scrollbar-thumb{background:var(--line);}
+.lnb ul{list-style:none;margin:0;padding:0;}
+.lnb li{margin:0 0 1px;}
+.lnb a{
+  display:block;font-family:var(--font-title);font-weight:500;font-size:12.5px;line-height:1.45;
+  color:var(--ink-2);text-decoration:none;padding:7px 10px;border-radius:2px;
+}
+.lnb a b{font-weight:700;color:var(--ink-3);margin-right:7px;}
+.lnb a:hover{background:var(--paper-2);color:var(--ink);}
+.lnb a.active{background:var(--ink);color:var(--paper);}
+.lnb a.active b{color:rgba(241,237,229,.7);}
+.doc{flex:1;min-width:0;max-width:940px;padding:0 0 90px;}
+
+
+/* ===== 6. 표지 =========================================================== */
+header.cover{padding:52px 0 32px;border-bottom:2px solid var(--ink);margin-bottom:40px;}
+.eyebrow{
+  font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:.08em;
+  color:var(--ink-2);margin:0 0 18px;
+}
+h1{font-family:var(--font-title);font-weight:900;font-size:32px;line-height:1.38;margin:0 0 20px;letter-spacing:-.025em;}
+h1 .lead{display:block;font-weight:400;font-size:17px;color:var(--ink-2);margin-bottom:9px;letter-spacing:-.01em;}
+.meta{display:flex;flex-wrap:wrap;gap:0 28px;font-size:13px;color:var(--ink-3);margin-top:24px;}
+.meta span b{font-family:var(--font-title);font-weight:600;color:var(--ink-2);}
+
+
+/* ===== 7. 목차 =========================================================== */
+.toc{border:1px solid var(--line);background:var(--surface);padding:22px 26px 18px;margin:0 0 44px;}
+.toc h2{
+  font-family:var(--font-title);font-weight:600;font-size:14px;margin:0 0 14px;
+  padding:0;border:0;letter-spacing:.06em;color:var(--ink-2);
+}
+.toc ol{list-style:none;margin:0;padding:0;columns:2;column-gap:40px;}
+.toc > ol > li{margin:0 0 11px;break-inside:avoid;page-break-inside:avoid;}
+.toc > ol > li > a{
+  font-family:var(--font-title);font-weight:700;font-size:14px;letter-spacing:-.015em;
+  color:var(--ink);text-decoration:none;
+}
+.toc > ol > li > a:hover{text-decoration:underline;}
+.toc > ol > li > a .n{font-weight:500;color:var(--ink-3);margin-right:7px;}
+.toc ul{list-style:none;margin:3px 0 0;padding:0 0 0 21px;}
+.toc ul li{margin:0 0 1px;}
+.toc ul li a{font-size:12.5px;color:var(--ink-2);text-decoration:none;line-height:1.6;}
+.toc ul li a:hover{color:var(--ink);text-decoration:underline;}
+.toc ul li a:before{content:"– ";color:var(--ink-3);}
+
+
+/* ===== 8. 섹션 · 인라인 ================================================== */
+section{margin:0 0 42px;}
+h2{
+  font-family:var(--font-title);font-weight:800;font-size:20px;margin:0 0 16px;
+  padding-bottom:9px;border-bottom:1px solid var(--ink);letter-spacing:-.025em;
+}
+h2 .num{font-weight:500;color:var(--ink-3);margin-right:9px;}
+h3{
+  font-family:var(--font-title);font-weight:700;font-size:16px;margin:26px 0 9px;
+  letter-spacing:-.02em;color:var(--ink);
+}
+h3:first-of-type{margin-top:16px;}
+/* 앵커 이동 목적지 보정 (2026-08-27) — LNB·목차·본문 링크가 어디로 점프하든
+   sticky 토프바(52px)가 제목을 덮지 않게 한다. h2/h3 에만 걸면 <section id="sN">
+   처럼 래퍼가 id 를 갖는 문서에서 제목이 통째로 가려진다. id 를 가진 모든
+   이동 대상에 준다. */
+[id]{scroll-margin-top:calc(var(--navh) + 20px);}
+
+p{margin:0 0 12px;}
+ul,ol{margin:0 0 12px;padding-left:20px;}
+li{margin-bottom:6px;}
+li::marker{color:var(--ink-3);}
+strong{font-weight:700;}
+a{color:var(--ink);}
+.muted{color:var(--ink-2);}
+.dim{color:var(--ink-3);}
+.small{font-size:14.5px;}
+.sm{font-size:13.5px;}
+.no{color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.star{color:var(--warn);font-weight:700;}
+
+/* 태그 — .chk = 검토대기/미확정, .pick = 확정/선택안 */
+.tag{
+  display:inline-block;font-family:var(--font-title);font-weight:500;font-size:11.5px;line-height:1.5;
+  padding:1px 7px;border:1px solid var(--line);border-radius:2px;color:var(--ink-3);
+  white-space:nowrap;vertical-align:2px;
+}
+.tag.chk{border-color:var(--warn);color:var(--warn);}
+.tag.pick{border-color:var(--ink);color:var(--ink);font-weight:700;}
+
+.jump{font-size:12.5px;color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line);}
+.jump:hover{color:var(--ink);border-bottom-color:var(--ink);}
+
+
+/* ===== 9. 콘셉트 (섹션 두괄식 한 문장) =================================== */
+.concept{border-left:3px solid var(--ink);background:var(--surface);padding:22px 26px;margin:0 0 20px;}
+.concept p{
+  margin:0;font-family:var(--font-title);font-weight:800;font-size:20px;
+  line-height:1.55;letter-spacing:-.025em;
+}
+.concept .sub{
+  margin-top:11px;font-family:var(--font-body);font-size:15px;font-weight:400;
+  line-height:1.7;letter-spacing:-.003em;color:var(--ink-2);
+}
+
+
+/* ===== 10. 표 =========================================================== */
+table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:15px;background:var(--surface);}
+caption{caption-side:top;text-align:left;font-size:13px;color:var(--ink-3);padding-bottom:7px;}
+th,td{border-bottom:1px solid var(--line-2);padding:10px 12px;text-align:left;vertical-align:top;}
+thead th{
+  font-family:var(--font-title);font-weight:600;font-size:13.5px;letter-spacing:-.01em;
+  border-top:1px solid var(--ink);border-bottom:1px solid var(--line);
+  background:var(--paper-2);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:1px solid var(--line);}
+td.c,th.c{text-align:center;white-space:nowrap;}
+.col-n{width:44px;text-align:center;font-family:var(--font-title);font-weight:600;color:var(--ink-3);}
+tr.grp td{background:var(--paper-2);font-family:var(--font-title);font-weight:600;border-top:1px solid var(--ink);}
+tr.subgrp td{
+  background:var(--paper);color:var(--ink-3);font-family:var(--font-title);
+  font-weight:600;font-size:12px;padding:5px 12px;
+}
+/* 넓은 표는 반드시 이 래퍼 안에 둔다 — 페이지 가로 스크롤 금지 */
+.table-scroll,.scroll{overflow-x:auto;}
+table.src td{font-size:14.5px;}
+table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
+.path{font-size:12px;color:var(--ink-3);word-break:break-all;}
+
+
+/* ===== 11. 진단 박스 ==================================================== */
+.findings{border:1px solid var(--line);background:var(--surface);padding:20px 24px 8px;}
+.findings.alert{border-color:var(--warn);}
+.findings ul{list-style:none;padding-left:0;}
+.findings li{position:relative;padding-left:18px;margin-bottom:10px;}
+.findings li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;background:var(--ink);}
+.findings.alert li:before{background:var(--warn);}
+
+.legend{
+  border:1px solid var(--line);background:var(--surface);padding:12px 16px;margin:10px 0 0;
+  font-size:13.5px;color:var(--ink-2);
+}
+.legend b{font-family:var(--font-title);font-weight:700;color:var(--ink);}
+
+
+/* ===== 12. 도식 — 세로 루프 / 가로 플로우 =============================== */
+.loop{border:1px solid var(--line);background:var(--surface);padding:26px 20px;margin:6px 0 14px;}
+.loop-row{display:flex;justify-content:center;}
+.node{
+  border:1px solid var(--line);background:var(--paper);padding:11px 16px;
+  font-family:var(--font-title);font-weight:600;font-size:13.5px;letter-spacing:-.015em;
+  text-align:center;min-width:210px;max-width:440px;
+}
+.node.key{border-color:var(--ink);background:var(--ink);color:var(--paper);}
+.node small{display:block;font-family:var(--font-body);font-weight:400;font-size:12px;opacity:.85;margin-top:3px;}
+.node.key small a{color:var(--paper);text-decoration:underline;}
+.arrow{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.4;padding:7px 0;}
+.arrow b{display:block;font-size:16px;color:var(--line);font-weight:400;}
+.loop-back{
+  margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);
+  text-align:center;font-size:13px;color:var(--ink-2);
+}
+.flow{
+  border:1px solid var(--line);background:var(--surface);padding:20px 16px;margin:6px 0 14px;
+  display:flex;align-items:stretch;justify-content:center;flex-wrap:wrap;gap:0;
+}
+.flow .fnode{
+  border:1px solid var(--line);background:var(--paper);padding:10px 14px;
+  font-family:var(--font-title);font-weight:600;font-size:12.5px;letter-spacing:-.015em;
+  text-align:center;display:flex;flex-direction:column;justify-content:center;min-width:120px;
+}
+.flow .fnode.key{border-color:var(--ink);background:var(--ink);color:var(--paper);}
+.flow .fnode small{font-family:var(--font-body);font-weight:400;font-size:11px;opacity:.8;margin-top:2px;}
+.flow .farrow{display:flex;align-items:center;padding:0 8px;color:var(--ink-3);font-size:14px;}
+
+
+/* ===== 13. 계층 트리 (IA · 메뉴 구조) =================================== */
+.tree{margin:14px 0 6px;}
+.ttop{display:flex;justify-content:center;}
+.ttop .tnode{
+  background:var(--surface);border:1px solid var(--line);padding:8px 22px;text-align:center;
+  font-family:var(--font-title);font-weight:700;font-size:13.5px;
+}
+.ttop .tnode .s{display:block;font-family:var(--font-body);font-weight:400;font-size:11.5px;color:var(--ink-3);}
+.tstub{width:1px;height:16px;background:var(--ink-3);margin:0 auto;}
+.tcols{display:flex;gap:8px;border-top:1px solid var(--ink-3);padding-top:14px;align-items:flex-start;}
+.tcol{flex:1;min-width:96px;position:relative;}
+.tcol::before{content:'';display:block;width:1px;height:12px;background:var(--ink-3);margin:-14px auto 2px;}
+.thead{
+  background:var(--ink);color:var(--paper);padding:7px 5px 6px;text-align:center;
+  font-family:var(--font-title);font-weight:600;font-size:12.5px;line-height:1.3;
+}
+.thead .no{display:block;font-weight:400;font-size:10px;color:rgba(241,237,229,.6);}
+.titem{
+  background:var(--surface);border:1px solid var(--line);padding:5px 4px 4px;margin-top:6px;
+  text-align:center;font-size:11.5px;line-height:1.35;word-break:keep-all;
+}
+.rbs{display:block;margin-top:2px;line-height:1.5;}
+.rb{
+  display:inline-block;border:1px solid var(--line);background:var(--paper-2);font-size:9.5px;
+  line-height:1.5;padding:0 3px;margin:0 1px;color:var(--ink-2);font-weight:600;
+}
+.rb.inv{background:rgba(241,237,229,.16);border-color:rgba(241,237,229,.3);color:rgba(241,237,229,.9);font-weight:400;}
+.rb.none{color:var(--ink-3);background:transparent;}
+.tcap{font-size:10.5px;color:var(--ink-3);text-align:center;margin-top:9px;letter-spacing:1.5px;}
+
+
+/* ===== 14. 모듈 · 노트 ================================================== */
+.module{border-top:1px solid var(--line-2);padding-top:18px;margin-top:18px;}
+.module:first-of-type{border-top:0;padding-top:0;margin-top:0;}
+.module h3{margin-top:0;}
+.module h3 .badge{
+  display:inline-block;min-width:22px;height:22px;line-height:22px;text-align:center;
+  background:var(--ink);color:var(--paper);font-family:var(--font-title);font-weight:700;font-size:12px;
+  border-radius:50%;margin-right:8px;vertical-align:1px;padding:0 6px;letter-spacing:0;
+}
+.module h3 .badge.sq{border-radius:2px;font-weight:800;}
+
+.note{border-left:2px solid var(--line);padding:2px 0 2px 14px;margin:12px 0;font-size:14.5px;color:var(--ink-2);}
+.note b{font-family:var(--font-title);font-weight:700;color:var(--ink);}
+.note.key{border-left-color:var(--ink);}
+.note.warn,.warn{border-left:2px solid var(--warn);padding:2px 0 2px 14px;margin:14px 0;font-size:14.5px;color:var(--ink-2);}
+.warn b{color:var(--warn);}
+
+
+/* ===== 15. 등급 목록 (dl) =============================================== */
+.tiers{margin:10px 0 14px;}
+.tier{display:flex;gap:16px;border-bottom:1px solid var(--line-2);padding:12px 0;font-size:15px;}
+.tier:first-child{border-top:1px solid var(--line);}
+.tier dt{flex:0 0 200px;font-family:var(--font-title);font-weight:700;letter-spacing:-.015em;}
+.tier dt small{display:block;font-family:var(--font-body);font-weight:400;font-size:12.5px;color:var(--ink-3);}
+.tier dd{margin:0;color:var(--ink-2);}
+
+
+/* ===== 16. 마무리 · 푸터 · 맨위로 ======================================= */
+.closing{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:38px 26px;text-align:center;}
+.closing p{
+  margin:0;font-family:var(--font-title);font-weight:900;font-size:22px;
+  line-height:1.5;letter-spacing:-.03em;
+}
+.closing .sub{
+  margin-top:12px;font-family:var(--font-body);font-size:14px;font-weight:400;
+  letter-spacing:-.003em;color:rgba(241,237,229,.78);
+}
+.closing .sub strong{color:var(--paper);}
+
+footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);line-height:1.7;}
+footer a{color:var(--ink-2);}
+
+.totop{
+  position:fixed;right:24px;bottom:24px;z-index:40;width:42px;height:42px;line-height:40px;
+  text-align:center;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  text-decoration:none;font-size:15px;border-radius:50%;
+}
+.totop:hover{background:var(--surface);color:var(--ink);}
+
+
+/* ===== 17. mermaid 도식 (오프라인 폴백 포함) ============================ */
+.mmwrap{border:1px solid var(--line);background:var(--surface);padding:18px 12px;margin:8px 0 6px;overflow-x:auto;}
+.mmwrap svg{display:block;margin:0 auto;height:auto;}
+pre.mermaid{
+  margin:0;font-family:var(--font-body);font-size:11.5px;line-height:1.5;color:var(--ink-3);
+  white-space:pre-wrap;text-align:left;
+}
+pre.mermaid.mm-fail::before{
+  content:"오프라인 상태 — 도식 대신 머메이드 정의 텍스트 표시";
+  display:block;font-weight:600;color:var(--warn);margin-bottom:8px;
+}
+
+
+/* ===== 18. 반응형 ======================================================= */
+@media (max-width:960px){
+  .layout{display:block;padding:0 16px;}
+  .lnb{
+    position:sticky;top:var(--navh);z-index:45;flex:none;max-height:none;
+    overflow-y:visible;overflow-x:auto;border:0;border-bottom:1px solid var(--line);
+    background:rgba(241,237,229,.96);backdrop-filter:saturate(180%) blur(6px);
+    padding:6px 4px;margin:0 -16px;
+  }
+  .lnb ul{display:flex;gap:2px;white-space:nowrap;padding:0 12px;}
+  .lnb li{margin:0;}
+  .lnb a{padding:6px 9px;}
+  .doc{max-width:none;padding-bottom:70px;}
+}
+@media (max-width:640px){
+  body{font-size:15.5px;}
+  .topbar-inner{padding:0 16px;}
+  .logo{font-size:12px;white-space:normal;line-height:1.4;}
+  .topbar-meta{font-size:11px;}
+  h1{font-size:25px;}
+  h2{font-size:18px;}
+  .concept p{font-size:17.5px;}
+  .closing p{font-size:19px;}
+  .toc{padding:18px 18px 14px;}
+  .toc ol{columns:1;}
+  .tier{display:block;}
+  .tier dt{margin-bottom:4px;}
+  .node{min-width:0;width:100%;}
+  .flow{flex-direction:column;}
+  .flow .fnode{min-width:0;}
+  .flow .farrow{justify-content:center;padding:6px 0;transform:rotate(90deg);}
+  .totop{right:14px;bottom:14px;}
+}
+
+
+/* ===== 19. 인쇄 (A4) ==================================================== */
+@page{size:A4;margin:16mm 14mm;}
+@media print{
+  html{scroll-behavior:auto;}
+  body{font-size:11pt;line-height:1.6;background:#fff;}
+  .topbar,.lnb,.totop{display:none !important;}
+  .layout{display:block;max-width:none;padding:0;}
+  .doc{max-width:none;padding:0;}
+  header.cover{padding-top:0;}
+  h1{font-size:21pt;}
+  h2{font-size:13.5pt;}
+  h3{font-size:11pt;}
+  .concept p{font-size:13.5pt;}
+  .closing p{font-size:15pt;}
+  section{margin-bottom:26px;}
+  thead th{background:#f2f2f2;}
+  table,.loop,.flow,.findings,.closing,.concept,.toc,.tree,.mmwrap{break-inside:avoid;page-break-inside:avoid;}
+  tr,li,.module,.tier{break-inside:avoid;page-break-inside:avoid;}
+  h2,h3{break-after:avoid;page-break-after:avoid;}
+  thead{display:table-header-group;}
+  a{text-decoration:none;color:var(--ink);}
+  table.src a:after{content:" (" attr(href) ")";font-size:8.5pt;color:#666;}
+  .node.key,.flow .fnode.key,.closing,.module h3 .badge,.thead,.rb.inv{
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .mmwrap svg{max-width:100% !important;height:auto !important;}
+  .tcols{min-width:0 !important;}
+  .stats{break-inside:avoid;page-break-inside:avoid;}
+  .gantt{break-inside:avoid;page-break-inside:avoid;}
+  .gbar{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+
+
+/* ===== 20. 요약 스탯 그리드 (Executive Header · prd 하네스) ============
+   섹션 0 "퀵 스탯" 등 핵심 수치를 카드 한 줄로 보여줄 때 쓴다.
+   색으로 구분하지 않는다 — 헤어라인(--line)으로 카드를 나눈 흰 격자.
+   ========================================================================= */
+.stats{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);margin:10px 0 16px;}
+.stat{flex:1 1 150px;background:var(--surface);padding:14px 18px;}
+.stat .v{font-family:var(--font-title);font-weight:800;font-size:21px;letter-spacing:-.02em;color:var(--ink);white-space:nowrap;}
+.stat .v .u{font-family:var(--font-body);font-weight:400;font-size:11.5px;color:var(--ink-3);margin-left:2px;}
+.stat .l{font-size:12.5px;color:var(--ink-2);margin-top:4px;}
+
+
+/* ===== 21. 간트 · 타임라인 (WBS 시각화 · prd 하네스) ===================
+   직군·단계는 색상이 아니라 --ink 명도 단계(.t2~.t4)로 구분한다.
+   게이트·마일스톤만 .key 로 반전해 강조 — 다른 컴포넌트와 동일 규칙.
+   ========================================================================= */
+.gantt{border:1px solid var(--line);background:var(--surface);padding:16px;margin:8px 0 14px;overflow-x:auto;}
+.gantt-grid{display:grid;grid-template-columns:160px 1fr;font-size:11.5px;min-width:640px;}
+.gantt-head{grid-column:2;display:flex;border-bottom:1px solid var(--ink);padding-bottom:6px;margin-bottom:6px;}
+.gantt-head span{flex:1;text-align:center;font-family:var(--font-title);font-weight:600;color:var(--ink-2);}
+.gantt-row{display:contents;}
+.gantt-label{padding:6px 10px 6px 0;color:var(--ink-2);white-space:nowrap;border-top:1px solid var(--line-2);display:flex;align-items:center;}
+.gantt-row:first-child .gantt-label{border-top:0;}
+.gantt-track{position:relative;height:28px;border-top:1px solid var(--line-2);}
+.gantt-row:first-child .gantt-track{border-top:0;}
+.gbar{position:absolute;top:5px;height:18px;background:var(--ink);opacity:.85;}
+.gbar.t2{opacity:.62;}
+.gbar.t3{opacity:.42;}
+.gbar.t4{opacity:.24;}
+.gbar.key{opacity:1;border:1px solid var(--ink);}
+.gantt-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:11px;color:var(--ink-2);}
+.gantt-legend i{display:inline-block;width:10px;height:10px;background:var(--ink);margin-right:5px;vertical-align:-1px;}
+.gantt-legend .t2 i{opacity:.62;} .gantt-legend .t3 i{opacity:.42;} .gantt-legend .t4 i{opacity:.24;}
+
+
+/* ===== 22. 출처 · 고유명사 외부링크 (리서치 · 분석 문서) — 2026-10-19 지시 · 2026-11-10 보강 =====
+   출처 URL이 있는 항목은 [S번호] 태그만 두지 않고 본문에 직접 링크를 건다.
+   - 출처 1건 = 항목 타이틀(굵은 라벨 · 표 첫 열 서비스명)에 / 2건 이상 = 각 출처가 받치는 구절에 각각
+   - 스탯 라벨 · 표 캡션 · 출처 표 「자료」 열 제목까지 포함, [S번호] 태그는 그대로 둔다
+   - 마크업: <a class="ext" href="URL" target="_blank" rel="noopener">텍스트</a>
+     굵은 타이틀은 <b><a class="ext" …>타이틀</a></b>
+   - 본문 고유명사(2026-11-10 지시): 출처 인용이 아니어도 사이트 · 서비스 · 기관 · 제품 · 도구 이름은 공식 URL이 있으면
+     같은 a.ext 로 연결한다. 섹션(h2)당 같은 URL 첫 등장 1회, 제목 · 표지 · 목차 · 거버닝 문장 · 출처 표 · 존재하지 않는 도메인 제외,
+     브랜드+ETF 처럼 이어진 이름은 전체에 걸어 아이콘이 단어 중간에 끼지 않게 한다 (규칙 정본 = agent/proposal/CLAUDE.md 5a)
+   기본 = 옅은 밑줄 + 텍스트 우측 끝 블랙 라인 외부링크 아이콘(Lucide external-link · currentColor · 투명도 없음 — 2026-11-10 지시)
+   hover · focus = 반전(ink 바탕 · paper 글자) + 아이콘 우상향 1px — 강조는 색이 아니라 반전
+   좌우 padding 1px만 둔다 — 음수 margin을 쓰면 뒤 문장부호가 반전 바탕에 가려진다
+   ========================================================================= */
+a.ext{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-decoration-thickness:1px;text-underline-offset:3px;
+  padding:0 1px;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  transition:background-color .15s ease,color .15s ease,text-decoration-color .15s ease;}
+a.ext::after{content:"";display:inline-block;width:.8em;height:.8em;margin-left:3px;vertical-align:-.04em;background:currentColor;opacity:1;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition:opacity .15s ease,transform .15s ease;}
+a.ext:hover,a.ext:focus-visible{background:var(--ink);color:var(--paper);text-decoration-color:transparent;outline:none;}
+a.ext:hover::after,a.ext:focus-visible::after{opacity:1;transform:translate(1px,-1px);}
+/* [S번호] 출처 태그 — 링크 뒤에 그대로 둔다 */
+.src-tag{display:inline-block;font-size:11px;color:var(--ink-3);white-space:nowrap;}
+/* 출처 표(§10 table.src)의 자료명 링크 — 정본 table.src a 의 작은 글씨 · 회색 · break-all을 되돌린다 */
+table.src a.ext{font-size:inherit;word-break:keep-all;color:var(--ink);}
+table.src a.ext:hover,table.src a.ext:focus-visible{color:var(--paper);}
+/* 어두운 블록 안 링크 */
+.node.key a.ext,.flow .fnode.key a.ext,.closing a.ext{text-decoration-color:rgba(241,237,229,.4);}
+.node.key a.ext:hover,.flow .fnode.key a.ext:hover,.closing a.ext:hover{background:var(--paper);color:var(--ink);}
+@media print{
+  a.ext{text-decoration:none;padding:0;}
+  a.ext::after,table.src a.ext::after{content:none;display:none;}
+}

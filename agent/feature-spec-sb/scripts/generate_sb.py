@@ -1,0 +1,364 @@
+#!/usr/bin/env python3
+"""
+SB(Storyboard) HTML 생성 헬퍼.
+
+ETRIBE 양식의 SB HTML 파일을 일괄 생성합니다.
+보일러플레이트(<head>, CSS, 메타 헤더, footer)는 자동 처리되며,
+호출자(Claude)는 화면별 본문(wireframe + Description)만 JSON으로 넘기면 됩니다.
+
+사용 예:
+  python3 generate_sb.py \
+    --variant mobile \
+    --input screens.json \
+    --output "01. 공통 기능/01_auth_account/SB/A-01"
+
+screens.json 구조:
+{
+  "feature_id": "A-01",
+  "feature_name": "회원가입",
+  "author": "-",
+  "ymd": "2026-05",
+  "screens": [
+    {
+      "id": "A-01-001",
+      "title": "회원가입 - 인증 방식 선택",
+      "path": "비회원 > 회원가입",
+      "body": "<div class='wf-panel'>...</div><div class='desc-panel'>...</div>"
+    },
+    ...
+  ]
+}
+
+- body: <div class="page"> 내부에 들어갈 raw HTML (wf-panel + desc-panel)
+
+★ 와이어프레임 골격 (필수 중첩 — 생략 시 캔버스가 왼쪽에 붙고 넘버링이 사라짐):
+    <div class="wf-panel">              <!-- 가운데 정렬 + 여백 -->
+      <div class="wf-canvas-wrap">      <!-- 배지+캔버스 가로 배치 -->
+        <div class="num-strip"></div>   <!-- 28px: num-badge가 그려질 캔버스 바깥 공간 -->
+        <div class="wf-canvas">...</div><!-- 실제 화면 -->
+      </div>
+    </div>
+    <div class="desc-panel">...</div>
+  이 스크립트는 .wf-canvas가 래퍼 없이 들어오면 자동으로 감싸거나(맨캔버스) 에러로 막는다.
+
+★ 캔버스 치수는 --variant 가 스타일 블록에 주입한다.
+  - 폭: mobile 390px / pc 1440px 고정 (--canvas-width로 변경)
+  - 높이: 하한만 지정하고 상한은 없다 (mobile min 844 / pc min 1440, height:auto).
+    화면이 길어지면 콘텐츠 길이만큼 세로로 늘어난다. 하한은 --canvas-min-height로 변경.
+  body에서 .wf-canvas에 인라인 치수를 주지 말 것:
+  - width:100% → .sb-page가 width:max-content라 기준 폭이 없어 콘텐츠 폭으로 쭈그러든다.
+  - height/max-height → 긴 화면이 그 높이에서 잘린다 (경고로 알려준다).
+"""
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+# Windows 기본 콘솔 인코딩(cp949)은 '✓' 같은 문자를 못 써서 UnicodeEncodeError로 죽는다.
+# 파일 출력은 항상 utf-8이므로 콘솔만 utf-8로 맞춘다.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
+# Pretendard CDN (Static 1순위)
+FONT_LINKS = '''<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-gov-dynamic-subset.min.css">'''
+
+# 원본 ETRIBE 로고 PNG MD5 (검증용)
+LOGO_MD5_EXPECTED = "51732c22289dc4b1eae17c2fd855ba4a"
+
+# variant별 .wf-canvas 기본 치수 (폭, 최소높이)
+CANVAS_SPEC = {"mobile": (390, 844), "pc": (1440, 1440)}
+
+# 시트(.sb-page)는 min-width 2560px + width:max-content 이다. 와이어프레임 열이 쓸 수 있는
+# 실제 폭 = 2560 - 시트 좌우 패딩 80 - desc-panel 640 - wf-panel 여백/패딩 88 - num-strip 28.
+CANVAS_WIDTH_FIT = 1724
+
+
+def canvas_style(variant: str, width_override, min_height_override):
+    """variant에 맞는 .wf-canvas 치수를 스타일 블록 끝에 주입할 CSS로 만든다.
+
+    폭은 고정, 높이는 하한(min-height)만 두고 height:auto — 화면이 길어지면 상한 없이
+    세로로 늘어난다.
+
+    본문(body)에서 인라인 치수를 주는 방식은 쓰지 않는다:
+    - 폭: .sb-page가 width:max-content라 `width:100%` 같은 백분율은 기준 폭이 없어
+      캔버스가 콘텐츠 폭으로 쭈그러든다.
+    - 높이: height/max-height를 주면 긴 화면이 그 높이에서 잘린다.
+    """
+    width, min_height = CANVAS_SPEC[variant]
+    if width_override:
+        width = width_override
+    if min_height_override:
+        min_height = min_height_override
+    if width > CANVAS_WIDTH_FIT:
+        print(
+            f"  [WARN] 캔버스 폭 {width}px > {CANVAS_WIDTH_FIT}px — "
+            f"시트가 2560px보다 넓어집니다 (메타 헤더·푸터는 함께 늘어남).",
+            file=sys.stderr,
+        )
+    return (
+        f"\n/* ===== Variant: {variant} — 캔버스 치수 (generate_sb.py 주입)\n"
+        f"   폭 고정 · 높이는 하한만(상한 없음) — 콘텐츠가 길면 그만큼 세로로 늘어남 ===== */\n"
+        f".wf-canvas {{ width:{width}px; min-height:{min_height}px; height:auto; }}\n"
+    )
+
+
+# .wf-canvas 여는 태그의 style 속성에서 높이를 고정하는 선언을 찾는 패턴
+_CANVAS_TAG = re.compile(r'<div[^>]*class="[^"]*\bwf-canvas\b[^"]*"[^>]*>')
+_STYLE_ATTR = re.compile(r'style="([^"]*)"')
+_HEIGHT_DECL = re.compile(r'(?<!min-)(?<!-)\b(max-height|height)\s*:')
+
+
+def warn_height_cap(body: str, screen_id: str) -> None:
+    """본문이 .wf-canvas에 높이를 고정하면 긴 화면이 잘리므로 경고한다.
+
+    min-height는 하한이라 늘어나는 데 지장이 없으므로 통과시킨다.
+    """
+    marker = '<div class="desc-panel"'
+    idx = body.find(marker)
+    wire = body if idx == -1 else body[:idx]
+    for tag in _CANVAS_TAG.findall(wire):
+        m = _STYLE_ATTR.search(tag)
+        if not m:
+            continue
+        decl = _HEIGHT_DECL.search(m.group(1))
+        if decl:
+            print(
+                f"  [WARN] {screen_id}: .wf-canvas에 인라인 {decl.group(1)}가 있습니다 — "
+                f"화면이 길어져도 그 높이에서 잘립니다. 제거하고 --canvas-min-height를 쓰세요.",
+                file=sys.stderr,
+            )
+
+
+def apply_canvas_style(style_block: str, css: str) -> str:
+    """스타일 블록의 </style> 직전에 variant CSS를 끼워 넣는다."""
+    marker = "</style>"
+    idx = style_block.rfind(marker)
+    if idx == -1:
+        sys.exit("[ERROR] sb-style-block.html 에 </style> 가 없습니다.")
+    return style_block[:idx] + css + style_block[idx:]
+
+
+def load_template(skill_dir: Path, name: str) -> str:
+    """skill_dir/templates/ 에서 템플릿 파일 읽기."""
+    path = skill_dir / "templates" / name
+    if not path.exists():
+        sys.exit(f"[ERROR] 템플릿 없음: {path}")
+    return path.read_text(encoding="utf-8")
+
+
+def verify_logo(skill_dir: Path) -> None:
+    """로고 PNG MD5 검증 (손상 방지)."""
+    logo_path = skill_dir / "templates" / "etribe-logo.png"
+    if not logo_path.exists():
+        print(f"[WARN] 로고 파일 없음: {logo_path}", file=sys.stderr)
+        return
+    md5 = hashlib.md5(logo_path.read_bytes()).hexdigest()
+    if md5 != LOGO_MD5_EXPECTED:
+        sys.exit(
+            f"[ERROR] ETRIBE 로고 PNG가 손상됐습니다.\n"
+            f"  Expected MD5: {LOGO_MD5_EXPECTED}\n"
+            f"  Actual MD5:   {md5}"
+        )
+
+
+def ensure_canvas_wrap(body: str, screen_id: str) -> str:
+    """와이어프레임 .wf-canvas가 필수 래퍼(.wf-panel > .wf-canvas-wrap > .num-strip)로
+    감싸졌는지 검증한다.
+
+    - 래퍼가 이미 있으면 그대로 통과 (idempotent).
+    - .wf-canvas가 래퍼 없이 단독으로 들어온 흔한 실수는 자동으로 감싸고 알림 출력.
+    - .wf-panel은 있는데 .wf-canvas-wrap/.num-strip이 빠진 애매한 경우는 에러로 막음.
+
+    근거: .num-badge는 `left:-44px`(.edge는 -28px)로 캔버스 '바깥 왼쪽'에 그려지므로
+    그 공간을 확보하는 .num-strip(28px)과 가운데 정렬·여백을 주는 .wf-panel이 반드시 필요.
+    누락 시 캔버스가 grid 셀 왼쪽에 달라붙고 넘버링이 캔버스 뒤로 숨어 안 보인다.
+    """
+    # 와이어프레임 영역만 검사 (desc-panel 앞까지)
+    marker = '<div class="desc-panel"'
+    idx = body.find(marker)
+    wire = body if idx == -1 else body[:idx]
+    desc = "" if idx == -1 else body[idx:]
+
+    has_canvas = 'class="wf-canvas"' in wire
+    if not has_canvas:
+        return body  # 와이어프레임 캔버스 없음 (특수 화면) — 손대지 않음
+
+    has_wrap = 'class="wf-canvas-wrap"' in wire
+    has_strip = 'class="num-strip"' in wire
+    if has_wrap and has_strip:
+        return body  # 이미 올바른 구조
+
+    has_panel = 'class="wf-panel"' in wire
+    if has_panel:
+        # panel은 있는데 wrap/strip이 빠짐 — 자동 감싸면 panel 중첩 위험 → 명확히 막음
+        sys.exit(
+            f"[ERROR] {screen_id}: .wf-canvas가 .wf-panel 안에 있지만 "
+            f".wf-canvas-wrap / .num-strip이 빠졌습니다.\n"
+            f"  올바른 골격:\n"
+            f'    <div class="wf-panel">\n'
+            f'      <div class="wf-canvas-wrap">\n'
+            f'        <div class="num-strip"></div>\n'
+            f'        <div class="wf-canvas">...</div>\n'
+            f"      </div>\n"
+            f"    </div>\n"
+            f"  (이 골격이 없으면 캔버스가 왼쪽에 붙고 넘버링이 사라집니다.)"
+        )
+
+    # 맨캔버스 — 흔한 실수. 자동으로 감싸고 알림.
+    wrapped = (
+        '<div class="wf-panel"><div class="wf-canvas-wrap">'
+        '<div class="num-strip"></div>' + wire + '</div></div>'
+    )
+    print(
+        f"  [AUTO-WRAP] {screen_id}: .wf-canvas를 .wf-panel > .wf-canvas-wrap > "
+        f".num-strip 으로 자동 래핑했습니다 (넘버링·정렬 정상화).",
+        file=sys.stderr,
+    )
+    return wrapped + desc
+
+
+def render_html(*, screen_id: str, title: str, path_str: str, author: str, ymd: str,
+                body: str, style_block: str, logo_data_url: str, channel: str = "Front") -> str:
+    """단일 SB HTML 렌더링.
+
+    메타 헤더 구조 (사용자 확정 2026-07-22 — 레퍼런스 화면설계서 기준):
+      1행: 화면/컴포넌트 | {제목} | Local | KO | 화면ID(라벨) | 작성자(라벨) | 작성일(라벨)
+      2행: 화면경로     | {경로} | Channel | {채널} | {화면ID} | {작성자} | {작성일}
+    푸터: 버전 표기 없음, 우측 하단 ETRIBE 로고만 (background-image).
+    """
+    # style block 안의 {LOGO_URL} placeholder 치환은 안 함 — 이미 base64가 들어있는 style block 사용
+    return f'''<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{screen_id} {title}</title>
+{FONT_LINKS}
+{style_block}
+</head>
+<body>
+
+<div class="sb-page">
+
+<!-- ===== ETRIBE: Top Meta Header ===== -->
+<table class="etribe-meta">
+  <colgroup>
+    <col style="width:200px"><col><col style="width:150px"><col style="width:220px">
+    <col style="width:260px"><col style="width:170px"><col style="width:170px">
+  </colgroup>
+  <tr>
+    <th>화면/컴포넌트</th><td>{title}</td>
+    <th>Local</th><td>KO</td>
+    <th>화면ID</th><th>작성자</th><th>작성일</th>
+  </tr>
+  <tr>
+    <th>화면경로</th><td>{path_str}</td>
+    <th>Channel</th><td>{channel}</td>
+    <td>{screen_id}</td><td>{author}</td><td>{ymd}</td>
+  </tr>
+</table>
+
+<div class="page">
+{body}
+</div>
+
+<!-- ETRIBE Footer (우측 하단 로고 — background-image) -->
+<div class="etribe-footer"></div>
+
+</div><!-- /.sb-page -->
+
+</body>
+</html>
+'''
+
+
+def main():
+    ap = argparse.ArgumentParser(description="ETRIBE SB HTML 일괄 생성")
+    ap.add_argument("--variant", choices=["mobile", "pc"], default="mobile",
+                    help="SB 양식 (mobile 390x844 / pc 1440x1440)")
+    ap.add_argument("--canvas-width", type=int, default=None,
+                    help=f"캔버스 폭 px 직접 지정 (기본: variant값, {CANVAS_WIDTH_FIT} 초과 시 시트가 넓어짐)")
+    ap.add_argument("--canvas-min-height", type=int, default=None,
+                    help="캔버스 최소 높이 px (하한만 지정. 상한은 없어 콘텐츠만큼 늘어남)")
+    ap.add_argument("--input", required=True, help="screens.json 경로")
+    ap.add_argument("--output", required=True, help="출력 디렉토리")
+    ap.add_argument("--skill-dir", default=None,
+                    help="스킬 루트 (기본: 이 스크립트 기준 자동 탐지)")
+    args = ap.parse_args()
+
+    # PC variant도 mobile과 동일 보일러플레이트(meta/footer/CSS) 사용.
+    # 차이는 .wf-canvas 치수뿐이고, 이는 아래에서 스타일 블록에 주입한다.
+    # (어드민 템플릿처럼 body가 자체 캔버스 클래스를 쓰면 그쪽이 나중 규칙이라 우선한다.)
+
+    # skill_dir 자동 탐지: 스크립트의 부모의 부모
+    if args.skill_dir:
+        skill_dir = Path(args.skill_dir)
+    else:
+        skill_dir = Path(__file__).resolve().parent.parent
+
+    # 검증
+    verify_logo(skill_dir)
+    style_block = load_template(skill_dir, "sb-style-block.html")
+    style_block = apply_canvas_style(
+        style_block,
+        canvas_style(args.variant, args.canvas_width, args.canvas_min_height),
+    )
+    logo_data_url = load_template(skill_dir, "sb-logo-data-url.txt").strip()
+
+    # screens.json 로드
+    input_path = Path(args.input)
+    if not input_path.exists():
+        sys.exit(f"[ERROR] input JSON 없음: {input_path}")
+    data = json.loads(input_path.read_text(encoding="utf-8"))
+
+    feature_id = data.get("feature_id", "")
+    author = data.get("author", "-")
+    ymd = data.get("ymd", "")
+    channel = data.get("channel", "Front")
+    screens = data.get("screens", [])
+
+    if not screens:
+        sys.exit("[ERROR] screens 배열이 비어 있음")
+
+    # 출력 디렉토리
+    out_dir = Path(args.output)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # 각 화면 생성
+    print(f"Generating {len(screens)} SB files for {feature_id}...")
+    for s in screens:
+        sid = s["id"]
+        body = ensure_canvas_wrap(s["body"], sid)
+        warn_height_cap(body, sid)
+        html = render_html(
+            screen_id=sid,
+            title=s["title"],
+            path_str=s.get("path", ""),
+            author=author,
+            ymd=ymd,
+            body=body,
+            style_block=style_block,
+            logo_data_url=logo_data_url,
+            channel=channel,
+        )
+        out_path = out_dir / f"{sid}.html"
+        out_path.write_text(html, encoding="utf-8")
+        print(f"  ✓ {out_path.name} ({len(html):,} bytes)")
+
+    print(f"\nDone. {len(screens)} files in {out_dir}")
+
+
+if __name__ == "__main__":
+    main()

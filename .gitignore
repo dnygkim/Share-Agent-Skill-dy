@@ -1,0 +1,30 @@
+# 스킬 자동 로드용 생성물 (정본은 /skills, sync-skills 스크립트가 생성)
+# 모든 에이전트(agent/<이름>/) 공통
+agent/*/.claude/skills/
+
+# Large example files
+agent/*/examples/*.pptx
+agent/*/examples/*.pdf
+agent/*/examples/*.xlsx
+
+# Workspace files (프로젝트별 중간물)
+agent/*/_workspace/
+
+# Input files (RFP 등 기업 민감정보 — 깃에 올리지 않음, 폴더 구조만 유지)
+agent/*/input/*
+agent/*/Input/*
+!agent/*/input/.gitkeep
+!agent/*/Input/.gitkeep
+
+# Output files (프로젝트별 산출물)
+agent/*/output/
+agent/*/Output/
+
+# System files
+.DS_Store
+*.swp
+desktop.ini
+
+# claude-mem 자동 생성 파일 · 이 PC 전용 메모리 (memory/ 에는 올리지 않는다)
+memory/CLAUDE.md
+memory/local-*.md
