@@ -1,4 +1,4 @@
-# schedule-weekly-windows.ps1 — 받는 사람 Windows PC용
+﻿# schedule-weekly-windows.ps1 — 받는 사람 Windows PC용
 # share/update.sh 를 매주 월요일 09:00 에 자동 실행하도록 작업 스케줄러에 등록한다.
 # PC가 꺼져 있었으면 켜진 뒤 바로 실행한다. 실행 기록은 ~/.claude/dykim-share-update.log 에 남는다.
 #   PowerShell:  powershell -ExecutionPolicy Bypass -File share\schedule-weekly-windows.ps1
