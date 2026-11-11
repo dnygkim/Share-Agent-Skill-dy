@@ -291,12 +291,12 @@ bash share/schedule-weekly-mac.sh
 
 ## 관리자용
 
-원본 → 공유 리포 반영: `bash share/mirror-from-source.sh` — 관리자 PC 작업 스케줄러 `dykim-share-mirror`가 **매주 금요일 24시(토 00:00)** 자동 실행하고 커밋 · 푸시까지 끝낸다(PC가 꺼져 있었으면 켜진 직후 실행). 받는 쪽 주간 업데이트(월 09:00)는 그 뒤에 돈다. 원본 `origin/main`에 푸시된 내용만 옮기고, 전역 규칙에서 Dan Jr. 조항을 뺀다. 제외 목록은 스크립트 머리의 `EXCLUDE`.
+원본 → 공유 리포 반영: `bash share/mirror-from-source.sh` — 관리자 PC 작업 스케줄러 `dykim-share-mirror`가 **매주 금요일 24시(토 00:10)** 자동 실행하고 커밋 · 푸시까지 끝낸다(PC가 꺼져 있었으면 켜진 직후 실행). 원본 쪽은 매일 00:00 일일 자동 커밋이 먼저 돌아 금요일 작업분까지 올라간 뒤 반영한다. 받는 쪽 주간 업데이트(월 09:00)는 그 뒤에 돈다. 원본 `origin/main`에 푸시된 내용만 옮기고, 전역 규칙에서 Dan Jr. 조항을 뺀다. 제외 목록은 스크립트 머리의 `EXCLUDE`.
 위 릴리즈노트는 미러할 때마다 `share/build-release-notes.sh`가 원본 각 폴더 README의 릴리즈노트에서 다시 만든다 — 내용을 고치려면 원본 쪽 README의 릴리즈노트를 고친다.
 
 | <sub>공유 리포 운영 이력</sub> | <sub>일자</sub> |
 |:---|:---:|
-| <sub>원본 반영 주기 변경 — 매일 08:30 → 매주 금요일 24시(토 00:00)</sub> | <sub>2026.11.11</sub> |
+| <sub>원본 반영 주기 변경 — 매일 08:30 → 매주 금요일 24시(토 00:10, 원본 일일 커밋 00:00 다음)</sub> | <sub>2026.11.11</sub> |
 | <sub>리포 이름 변경 — `dykim-claude-agents-skills-share` → `Share-Agent-Skill-dy` (예전 주소는 GitHub 이 자동 연결)</sub> | <sub>2026.11.11</sub> |
 | <sub>릴리즈노트 자동 생성 추가 — 일자별 업데이트 항목 · 월별 상세 · 공통 반영 사항</sub> | <sub>2026.11.11</sub> |
 | <sub>공유 리포 개설 — 원본 1:1 미러(단이bot · Dan Jr. · 페르소나 · 메모리 제외), 받는 쪽 주간 업데이트</sub> | <sub>2026.11.11</sub> |
