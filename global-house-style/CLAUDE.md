@@ -15,7 +15,7 @@
 - **스타일 정본**: `~/.claude/house-style/house-style.css` — 작업 전에 읽고 `<style>` 안에 전문을 그대로 인라인한다.
 - **골격은 둘**. 산출물 성격에 맞는 쪽을 쓴다.
   - **문서형** = `~/.claude/house-style/base_template_doc.html` — 토프바(GNB) + 좌측 LNB(앵커 목차) + 표지 + 목차 + 섹션 + footer. 롱스크롤 + A4 인쇄. 분석서·리포트·PRD 가 여기 해당한다.
-  - **슬라이드형** = `dykim-claude-agents-skills-share/agent/proposal/template/base_template.html` — 1280×720 덱. 정본의 §1 서체·§2 토큰만 복제하고 슬라이드 전용 규칙은 자기 `<style>`에 둔다.
+  - **슬라이드형** = `Share-Agent-Skill-dy/agent/proposal/template/base_template.html` — 1280×720 덱. 정본의 §1 서체·§2 토큰만 복제하고 슬라이드 전용 규칙은 자기 `<style>`에 둔다.
 - **GNB(topbar)·LNB·표지·목차·footer의 구조와 스타일은 고정**한다 — 매번 그대로 쓴다.
 - **콘텐츠 영역(섹션 본문)은 고정하지 않는다.** 골격 파일 안 "콘텐츠 컴포넌트 팔레트" 주석 아래 있는 표·요약 스탯·플로우·루프·트리·mermaid·진단박스·노트·등급목록 중, **추출한 내용의 성격에 맞는 것만 골라 조합**한다. 팔레트를 통째로 나열하지 않고, 섹션마다 쓰는 조합이 달라도 된다. 전체 클래스와 용도는 `house-style.css`의 섹션별 주석(§1~22)이 정본이다.
 - 산출물은 **자기완결 단일 HTML 파일**로 만든다 — 외부 `.css`를 상대/절대경로로 link하지 않는다(파일을 옮기면 깨진다).
