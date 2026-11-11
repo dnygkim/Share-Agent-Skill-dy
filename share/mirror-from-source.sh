@@ -49,6 +49,9 @@ src_sha="$(git -C "$src" rev-parse --short origin/main)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 git -C "$src" archive origin/main | tar -x -C "$tmp"
+src_readme="$(mktemp)"
+trap 'rm -rf "$tmp" "$src_readme"' EXIT
+cp "$tmp/README.md" "$src_readme" 2>/dev/null || : > "$src_readme"   # 릴리즈노트 생성용 (README 자체는 제외 대상)
 for p in "${EXCLUDE[@]}"; do rm -rf "${tmp:?}/$p"; done
 
 # 3) 전역 규칙에서 Dan Jr. 조항을 뺀다 (하우스 스타일 · 문체 · 파일명 · 창 위치 · 수정 이력 규칙은 유지)
@@ -74,6 +77,7 @@ done
 
 # 5) 덮어쓰기 + 커밋
 cp -R "$tmp/." "$share/"
+bash "$share/share/build-release-notes.sh" "$src_readme"
 git add -A
 if git diff --cached --quiet; then
   echo "변경 없음 (원본 $src_sha)"
