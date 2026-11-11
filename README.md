@@ -1,5 +1,15 @@
 # Share-Agent-Skill(dy)
 
+<!-- SYNC-STATUS:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
+| <div align="center"><sub>배치</sub></div> | <sub>시점</sub> | <sub>하는 일</sub> |
+|:---|:---:|:---|
+| <sub>원본 일일 커밋</sub> | <sub>매일 00:00</sub> | <sub>관리자 PC의 그날 작업분을 원본 리포에 커밋 · 푸시</sub> |
+| <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |
+| <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
+
+**현재 반영본** — 원본 `d6df7e3`(2026.11.11 커밋) · 하네스 7종 · 스킬 15종 · 릴리즈노트 127건(최신 2026.11.11)
+<!-- SYNC-STATUS:END -->
+
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포.
 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지가 1:1로 들어 있고, 원본이 바뀌면 이 리포도 같이 바뀐다.
 
@@ -30,7 +40,7 @@ powershell -ExecutionPolicy Bypass -File share\schedule-weekly-windows.ps1
 bash share/schedule-weekly-mac.sh
 ```
 
-등록 후에는 **매주 월요일 09:00**에 새 내용이 있을 때만 받아서 반영한다. PC가 꺼져 있었으면 켜진 뒤 실행한다. 반영된 내용은 새로 여는 Claude Code 세션부터 적용된다. 실행 기록은 `~/.claude/dykim-share-update.log`.
+등록 후에는 **매주 월요일 09:00**에 새 내용이 있을 때만 받아서 반영한다(이 리포는 그 전 금요일 24시에 원본 최신본으로 갱신된다). PC가 꺼져 있었으면 켜진 뒤 실행한다. 반영된 내용은 새로 여는 Claude Code 세션부터 적용된다. 실행 기록은 `~/.claude/dykim-share-update.log`.
 
 ## 업데이트가 내 PC에서 하는 일
 
@@ -46,19 +56,39 @@ bash share/schedule-weekly-mac.sh
 
 ## 들어 있는 것
 
-| <sub>에이전트(하네스)</sub> | <sub>역할</sub> |
+<!-- CONTENTS:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
+| <div align="center"><sub>에이전트(하네스)</sub></div> | <sub>역할</sub> |
 |:---|:---|
-| <sub>[`agent/proposal/`](agent/proposal/)</sub> | <sub>제안서 작성 파이프라인 (RFP 분석 · 리서치 → 컨셉 → 목차 → 차수별 추출 → 최종본)</sub> |
-| <sub>[`agent/prd/`](agent/prd/)</sub> | <sub>공수산정 · 기초 PRD(RRD) 생성</sub> |
-| <sub>[`agent/harness_st-etribe/`](agent/harness_st-etribe/)</sub> | <sub>공수산정 분석서 하네스</sub> |
-| <sub>[`agent/screen-spec-id/`](agent/screen-spec-id/)</sub> | <sub>메뉴구조도(IA) 엑셀 → 화면ID 채번 → 화면명세서</sub> |
-| <sub>[`agent/feature-spec-sb/`](agent/feature-spec-sb/)</sub> | <sub>PRD(명세서) → SB(화면설계서 · 와이어프레임)</sub> |
-| <sub>[`agent/test-runner/`](agent/test-runner/)</sub> | <sub>qa-master TC 엑셀을 브라우저에서 수행 → 결과 엑셀 · HTML 리포트</sub> |
-| <sub>[`agent/worker/`](agent/worker/)</sub> | <sub>단순작업 위임 서브에이전트</sub> |
+| <sub>[`agent/proposal/`](agent/proposal/)</sub> | <sub>제안서 작성 7단계 파이프라인 (RFP 분석 · 리서치 → 컨셉 · 스토리 GATE → 목차 GATE → 1차 추출 → 피드백 대장 GATE → n차 추출 + 변경분 HTML → 최종본)</sub> |
+| <sub>[`agent/prd/`](agent/prd/)</sub> | <sub>공수산정·기초 PRD(RRD) 생성 + STATE.md 기반 살아있는 문서 갱신</sub> |
+| <sub>[`agent/screen-spec-id/`](agent/screen-spec-id/)</sub> | <sub>메뉴구조도(IA) 엑셀 → 화면ID 채번 → 화면명세서 v0.x 자동 생성</sub> |
+| <sub>[`agent/feature-spec-sb/`](agent/feature-spec-sb/)</sub> | <sub>PC/MO B2C 웹사이트 PRD(명세서) → SB(화면설계서·와이어프레임) 생성. 신규 서비스는 IA(`ia-builder` 연동)까지 잇는 프로젝트 착수 모드 지원. 별도 인증 없이 동작</sub> |
+| <sub>[`agent/test-runner/`](agent/test-runner/)</sub> | <sub>qa-master TC 엑셀을 브라우저(claude-in-chrome · Playwright)에서 직접 수행 → Pass/Fail/Block·전수 증적 기입 → 회차별 결과 엑셀 + HTML 리포트. qa-master(설계)의 짝(실행)</sub> |
+| <sub>[`agent/worker/`](agent/worker/)</sub> | <sub>단순작업 위임 로컬 서브에이전트(`~/.claude/agents/worker.md`)의 백업</sub> |
+| <sub>[`agent/harness_st-etribe/`](agent/harness_st-etribe/)</sub> | <sub>이트라이브의 IA·공수산정 HTML 리포트(웅진 04/05, FunETF 01, 아너파라다이스 02 류)를 한 번에 생성하기 위한 에이전트 하네스</sub> |
 
 하네스는 해당 폴더에서 Claude Code를 열어 쓴다. 쓰는 방법은 각 폴더의 `README.md`.
 
-스킬 목록과 제작자는 [`skills/README.md`](skills/README.md). 기획 실무 스킬 8종(`dev-reading` · `flowchart-defense` · `ia-builder` · `meeting-minutes` · `qa-master` · `requirements-generator` · `wbs-generator` · `weekly-report`)의 제작자는 신지은([jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills)). `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상이 아니다.
+| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>제작</sub> |
+|:---|:---|:---:|
+| <sub>[`rfp-analysis-research`](skills/rfp-analysis-research/SKILL.md)</sub> | <sub>RFP/RFI 파싱 → 요구사항 구조화 + 산업·경쟁사·기술 리서치</sub> | <sub>dykim</sub> |
+| <sub>[`ux-journey-insight`](skills/ux-journey-insight/SKILL.md)</sub> | <sub>사용자 여정맵 + 개선 포인트·UI/UX 전략 도출</sub> | <sub>dykim</sub> |
+| <sub>[`proposal-structure-validation`](skills/proposal-structure-validation/SKILL.md)</sub> | <sub>RFP·UX 종합 → 제안서 목차 구성 + 최종 자기검증</sub> | <sub>dykim</sub> |
+| <sub>[`proposal-slide-builder`](skills/proposal-slide-builder/SKILL.md)</sub> | <sub>본문 슬라이드 생성 (콘텐츠 초안 → HTML → PPT/Figma)</sub> | <sub>dykim</sub> |
+| <sub>[`deckslide-design-guideline`](skills/deckslide-design-guideline/SKILL.md)</sub> | <sub>PPT 장표 규격·레이아웃·디자인 스타일 표준 적용 (블랙 헤더 + 라운드 카드 + 포인트 컬러, pptxgenjs)</sub> | <sub>dykim</sub> |
+| <sub>[`handoff`](skills/handoff/SKILL.md)</sub> | <sub>`/clear` 전에 현재 세션 맥락을 `.claude/HANDOFF.md` 로 저장 → 다음 세션이 이어받기 (SessionStart 훅과 함께 사용)</sub> | <sub>dykim</sub> |
+| <sub>[`dev-reading`](skills/dev-reading/SKILL.md)</sub> | <sub>개발자료(API 명세·DB 스키마/ERD·기술문서)를 비개발 기획자 눈높이로 해설 + 확인·질문 포인트 도출</sub> | <sub>신지은</sub> |
+| <sub>[`flowchart-defense`](skills/flowchart-defense/SKILL.md)</sub> | <sub>고객 전달 플로우차트 검토 → 누락된 예외·빈결과·취소·막다른 길 방어설계 보강</sub> | <sub>신지은</sub> |
+| <sub>[`ia-builder`](skills/ia-builder/SKILL.md)</sub> | <sub>서비스 메뉴·뎁스 구조(사이트맵/IA)·기능정의서 엑셀 생성</sub> | <sub>신지은</sub> |
+| <sub>[`meeting-minutes`](skills/meeting-minutes/SKILL.md)</sub> | <sub>녹취록·메모·회의자료 → 표준 엑셀 회의록(개요/내용/TO-DO/이슈)</sub> | <sub>신지은</sub> |
+| <sub>[`qa-master`](skills/qa-master/SKILL.md)</sub> | <sub>ISTQB(CTFL·CTAL·CTEL) 기반 테스트케이스·시나리오 엑셀 생성 + 기획서 QA 검토 + 테스트 계획 수립</sub> | <sub>신지은</sub> |
+| <sub>[`requirements-generator`](skills/requirements-generator/SKILL.md)</sub> | <sub>회의록·RFP·IA 엑셀 → 요구사항 정의서(.xlsx) 생성</sub> | <sub>신지은</sub> |
+| <sub>[`wbs-generator`](skills/wbs-generator/SKILL.md)</sub> | <sub>WBS 엑셀 생성 (L1~L3 작업 계층·일정·담당자·진척률·간트)</sub> | <sub>신지은</sub> |
+| <sub>[`weekly-report`](skills/weekly-report/SKILL.md)</sub> | <sub>주간업무 보고서(PPT) 자동 작성 (W1/W2 선택, 진척률 6칸 자동 계산)</sub> | <sub>신지은</sub> |
+| <sub>[`eli5`](skills/eli5/SKILL.md)</sub> | <sub>어떤 주제든 그림 위주·적은 텍스트의 HTML 아티팩트로 쉽게 설명 (`/eli5 <주제>`)</sub> | <sub>외부 백업</sub> |
+
+스킬 제작자와 설치 방법은 [`skills/README.md`](skills/README.md). 신지은 제작 스킬의 출처는 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills). `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상이 아니다.
+<!-- CONTENTS:END -->
 
 ## 알아 둘 점
 
@@ -293,11 +323,12 @@ bash share/schedule-weekly-mac.sh
 
 ## 관리자용
 
-원본 → 공유 리포 반영: `bash share/mirror-from-source.sh` — 관리자 PC 작업 스케줄러 `dykim-share-mirror`가 **매주 금요일 24시(토 00:10)** 자동 실행하고 커밋 · 푸시까지 끝낸다(PC가 꺼져 있었으면 켜진 직후 실행). 원본 쪽은 매일 00:00 일일 자동 커밋이 먼저 돌아 금요일 작업분까지 올라간 뒤 반영한다. 받는 쪽 주간 업데이트(월 09:00)는 그 뒤에 돈다. 원본 `origin/main`에 푸시된 내용만 옮기고, 전역 규칙에서 Dan Jr. 조항을 뺀다. 제외 목록은 스크립트 머리의 `EXCLUDE`.
-위 릴리즈노트는 미러할 때마다 `share/build-release-notes.sh`가 원본 각 폴더 README의 릴리즈노트에서 다시 만든다 — 내용을 고치려면 원본 쪽 README의 릴리즈노트를 고친다.
+원본 → 공유 리포 반영: `bash share/mirror-from-source.sh` — 관리자 PC 작업 스케줄러 `dykim-share-mirror`(토 00:10)가 실행하고 커밋 · 푸시까지 끝낸다. 원본 일일 커밋은 작업 스케줄러 `dykim-source-daily-commit`(매일 00:00, `~/.claude/tools/daily-commit-source.sh`). 시점은 맨 위 표 참고. PC가 꺼져 있었으면 켜진 직후 실행한다. 원본 `origin/main`에 푸시된 내용만 옮기고, 전역 규칙에서 Dan Jr. 조항을 뺀다. 제외 목록은 스크립트 머리의 `EXCLUDE`.
+README의 자동 영역 3곳(맨 위 배치 시점 · 「들어 있는 것」 · 릴리즈노트)은 미러할 때마다 `share/build-release-notes.sh`가 원본에서 다시 만든다 — 하네스 설명은 원본 루트 README 표, 스킬 설명은 `skills/README.md`, 릴리즈노트는 원본 각 폴더 README가 출처이므로 고칠 때는 원본 쪽을 고친다.
 
 | <sub>공유 리포 운영 이력</sub> | <sub>일자</sub> |
 |:---|:---:|
+| <sub>README 맨 위에 배치 시점 · 현재 반영본 표기, 「들어 있는 것」 하네스 · 스킬 표를 원본 기준 자동 갱신으로 전환</sub> | <sub>2026.11.11</sub> |
 | <sub>원본 반영 주기 변경 — 매일 08:30 → 매주 금요일 24시(토 00:10, 원본 일일 커밋 00:00 다음)</sub> | <sub>2026.11.11</sub> |
 | <sub>리포 이름 변경 — `dykim-claude-agents-skills-share` → `Share-Agent-Skill-dy` (예전 주소는 GitHub 이 자동 연결)</sub> | <sub>2026.11.11</sub> |
 | <sub>릴리즈노트 자동 생성 추가 — 일자별 업데이트 항목 · 월별 상세 · 공통 반영 사항</sub> | <sub>2026.11.11</sub> |

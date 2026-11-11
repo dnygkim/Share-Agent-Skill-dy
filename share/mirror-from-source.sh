@@ -77,7 +77,8 @@ done
 
 # 5) 덮어쓰기 + 커밋
 cp -R "$tmp/." "$share/"
-bash "$share/share/build-release-notes.sh" "$src_readme"
+src_date="$(git -C "$src" log -1 --format=%cd --date=format:%Y.%m.%d origin/main)"
+bash "$share/share/build-release-notes.sh" "$src_readme" "$src_sha" "$src_date"
 git add -A
 if git diff --cached --quiet; then
   echo "변경 없음 (원본 $src_sha)"

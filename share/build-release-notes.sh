@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
-# build-release-notes.sh — 공유 리포 README 의 릴리즈노트 영역을 다시 만든다
-#   bash share/build-release-notes.sh [원본 README 경로]
+# build-release-notes.sh — 공유 리포 README 의 자동 영역 3곳을 다시 만든다
+#   bash share/build-release-notes.sh [원본 README 경로] [원본 커밋 sha] [원본 커밋 일자 YYYY.MM.DD]
 # mirror-from-source.sh 가 미러할 때마다 자동으로 부른다. 직접 돌릴 일은 거의 없다.
+#
+# 자동 영역 (README.md 의 표식 사이만 바꾼다)
+# - SYNC-STATUS  : 최상단 배치 시점 · 현재 반영본(원본 sha · 하네스/스킬 수 · 릴리즈노트 최신)
+# - CONTENTS     : 「들어 있는 것」 하네스 표(원본 루트 README 표 기준, 단이bot 제외) · 스킬 표(skills/README.md 기준)
+# - RELEASE-NOTES: 릴리즈노트
 #
 # 모으는 곳 (공유 리포에 들어 있는 것만)
 # - agent/<이름>/README.md · skills/<이름>/README.md · global-house-style/README.md 의 「## 릴리즈노트」 표
@@ -14,6 +19,8 @@ export LC_ALL=C
 
 share="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 src_readme="${1:-}"
+src_sha="${2:-}"
+src_date="${3:-}"
 readme="$share/README.md"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
@@ -151,15 +158,73 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
   echo '<!-- RELEASE-NOTES:END -->'
 } > "$work/notes.md"
 
-# README 의 표식 사이를 교체 (표식이 없으면 끝에 붙인다)
-if grep -q '^<!-- RELEASE-NOTES:START' "$readme"; then
-  awk -v notes="$work/notes.md" '
-    /^<!-- RELEASE-NOTES:START/ { while ((getline l < notes) > 0) print l; skip = 1; next }
-    /^<!-- RELEASE-NOTES:END -->/ { skip = 0; next }
-    !skip { print }
-  ' "$readme" > "$work/README.md"
-else
-  { cat "$readme"; echo; cat "$work/notes.md"; } > "$work/README.md"
-fi
-cp "$work/README.md" "$readme"
-echo "release notes: ${total}건 (최신 ${latest}) -> README.md"
+# ── 들어 있는 것: 하네스 표 + 스킬 표 ──────────────────────────────────────
+{
+  echo '<!-- CONTENTS:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->'
+  echo '| <div align="center"><sub>에이전트(하네스)</sub></div> | <sub>역할</sub> |'
+  echo '|:---|:---|'
+  # 원본 루트 README 의 에이전트 표 행 (공유 리포에 있는 폴더만, 원본 순서)
+  if [ -n "$src_readme" ] && [ -f "$src_readme" ]; then
+    awk '/^\| *<div align="center"><sub>에이전트<\/sub>/ { on = 1; next } on && /^\|:/ { next } on && !/^\|/ { exit } on { print }' "$src_readme"
+  fi > "$work/agent_rows.md"
+  for d in "$share"/agent/*/; do
+    name="$(basename "$d")"
+    row="$(grep -F "[\`agent/$name/\`]" "$work/agent_rows.md" | head -1 || true)"
+    if [ -z "$row" ]; then   # 원본 표에 없는 하네스: 폴더 README 첫 문단
+      desc="$(awk 'NR > 1 && /^[^# \t|>`-]/ { gsub(/\*\*/, ""); sub(/[. ]+$/, ""); print; exit }' "$d/README.md" 2>/dev/null || true)"
+      row="| <sub>[\`agent/$name/\`](agent/$name/)</sub> | <sub>${desc}</sub> |"
+    fi
+    printf '%s\t%s\n' "$(grep -nF "[\`agent/$name/\`]" "$work/agent_rows.md" | head -1 | cut -d: -f1 || true)" "$row"
+  done | sort -t "$(printf '\t')" -k1,1n | awk -F '\t' '$1 != "" { print $2 } $1 == "" { tail[++t] = $2 } END { for (i = 1; i <= t; i++) print tail[i] }'
+  echo
+  echo '하네스는 해당 폴더에서 Claude Code를 열어 쓴다. 쓰는 방법은 각 폴더의 `README.md`.'
+  echo
+  echo '| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>제작</sub> |'
+  echo '|:---|:---|:---:|'
+  awk '
+    /^## 스킬 목록/ { on = 1; next }
+    on && /^## / { exit }
+    on && /^### / { by = "외부 백업"; if (match($0, /제작: */)) by = substr($0, RSTART + RLENGTH); next }
+    on && /^\| *<sub>\[`/ {
+      n = split($0, f, "|")
+      gsub(/\]\(/, "](skills/", f[2])
+      printf "|%s|%s| <sub>%s</sub> |\n", f[2], f[3], by
+    }
+  ' "$share/skills/README.md"
+  echo
+  echo '스킬 제작자와 설치 방법은 [`skills/README.md`](skills/README.md). 신지은 제작 스킬의 출처는 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills). `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상이 아니다.'
+  echo '<!-- CONTENTS:END -->'
+} > "$work/contents.md"
+n_agent="$(grep -c '^| <sub>\[`agent/' "$work/contents.md" || true)"
+n_skill="$(find "$share/skills" -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l | tr -d ' ')"
+
+# ── 최상단: 배치 시점 · 현재 반영본 ─────────────────────────────────────────
+{
+  echo '<!-- SYNC-STATUS:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->'
+  echo '| <div align="center"><sub>배치</sub></div> | <sub>시점</sub> | <sub>하는 일</sub> |'
+  echo '|:---|:---:|:---|'
+  echo '| <sub>원본 일일 커밋</sub> | <sub>매일 00:00</sub> | <sub>관리자 PC의 그날 작업분을 원본 리포에 커밋 · 푸시</sub> |'
+  echo '| <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |'
+  echo '| <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |'
+  echo
+  printf '**현재 반영본** — 원본 `%s`(%s 커밋) · 하네스 %s종 · 스킬 %s종 · 릴리즈노트 %s건(최신 %s)\n' \
+    "${src_sha:-?}" "${src_date:-?}" "$n_agent" "$n_skill" "$total" "$latest"
+  echo '<!-- SYNC-STATUS:END -->'
+} > "$work/status.md"
+
+# README 의 표식 사이를 교체 (표식이 없으면 그대로 둔다 — RELEASE-NOTES 만 끝에 붙인다)
+replace_block() {  # $1=표식 이름 $2=새 내용 파일
+  if grep -q "^<!-- $1:START" "$readme"; then
+    awk -v notes="$2" -v s="^<!-- $1:START" -v e="^<!-- $1:END -->" '
+      $0 ~ s { while ((getline l < notes) > 0) print l; skip = 1; next }
+      $0 ~ e { skip = 0; next }
+      !skip { print }
+    ' "$readme" > "$work/README.new" && cp "$work/README.new" "$readme"
+  elif [ "$1" = "RELEASE-NOTES" ]; then
+    { echo; cat "$2"; } >> "$readme"
+  fi
+}
+replace_block SYNC-STATUS "$work/status.md"
+replace_block CONTENTS "$work/contents.md"
+replace_block RELEASE-NOTES "$work/notes.md"
+echo "readme: 하네스 ${n_agent} · 스킬 ${n_skill} · 릴리즈노트 ${total}건 (최신 ${latest}) · 원본 ${src_sha:-?}"
