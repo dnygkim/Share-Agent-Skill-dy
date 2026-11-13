@@ -1,28 +1,21 @@
-# Slack-Bot (슬랙 봇 생성 스킬)
+# Slack-Bot — 슬랙 봇 생성 스킬
 
-## 릴리즈노트
+슬랙 채널에 메시지를 자동으로 올리거나(알림형), `@봇`으로 물어보면 정해 둔 자료로 답하는(대화형) 내 봇을 만드는 스킬. 요청 한 줄 + 슬랙 로그인 · 권한 허용만으로 앱 생성부터 게시 · 답변 시험까지 진행
 
-| <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
-|:---|:---:|:---:|
-| <sub>최초 등록 — 슬랙 워크스페이스에 내 봇을 만드는 스킬. 알림형(Incoming Webhook 채널 자동 게시) · 대화형(Socket Mode + @멘션 질문에 Claude가 정해 둔 자료로 스레드 답변) 6단계 진행 절차, 매니페스트 템플릿 2종, 비밀값 저장 · 웹후크 게시 · 멘션 응답 봇 · 자동 시작 등록 스크립트 4종. 2026.11.13 공유 리포 업데이트 안내 봇을 만든 실제 절차를 범용화</sub> | <sub>2026.11.13</sub> | <sub>김단영</sub> |
+## 한눈에 보기
 
----
+| <div align="center"><sub>항목</sub></div> | <sub>내용</sub> |
+|:---|:---:|
+| <sub>**목적**</sub> | <sub>반복 알림 게시 자동화 + 동료 질문에 리포 기록 근거로 바로 답하는 봇</sub> |
+| <sub>**이럴 때 사용**</sub> | <sub>업데이트 내역 · 배치 결과를 채널에 자동 게시하고 싶을 때 / 「요즘 뭐 바뀌었어?」 질문에 봇이 답하게 하고 싶을 때</sub> |
+| <sub>**넣는 것**</sub> | <sub>봇 종류(알림형 · 대화형) · 워크스페이스 채널 링크 · 봇 이름 · 게시 내용과 시점(알림형) · 답변 근거 자료(대화형)</sub> |
+| <sub>**나오는 것**</sub> | <sub>슬랙 앱(봇) · 리포 밖 비밀 파일(웹후크 URL · 토큰) · 게시 스크립트 연결 · 대화형은 PC 상주 답변 프로그램 + 작업 스케줄러 등록</sub> |
+| <sub>**부르는 법**</sub> | <sub>`슬랙 봇 만들어줘` 같은 요청 문장 — 스킬 호출 이름 `slack-bot`(규격상 소문자), 폴더 · 표기 이름 `Slack-Bot`</sub> |
+| <sub>**사용자 할 일**</sub> | <sub>요청 한 줄 + 슬랙 로그인 · 권한 허용 + 시험 게시 문구 확인 — 슬랙 설정 화면이 어려우면 「대신 눌러줘」 한마디로 Claude가 Chrome에서 진행</sub> |
+| <sub>**Claude가 하는 일**</sub> | <sub>앱 설정 안내(또는 대신 클릭) · 비밀값 저장 · 스크립트 준비 · 단계별 시험</sub> |
+| <sub>**제작**</sub> | <sub>김단영(dykim) — 2026.11.13 공유 리포 업데이트 안내 봇을 만든 실제 절차를 범용화</sub> |
 
-## 1. 개요
-
-**슬랙 채널에 메시지를 자동으로 올리거나, `@봇`으로 물어보면 답하는 내 봇을 만드는 스킬**
-
-- 사용자가 하는 일 = 요청 한 줄 + 슬랙 로그인 · 권한 허용 + 시험 게시 문구 확인
-- Claude가 하는 일 = 앱 설정 안내(또는 대신 클릭) · 비밀값 저장 · 스크립트 준비 · 단계별 시험
-- 슬랙 설정 화면이 어려우면 「대신 눌러줘」 한마디 → 사용자가 로그인한 Chrome에서 Claude가 진행
-
-### 1.1 만든 배경
-
-- 공유 리포 업데이트 내역을 매번 손으로 채널에 올리던 일 → 업데이트 직후 자동 게시
-- 「요즘 뭐 바뀌었어?」 같은 동료 질문 → 리포 기록을 근거로 봇이 바로 답변
-- 2026.11.13 실제로 만든 봇의 절차 · 프로그램을 누구나 다시 쓸 수 있게 범용화
-
-### 1.2 봇 2종
+### 봇 2종
 
 | <div align="center"><sub>구분</sub></div> | <sub>알림형</sub> | <sub>대화형</sub> |
 |:---|:---:|:---:|
@@ -34,47 +27,18 @@
 | <sub>진행 단계</sub> | <sub>①–③</sub> | <sub>①–⑥</sub> |
 | <sub>쓰임 예</sub> | <sub>리포 업데이트 알림 · 배치 작업 결과 알림</sub> | <sub>「최근 업데이트 알려줘」 질문 답변</sub> |
 
-### 1.3 용어
+## 이렇게 요청
 
-| <div align="center"><sub>용어</sub></div> | <sub>뜻</sub> |
-|:---|:---:|
-| <sub>**슬랙 앱**</sub> | <sub>워크스페이스에 설치하는 프로그램 단위. 봇은 앱 안의 사용자</sub> |
-| <sub>**매니페스트**</sub> | <sub>앱 이름 · 권한 · 기능을 한 번에 적은 설정 글(YAML). 붙여 넣으면 앱 생성</sub> |
-| <sub>**Incoming Webhook**</sub> | <sub>정해진 채널에 메시지를 넣는 전용 주소 `https://hooks.slack.com/services/…`</sub> |
-| <sub>**Socket Mode**</sub> | <sub>공개 서버 없이 PC가 슬랙에 연결해 멘션 같은 이벤트를 받는 방식</sub> |
-| <sub>**app_mention**</sub> | <sub>누군가 `@봇`을 부른 사건. 이 이벤트를 구독해야 봇에 멘션 전달</sub> |
-| <sub>**봇 토큰** `xoxb-`</sub> | <sub>봇 이름으로 메시지를 쓰는 열쇠</sub> |
-| <sub>**앱 토큰** `xapp-`</sub> | <sub>Socket Mode로 연결하는 열쇠 (권한 `connections:write`)</sub> |
-| <sub>**비밀 파일**</sub> | <sub>웹후크 URL · 토큰을 담는 리포 밖 파일 — `~/.claude/secrets/`</sub> |
-
----
-
-## 2. 사전 준비
-
-| <div align="center"><sub>순서</sub></div> | <sub>할 일</sub> | <sub>비고</sub> |
+| <div align="center"><sub>상황</sub></div> | <sub>요청 예시</sub> | <sub>나오는 것</sub> |
 |:---|:---:|:---:|
-| <sub>①</sub> | <sub>스킬 설치 — `skills/Slack-Bot/` 폴더를 `~/.claude/skills/Slack-Bot/`으로 복사</sub> | <sub>원본 리포는 `install-global.sh`, 공유 리포는 `share/update.sh`가 자동 복사</sub> |
-| <sub>②</sub> | <sub>슬랙 계정 · 앱 설치 권한</sub> | <sub>워크스페이스가 앱 승인제면 관리자 승인 필요</sub> |
-| <sub>③</sub> | <sub>게시 · 답변할 채널</sub> | <sub>비공개 채널은 봇 초대 필요</sub> |
-| <sub>④</sub> | <sub>bash · curl</sub> | <sub>Windows는 Git Bash, macOS는 기본 터미널</sub> |
-| <sub>⑤ (대화형)</sub> | <sub>Python 3 · Claude Code 로그인</sub> | <sub>`claude -p`가 되는 상태. 추가 패키지 설치 불필요</sub> |
-| <sub>⑥ (선택)</sub> | <sub>Chrome + Claude in Chrome 확장</sub> | <sub>슬랙 설정 화면을 Claude가 대신 누를 때</sub> |
+| <sub>봇 종류부터 정하며 시작</sub> | <sub>`슬랙 봇 만들어줘`</sub> | <sub>인테이크 질문 → 알림형 ①–③ 또는 대화형 ①–⑥</sub> |
+| <sub>특정 채널에 자동 게시</sub> | <sub>`이 채널에 리포 업데이트 내역 자동으로 올려줘  https://….slack.com/archives/C0XXXXXXX`</sub> | <sub>알림형 봇 + 기존 작업 끝에 게시 호출 연결</sub> |
+| <sub>업데이트 알림</sub> | <sub>`업데이트 내역 슬랙으로 알려줘` · `슬랙 웹후크 연결해줘`</sub> | <sub>웹후크 비밀 파일 + 게시 스크립트</sub> |
+| <sub>멘션 질문에 답하는 봇</sub> | <sub>`봇 멘션하면 최근 업데이트 내역 답하게 해줘`</sub> | <sub>대화형 봇 + PC 상주 답변 프로그램</sub> |
+| <sub>슬랙 설정 화면 대행</sub> | <sub>`대신 눌러줘`</sub> | <sub>사용자가 로그인한 Chrome에서 Claude가 설정 진행</sub> |
 
-> 스킬 호출 이름은 `slack-bot`(스킬 이름 규격상 소문자), 폴더 · 표기 이름은 `Slack-Bot`
-
----
-
-## 3. 사용 방법
-
-Claude Code에서 아래처럼 요청
-
-```
-슬랙 봇 만들어줘
-이 채널에 리포 업데이트 내역 자동으로 올려줘  https://….slack.com/archives/C0XXXXXXX
-봇 멘션하면 최근 업데이트 내역 답하게 해줘
-```
-
-요청 후 Claude가 아래 질문을 **하나씩** 진행. 요청 문장에 이미 들어 있는 답은 재질문 생략
+- 이미 연결된 봇으로 메시지를 한 번 보내는 일에는 이 스킬 미사용
+- 요청 후 Claude가 아래 질문을 **하나씩** 진행 — 요청 문장에 이미 들어 있는 답은 재질문 생략
 
 | <div align="center"><sub>#</sub></div> | <sub>질문</sub> | <sub>답 예시</sub> |
 |:---|:---:|:---:|
@@ -84,9 +48,7 @@ Claude Code에서 아래처럼 요청
 | <sub>④</sub> | <sub>알림형: 무엇을 · 언제 / 대화형: 무엇에 답하는지 · 근거 자료</sub> | <sub>「리포 커밋을 푸시 직후」 · 「리포 커밋 · README 릴리즈노트 기준으로 답변」</sub> |
 | <sub>⑤</sub> | <sub>슬랙 화면 조작</sub> | <sub>「직접 할게」(단계 안내) · 「대신 해줘」(Chrome 자동 진행)</sub> |
 
----
-
-## 4. 진행 단계
+## 진행 단계
 
 ```
 ① 앱 만들기 ─▶ ② 웹후크 연결 ─▶ ③ 게시 시험 · 자동 게시            ← 알림형은 여기까지
@@ -130,7 +92,7 @@ Claude Code에서 아래처럼 요청
   macOS: `pbpaste | tr -d '\r\n' > ~/.claude/secrets/team-bot-webhook.url && pbcopy < /dev/null`
 - **자주 막히는 곳**
   - 채널 선택 화면 옆의 Slack CLI 설치 안내 → 무시
-  - 비공개 채널이 목록에 없음 → 그 채널에서 `/invite @봇이름` 후 다시 시도
+  - 비공개 채널이 목록에 미표시 → 그 채널에서 `/invite @봇이름` 후 다시 시도
   - 앱 승인제 워크스페이스 → 관리자 승인 대기
 
 ### ③ 게시 시험 · 자동 게시 연결
@@ -207,9 +169,32 @@ Claude Code에서 아래처럼 요청
 - **연결 확인**: 기록 파일 `~/.claude/<봇이름>-slack.log` 마지막 줄 「연결」
 - **멘션 시험** (사용자 이름으로 글이 올라가므로 사용자가 직접): 채널에서 `@봇이름 최근 업데이트 내역 알려줘` → 10초 안팎 스레드 답변 · 기록 파일 「질문」 「답변 ok」
 
----
+## 산출물
 
-## 5. 대화형 봇 동작 방식
+| <div align="center"><sub>결과물</sub></div> | <sub>위치</sub> | <sub>내용</sub> |
+|:---|:---:|:---:|
+| <sub>슬랙 앱(봇)</sub> | <sub>워크스페이스 · https://api.slack.com/apps</sub> | <sub>봇 이름 · 권한 · (대화형) Socket Mode · `app_mention` 구독</sub> |
+| <sub>비밀 파일</sub> | <sub>`~/.claude/secrets/`</sub> | <sub>웹후크 URL · 봇 토큰 `xoxb-` · 앱 토큰 `xapp-` — 리포 밖</sub> |
+| <sub>자동 게시 연결</sub> | <sub>기존 배치 스크립트 · 작업 스케줄러</sub> | <sub>게시 호출 한 줄 + 상태 파일 `~/.claude/state/…`(중복 게시 방지)</sub> |
+| <sub>답변 프로그램 (대화형)</sub> | <sub>`~/.claude/tools/<봇이름>/`</sub> | <sub>`slack_mention_bot.py` · `config.json` · `system-prompt.md`</sub> |
+| <sub>상주 실행 (대화형)</sub> | <sub>Windows 작업 스케줄러</sub> | <sub>로그온 + 10분마다 시작, 기록 `~/.claude/<봇이름>-slack.log`</sub> |
+
+## 설치 · 사전 준비
+
+| <div align="center"><sub>순서</sub></div> | <sub>할 일</sub> | <sub>비고</sub> |
+|:---|:---:|:---:|
+| <sub>①</sub> | <sub>스킬 설치 — `skills/Slack-Bot/` 폴더를 `~/.claude/skills/Slack-Bot/`으로 복사</sub> | <sub>원본 리포는 `install-global.sh`, 공유 리포는 `share/update.sh`가 자동 복사</sub> |
+| <sub>②</sub> | <sub>슬랙 계정 · 앱 설치 권한</sub> | <sub>워크스페이스가 앱 승인제면 관리자 승인 필요</sub> |
+| <sub>③</sub> | <sub>게시 · 답변할 채널</sub> | <sub>비공개 채널은 봇 초대 필요</sub> |
+| <sub>④</sub> | <sub>bash · curl</sub> | <sub>Windows는 Git Bash, macOS는 기본 터미널</sub> |
+| <sub>⑤ (대화형)</sub> | <sub>Python 3 · Claude Code 로그인</sub> | <sub>`claude -p`가 되는 상태. 추가 패키지 설치 불필요</sub> |
+| <sub>⑥ (선택)</sub> | <sub>Chrome + Claude in Chrome 확장</sub> | <sub>슬랙 설정 화면을 Claude가 대신 누를 때</sub> |
+
+```bash
+cp -r skills/Slack-Bot ~/.claude/skills/Slack-Bot      # 수동 설치 (bash · Git Bash)
+```
+
+## 대화형 봇 동작 방식
 
 ```
 슬랙 채널 「@봇 최근 업데이트 알려줘」
@@ -229,9 +214,7 @@ PC의 답변 프로그램 slack_mention_bot.py (상주)
 - **안정성**: 중복 실행 방지(로컬 포트 잠금) · 같은 멘션 중복 처리 방지 · 끊기면 5초–2분 간격 재연결 · 동시 답변 2건까지
 - **표준 라이브러리만 사용**: 웹소켓 연결까지 직접 구현 — `pip install` 불필요
 
----
-
-## 6. 비밀값 관리
+## 비밀값 관리
 
 | <div align="center"><sub>원칙</sub></div> | <sub>방법</sub> |
 |:---|:---:|
@@ -240,9 +223,7 @@ PC의 답변 프로그램 slack_mention_bot.py (상주)
 | <sub>형식 확인</sub> | <sub>`https://hooks.slack.com/services/` · `xoxb-` · `xapp-`로 시작할 때만 저장</sub> |
 | <sub>노출 시 재발급</sub> | <sub>웹후크 = Incoming Webhooks 표에서 삭제 후 새로 만들기 · 앱 토큰 = App-Level Tokens에서 Revoke 후 새로 만들기 · 봇 토큰 = 토큰 폐기(Revoke) 후 앱 재설치로 새 토큰 발급 → 새 값으로 `save-secret.ps1` 재저장</sub> |
 
----
-
-## 7. 운영 · 문제 해결
+## 운영 · 문제 해결
 
 | <div align="center"><sub>상황</sub></div> | <sub>처리</sub> |
 |:---|:---:|
@@ -256,9 +237,20 @@ PC의 답변 프로그램 slack_mention_bot.py (상주)
 | <sub>봇 잠시 멈추기 · 완전히 끄기</sub> | <sub>`Stop-ScheduledTask -TaskName <이름>` · `Disable-ScheduledTask -TaskName <이름>` (해제는 `Unregister-ScheduledTask`)</sub> |
 | <sub>봇을 하나 더 만들기</sub> | <sub>봇 폴더 · 봇 이름 · `lock_port` · 작업 이름을 모두 다르게</sub> |
 
----
+## 용어
 
-## 8. 파일 구성
+| <div align="center"><sub>용어</sub></div> | <sub>뜻</sub> |
+|:---|:---:|
+| <sub>**슬랙 앱**</sub> | <sub>워크스페이스에 설치하는 프로그램 단위. 봇은 앱 안의 사용자</sub> |
+| <sub>**매니페스트**</sub> | <sub>앱 이름 · 권한 · 기능을 한 번에 적은 설정 글(YAML). 붙여 넣으면 앱 생성</sub> |
+| <sub>**Incoming Webhook**</sub> | <sub>정해진 채널에 메시지를 넣는 전용 주소 `https://hooks.slack.com/services/…`</sub> |
+| <sub>**Socket Mode**</sub> | <sub>공개 서버 없이 PC가 슬랙에 연결해 멘션 같은 이벤트를 받는 방식</sub> |
+| <sub>**app_mention**</sub> | <sub>누군가 `@봇`을 부른 사건. 이 이벤트를 구독해야 봇에 멘션 전달</sub> |
+| <sub>**봇 토큰** `xoxb-`</sub> | <sub>봇 이름으로 메시지를 쓰는 열쇠</sub> |
+| <sub>**앱 토큰** `xapp-`</sub> | <sub>Socket Mode로 연결하는 열쇠 (권한 `connections:write`)</sub> |
+| <sub>**비밀 파일**</sub> | <sub>웹후크 URL · 토큰을 담는 리포 밖 파일 — `~/.claude/secrets/`</sub> |
+
+## 파일 구성
 
 ```
 skills/Slack-Bot/
@@ -276,12 +268,21 @@ skills/Slack-Bot/
     └── register-autostart.ps1       # Windows 작업 스케줄러 등록 · -DryRun
 ```
 
----
+## 만든 배경 · 실사용 예 · 검증 범위 (2026.11.13 등록 시점)
 
-## 9. 실사용 예 · 검증 범위 (2026.11.13 등록 시점)
-
+- **만든 배경**
+  - 공유 리포 업데이트 내역을 매번 손으로 채널에 올리던 일 → 업데이트 직후 자동 게시
+  - 「요즘 뭐 바뀌었어?」 같은 동료 질문 → 리포 기록을 근거로 봇이 바로 답변
+  - 2026.11.13 실제로 만든 봇의 절차 · 프로그램을 누구나 다시 쓸 수 있게 범용화
 - **실사용**: 공유 리포(Share-Agent-Skill-dy) 업데이트 안내 봇
   - 알림형: 공유 리포 반영 직후 「*MM/DD 항목 업데이트 내역*」 + 「• 」 불릿 자동 게시 (`share/notify-slack.sh`, 불릿 = 원본 커밋 본문 「- 」 줄)
   - 대화형: `@봇 최근 업데이트 내역 알려줘` → 리포 커밋 · README 릴리즈노트 기준 스레드 답변
 - **검증 완료**: 매니페스트로 앱 생성 · 웹후크 채널 게시 · Socket Mode 연결 · 토큰 확인(`--check`) · 답변 시험(정상 질문 답변 약 10초 · 범위 밖 질문 거절) · 비밀값 저장 · 웹후크 미리보기 · 자동 시작 등록 미리보기
 - **미검증**: 실제 채널 멘션 → 스레드 답변(사용자 시험 대기) · `manifest-mention.yaml` 한 번에 만들기(실사용은 알림형 매니페스트 + 화면에서 설정 추가) · macOS 절차
+
+## 릴리즈노트
+
+| <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
+|:---|:---:|:---:|
+| <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>2026.11.13</sub> | <sub>김단영</sub> |
+| <sub>최초 등록 — 슬랙 워크스페이스에 내 봇을 만드는 스킬. 알림형(Incoming Webhook 채널 자동 게시) · 대화형(Socket Mode + @멘션 질문에 Claude가 정해 둔 자료로 스레드 답변) 6단계 진행 절차, 매니페스트 템플릿 2종, 비밀값 저장 · 웹후크 게시 · 멘션 응답 봇 · 자동 시작 등록 스크립트 4종. 2026.11.13 공유 리포 업데이트 안내 봇을 만든 실제 절차를 범용화</sub> | <sub>2026.11.13</sub> | <sub>김단영</sub> |

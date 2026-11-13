@@ -7,7 +7,7 @@
 | <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `040080d`(2026.11.13 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 130건(최신 2026.11.13)
+**현재 반영본** — 원본 `e9551f9`(2026.11.13 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 154건(최신 2026.11.13)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -73,38 +73,38 @@ bash share/schedule-weekly-mac.sh
 ## 들어 있는 것
 
 <!-- CONTENTS:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
-| <div align="center"><sub>에이전트(하네스)</sub></div> | <sub>역할</sub> |
-|:---|:---|
-| <sub>[`agent/proposal/`](agent/proposal/)</sub> | <sub>제안서 작성 7단계 파이프라인 (RFP 분석 · 리서치 → 컨셉 · 스토리 GATE → 목차 GATE → 1차 추출 → 피드백 대장 GATE → n차 추출 + 변경분 HTML → 최종본)</sub> |
-| <sub>[`agent/prd/`](agent/prd/)</sub> | <sub>공수산정·기초 PRD(RRD) 생성 + STATE.md 기반 살아있는 문서 갱신</sub> |
-| <sub>[`agent/screen-spec-id/`](agent/screen-spec-id/)</sub> | <sub>메뉴구조도(IA) 엑셀 → 화면ID 채번 → 화면명세서 v0.x 자동 생성</sub> |
-| <sub>[`agent/feature-spec-sb/`](agent/feature-spec-sb/)</sub> | <sub>PC/MO B2C 웹사이트 PRD(명세서) → SB(화면설계서·와이어프레임) 생성. 신규 서비스는 IA(`ia-builder` 연동)까지 잇는 프로젝트 착수 모드 지원. 별도 인증 없이 동작</sub> |
-| <sub>[`agent/test-runner/`](agent/test-runner/)</sub> | <sub>qa-master TC 엑셀을 브라우저(claude-in-chrome · Playwright)에서 직접 수행 → Pass/Fail/Block·전수 증적 기입 → 회차별 결과 엑셀 + HTML 리포트. qa-master(설계)의 짝(실행)</sub> |
-| <sub>[`agent/worker/`](agent/worker/)</sub> | <sub>단순작업 위임 로컬 서브에이전트(`~/.claude/agents/worker.md`)의 백업</sub> |
-| <sub>[`agent/harness_st-etribe/`](agent/harness_st-etribe/)</sub> | <sub>이트라이브의 IA·공수산정 HTML 리포트(웅진 04/05, FunETF 01, 아너파라다이스 02 류)를 한 번에 생성하기 위한 에이전트 하네스</sub> |
+| <div align="center"><sub>에이전트(하네스)</sub></div> | <sub>역할</sub> | <sub>이렇게 요청</sub> |
+|:---|:---|:---|
+| <sub>[`agent/proposal/`](agent/proposal/)</sub> | <sub>제안서 작성 7단계 파이프라인 (RFP 분석 · 리서치 → 컨셉 · 스토리 GATE → 목차 GATE → 1차 추출 → 피드백 대장 GATE → n차 추출 + 변경분 HTML → 최종본)</sub> | <sub>`이 RFP로 제안서 만들어줘` · `표지만 만들어줘`</sub> |
+| <sub>[`agent/prd/`](agent/prd/)</sub> | <sub>공수산정·기초 PRD(RRD) 생성 + STATE.md 기반 살아있는 문서 갱신</sub> | <sub>`이 자료로 PRD 만들어줘` · `회의록 반영해서 PRD 업데이트해줘`</sub> |
+| <sub>[`agent/harness_st-etribe/`](agent/harness_st-etribe/)</sub> | <sub>요건정의서 · 개발계획서 · RFP · 기존 사이트 → 분석 · IA 추출 → IA · 공수 설계 → 이트라이브 IA · 공수산정 HTML 리포트 생성 + 정합성 검수</sub> | <sub>`이 계획서로 산출물 만들어줘` · `공수 HTML 뽑아줘`</sub> |
+| <sub>[`agent/screen-spec-id/`](agent/screen-spec-id/)</sub> | <sub>메뉴구조도(IA) 엑셀 → 화면ID 채번 → 화면명세서 v0.x 자동 생성</sub> | <sub>`이 IA로 화면명세서 만들어줘`</sub> |
+| <sub>[`agent/feature-spec-sb/`](agent/feature-spec-sb/)</sub> | <sub>PC/MO B2C 웹사이트 PRD(명세서) → SB(화면설계서·와이어프레임) 생성. 신규 서비스는 IA(`ia-builder` 연동)까지 잇는 프로젝트 착수 모드 지원. 별도 인증 없이 동작</sub> | <sub>`A-02 SB 만들어줘` · `A-02 PRD 만들어줘` · `테스트커머스 서비스 기획해줘`</sub> |
+| <sub>[`agent/test-runner/`](agent/test-runner/)</sub> | <sub>qa-master TC 엑셀을 브라우저(claude-in-chrome · Playwright)에서 직접 수행 → Pass/Fail/Block·전수 증적 기입 → 회차별 결과 엑셀 + HTML 리포트. qa-master(설계)의 짝(실행)</sub> | <sub>`PC에서 이 TC 돌려줘` · `어제 Fail 난 것만 다시 확인해줘`</sub> |
+| <sub>[`agent/worker/`](agent/worker/)</sub> | <sub>단순작업 위임 로컬 서브에이전트(`~/.claude/agents/worker.md`)의 백업</sub> | <sub>요청 불필요 — 단순 작업이면 자동 위임</sub> |
 
-하네스는 해당 폴더에서 Claude Code를 열어 쓴다. 쓰는 방법은 각 폴더의 `README.md`.
+하네스 = 해당 폴더에서 Claude Code 실행 → 요청 한 줄. 단계 · 산출물 상세는 각 폴더 `README.md`
 
-| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>제작</sub> |
-|:---|:---|:---:|
-| <sub>[`rfp-analysis-research`](skills/rfp-analysis-research/SKILL.md)</sub> | <sub>RFP/RFI 파싱 → 요구사항 구조화 + 산업·경쟁사·기술 리서치</sub> | <sub>dykim</sub> |
-| <sub>[`ux-journey-insight`](skills/ux-journey-insight/SKILL.md)</sub> | <sub>사용자 여정맵 + 개선 포인트·UI/UX 전략 도출</sub> | <sub>dykim</sub> |
-| <sub>[`proposal-structure-validation`](skills/proposal-structure-validation/SKILL.md)</sub> | <sub>RFP·UX 종합 → 제안서 목차 구성 + 최종 자기검증</sub> | <sub>dykim</sub> |
-| <sub>[`proposal-slide-builder`](skills/proposal-slide-builder/SKILL.md)</sub> | <sub>본문 슬라이드 생성 (콘텐츠 초안 → HTML → PPT/Figma)</sub> | <sub>dykim</sub> |
-| <sub>[`deckslide-design-guideline`](skills/deckslide-design-guideline/SKILL.md)</sub> | <sub>PPT 장표 규격·레이아웃·디자인 스타일 표준 적용 (블랙 헤더 + 라운드 카드 + 포인트 컬러, pptxgenjs)</sub> | <sub>dykim</sub> |
-| <sub>[`handoff`](skills/handoff/SKILL.md)</sub> | <sub>`/clear` 전에 현재 세션 맥락을 `.claude/HANDOFF.md` 로 저장 → 다음 세션이 이어받기 (SessionStart 훅과 함께 사용)</sub> | <sub>dykim</sub> |
-| <sub>[`Slack-Bot`](skills/Slack-Bot/SKILL.md)</sub> | <sub>슬랙 봇 만들기 — 채널 자동 게시(Incoming Webhook) · @멘션 질문에 정해 둔 자료로 스레드 답변(Socket Mode + Claude), 6단계 진행 · 비밀값 저장 · 자동 시작 등록 (호출 이름 `slack-bot`)</sub> | <sub>dykim</sub> |
-| <sub>[`dev-reading`](skills/dev-reading/SKILL.md)</sub> | <sub>개발자료(API 명세·DB 스키마/ERD·기술문서)를 비개발 기획자 눈높이로 해설 + 확인·질문 포인트 도출</sub> | <sub>신지은</sub> |
-| <sub>[`flowchart-defense`](skills/flowchart-defense/SKILL.md)</sub> | <sub>고객 전달 플로우차트 검토 → 누락된 예외·빈결과·취소·막다른 길 방어설계 보강</sub> | <sub>신지은</sub> |
-| <sub>[`ia-builder`](skills/ia-builder/SKILL.md)</sub> | <sub>서비스 메뉴·뎁스 구조(사이트맵/IA)·기능정의서 엑셀 생성</sub> | <sub>신지은</sub> |
-| <sub>[`meeting-minutes`](skills/meeting-minutes/SKILL.md)</sub> | <sub>녹취록·메모·회의자료 → 표준 엑셀 회의록(개요/내용/TO-DO/이슈)</sub> | <sub>신지은</sub> |
-| <sub>[`qa-master`](skills/qa-master/SKILL.md)</sub> | <sub>ISTQB(CTFL·CTAL·CTEL) 기반 테스트케이스·시나리오 엑셀 생성 + 기획서 QA 검토 + 테스트 계획 수립</sub> | <sub>신지은</sub> |
-| <sub>[`requirements-generator`](skills/requirements-generator/SKILL.md)</sub> | <sub>회의록·RFP·IA 엑셀 → 요구사항 정의서(.xlsx) 생성</sub> | <sub>신지은</sub> |
-| <sub>[`wbs-generator`](skills/wbs-generator/SKILL.md)</sub> | <sub>WBS 엑셀 생성 (L1~L3 작업 계층·일정·담당자·진척률·간트)</sub> | <sub>신지은</sub> |
-| <sub>[`weekly-report`](skills/weekly-report/SKILL.md)</sub> | <sub>주간업무 보고서(PPT) 자동 작성 (W1/W2 선택, 진척률 6칸 자동 계산)</sub> | <sub>신지은</sub> |
-| <sub>[`eli5`](skills/eli5/SKILL.md)</sub> | <sub>어떤 주제든 그림 위주·적은 텍스트의 HTML 아티팩트로 쉽게 설명 (`/eli5 <주제>`)</sub> | <sub>외부 백업</sub> |
+| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>이렇게 요청</sub> | <sub>제작</sub> |
+|:---|:---|:---|:---:|
+| <sub>[`rfp-analysis-research`](skills/rfp-analysis-research/README.md)</sub> | <sub>제안 1단계 — RFP/RFI 파싱 → 요구사항 구조화 + 산업·경쟁사·기술 리서치</sub> | <sub>`이 RFP 분석하고 경쟁사 리서치해줘`</sub> | <sub>dykim</sub> |
+| <sub>[`ux-journey-insight`](skills/ux-journey-insight/README.md)</sub> | <sub>제안 2단계 — 사용자 여정맵 + 개선 포인트·UI/UX 전략 도출</sub> | <sub>`이 서비스 사용자 여정맵 그려줘`</sub> | <sub>dykim</sub> |
+| <sub>[`proposal-structure-validation`](skills/proposal-structure-validation/README.md)</sub> | <sub>제안 3단계 — RFP·UX 종합 → 제안서 목차 구성 + 최종 자기검증</sub> | <sub>`제안서 목차 구성하고 검증해줘`</sub> | <sub>dykim</sub> |
+| <sub>[`proposal-slide-builder`](skills/proposal-slide-builder/README.md)</sub> | <sub>제안 4단계 — 본문 슬라이드 생성 (콘텐츠 초안 → HTML → PPT/Figma)</sub> | <sub>`SECTION 3 작성해줘` · `제안서를 PPT로 만들어줘`</sub> | <sub>dykim</sub> |
+| <sub>[`deckslide-design-guideline`](skills/deckslide-design-guideline/README.md)</sub> | <sub>PPT 장표 규격·레이아웃·디자인 스타일 표준 적용 (블랙 헤더 + 라운드 카드 + 포인트 컬러, pptxgenjs)</sub> | <sub>`PPT 디자인 지침 적용해줘` · `장표 디자인 통일해줘`</sub> | <sub>dykim</sub> |
+| <sub>[`handoff`](skills/handoff/README.md)</sub> | <sub>`/clear` 전에 현재 세션 맥락을 `.claude/HANDOFF.md` 로 저장 → 다음 세션이 이어받기 (SessionStart 훅과 함께 사용)</sub> | <sub>`/handoff` · `핸드오프 저장해줘`</sub> | <sub>dykim</sub> |
+| <sub>[`Slack-Bot`](skills/Slack-Bot/README.md)</sub> | <sub>슬랙 봇 만들기 — 채널 자동 게시(Incoming Webhook) · @멘션 질문에 정해 둔 자료로 스레드 답변(Socket Mode + Claude), 6단계 진행 · 비밀값 저장 · 자동 시작 등록 (호출 이름 `slack-bot`)</sub> | <sub>`슬랙 봇 만들어줘` · `봇 멘션하면 답하게 해줘`</sub> | <sub>dykim</sub> |
+| <sub>[`dev-reading`](skills/dev-reading/README.md)</sub> | <sub>개발자료(API 명세·DB 스키마/ERD·기술문서)를 비개발 기획자 눈높이로 해설 + 확인·질문 포인트 도출</sub> | <sub>`이 API 명세 풀어줘` · `ERD 해석해줘`</sub> | <sub>신지은</sub> |
+| <sub>[`flowchart-defense`](skills/flowchart-defense/README.md)</sub> | <sub>고객 전달 플로우차트 검토 → 누락된 예외·빈결과·취소·막다른 길 방어설계 보강</sub> | <sub>`이 챗봇 흐름도 검토해줘`</sub> | <sub>신지은</sub> |
+| <sub>[`ia-builder`](skills/ia-builder/README.md)</sub> | <sub>서비스 메뉴·뎁스 구조(사이트맵/IA)·기능정의서 엑셀 생성</sub> | <sub>`IA 만들어줘` · `사이트맵 만들어줘`</sub> | <sub>신지은</sub> |
+| <sub>[`meeting-minutes`](skills/meeting-minutes/README.md)</sub> | <sub>녹취록·메모·회의자료 → 표준 엑셀 회의록(개요/내용/TO-DO/이슈)</sub> | <sub>`이 녹취록 회의록으로 정리해줘`</sub> | <sub>신지은</sub> |
+| <sub>[`qa-master`](skills/qa-master/README.md)</sub> | <sub>ISTQB(CTFL·CTAL·CTEL) 기반 테스트케이스·시나리오 엑셀 생성 + 기획서 QA 검토 + 테스트 계획 수립</sub> | <sub>`테스트케이스 만들어줘` · `이 기획서 QA해줘`</sub> | <sub>신지은</sub> |
+| <sub>[`requirements-generator`](skills/requirements-generator/README.md)</sub> | <sub>회의록·RFP·IA 엑셀 → 요구사항 정의서(.xlsx) 생성</sub> | <sub>`이 회의록으로 요구사항 정의서 뽑아줘`</sub> | <sub>신지은</sub> |
+| <sub>[`wbs-generator`](skills/wbs-generator/README.md)</sub> | <sub>WBS 엑셀 생성 (L1~L3 작업 계층·일정·담당자·진척률·간트)</sub> | <sub>`이 프로젝트 WBS 짜줘`</sub> | <sub>신지은</sub> |
+| <sub>[`weekly-report`](skills/weekly-report/README.md)</sub> | <sub>주간업무 보고서(PPT) 자동 작성 (W1/W2 선택, 진척률 6칸 자동 계산)</sub> | <sub>`이번주 주간보고 작성해줘`</sub> | <sub>신지은</sub> |
+| <sub>[`eli5`](skills/eli5/README.md)</sub> | <sub>어떤 주제든 그림 위주·적은 텍스트의 HTML 아티팩트로 쉽게 설명 (`/eli5 <주제>`)</sub> | <sub>`/eli5 DNS가 뭐야`</sub> | <sub>외부 백업</sub> |
 
-스킬 제작자와 설치 방법은 [`skills/README.md`](skills/README.md). 신지은 제작 스킬의 출처는 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills). `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상이 아니다.
+스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상 제외
 <!-- CONTENTS:END -->
 
 ## 업무 흐름으로 잇기
@@ -144,11 +144,11 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 모아 일자별로 정리한 것 (총 130건 · 최신 2026.11.13). 상세는 항목 이름을 눌러 해당 README 에서 본다.
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 154건 · 최신 2026.11.13). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
-모든 하네스 · 스킬에 공통으로 적용되는 전역 규칙. 정본은 [`global-house-style/CLAUDE.md`](global-house-style/CLAUDE.md)이고, `share/update.sh` 가 `~/.claude/house-style/global-rules.md` 로 설치해 `~/.claude/CLAUDE.md` 에서 불러온다. 규칙이 바뀐 이력은 아래 표의 「공통」 구분.
+모든 하네스 · 스킬에 공통으로 걸리는 전역 규칙. 정본 [`global-house-style/CLAUDE.md`](global-house-style/CLAUDE.md) → `share/update.sh` 가 `~/.claude/house-style/global-rules.md` 로 설치 → `~/.claude/CLAUDE.md` 에서 불러오기. 규칙 변경 이력은 아래 표의 「공통」 구분
 
 | <div align="center"><sub>#</sub></div> | <sub>전역 규칙</sub> |
 |:---:|:---|
@@ -162,7 +162,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
-| <sub>2026.11.13</sub> |  | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
+| <sub>2026.11.13</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md) · [harness_st-etribe](agent/harness_st-etribe/README.md) · [prd](agent/prd/README.md) · [proposal](agent/proposal/README.md) · [screen-spec-id](agent/screen-spec-id/README.md) · [test-runner](agent/test-runner/README.md) · [worker](agent/worker/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md) · [deckslide-design-guideline](skills/deckslide-design-guideline/README.md) · [dev-reading](skills/dev-reading/README.md) · [eli5](skills/eli5/README.md) · [flowchart-defense](skills/flowchart-defense/README.md) · [handoff](skills/handoff/README.md) · [ia-builder](skills/ia-builder/README.md) · [meeting-minutes](skills/meeting-minutes/README.md) · [proposal-slide-builder](skills/proposal-slide-builder/README.md) · [proposal-structure-validation](skills/proposal-structure-validation/README.md) · [qa-master](skills/qa-master/README.md) · [requirements-generator](skills/requirements-generator/README.md) · [rfp-analysis-research](skills/rfp-analysis-research/README.md) · [ux-journey-insight](skills/ux-journey-insight/README.md) · [wbs-generator](skills/wbs-generator/README.md) · [weekly-report](skills/weekly-report/README.md)</sub> |
 | <sub>2026.11.11</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> |  |
 | <sub>2026.11.10</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[rfp-analysis-research](skills/rfp-analysis-research/README.md)</sub> |
 | <sub>2026.11.06</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> |  |  |
@@ -192,12 +192,36 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 12건</summary>
+<summary><b>2026.11</b> · 36건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
-| <sub>2026.11.13</sub> | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>장표 품질 기준 신설 — 드라이브 `! 사업제안&견적` 최종 제출본 12건(메리츠화재 2027 · GS칼텍스를 기준으로 KB손해보험 · 롯데지주 LIPUS · 수협 · 블루망고 · 계룡건설 · MG새마을금고 · 아시아나 · 삼성닷컴 · 현대오토에버)을 장표 단위로 읽고 `references/slide-quality-bar.md`로 정리: ① 덱 유형별 골격 · 분량(경쟁입찰 운영 · 구축 / 평가 목차 지정형 / 제언서 RFI 응답형 · 피치형 / 견적형 / 발표 요약본) ② 장표 한 장의 해부(헤더 · 태그라인 · 거버닝 · 리드 · 근거 캡션 · 결론 바 · ※ 단서 · 그룹마다 강조 1개) ③ 장표 유형 30여 종의 레이아웃 · 반드시 들어갈 내용 · 불합격 예 ④ 잘 쓴 문장 · 버릴 문장 ⑤ 완성도 점검표(수치 일치 · 콜아웃 번호 · 명칭 통일 · 스토리 회수). `writing-style.md` §5에 반례 5종(「~을 통한 ~ 확보」 · 최상급 · 인칭 · 반복 · 띄어쓰기), `check_style.pl` [주의] 확장, slide-builder 자기검증 · qa 체크리스트 · `CLAUDE.md` 3-1 · `ORCHESTRATOR.md` S4 · `skeleton-bid.md` §3 연결. 드라이브 폴더 번호 변경에 맞춰 기준 덱 경로를 이름 기준으로</sub> | <sub>김단영</sub> |
+| <sub>2026.11.13</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 변경 이력 맨 아래로 이동</sub> | <sub>—</sub> |
+|  | <sub>하네스</sub> | <sub>[prd](agent/prd/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>장표 품질 기준 신설 — 드라이브 `! 사업제안&견적` 최종 제출본 12건(메리츠화재 2027 · GS칼텍스를 기준으로 KB손해보험 · 롯데지주 LIPUS · 수협 · 블루망고 · 계룡건설 · MG새마을금고 · 아시아나 · 삼성닷컴 · 현대오토에버)을 장표 단위로 읽고 `references/slide-quality-bar.md`로 정리: ① 덱 유형별 골격 · 분량(경쟁입찰 운영 · 구축 / 평가 목차 지정형 / 제언서 RFI 응답형 · 피치형 / 견적형 / 발표 요약본) ② 장표 한 장의 해부(헤더 · 태그라인 · 거버닝 · 리드 · 근거 캡션 · 결론 바 · ※ 단서 · 그룹마다 강조 1개) ③ 장표 유형 30여 종의 레이아웃 · 반드시 들어갈 내용 · 불합격 예 ④ 잘 쓴 문장 · 버릴 문장 ⑤ 완성도 점검표(수치 일치 · 콜아웃 번호 · 명칭 통일 · 스토리 회수). `writing-style.md` §5에 반례 5종(「~을 통한 ~ 확보」 · 최상급 · 인칭 · 반복 · 띄어쓰기), `check_style.pl` [주의] 확장, slide-builder 자기검증 · qa 체크리스트 · `CLAUDE.md` 3-1 · `ORCHESTRATOR.md` S4 · `skeleton-bid.md` §3 연결. 드라이브 폴더 번호 변경에 맞춰 기준 덱 경로를 이름 기준으로</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[screen-spec-id](agent/screen-spec-id/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[test-runner](agent/test-runner/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[worker](agent/worker/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> | <sub>최초 등록 — 슬랙 워크스페이스에 내 봇을 만드는 스킬. 알림형(Incoming Webhook 채널 자동 게시) · 대화형(Socket Mode + @멘션 질문에 Claude가 정해 둔 자료로 스레드 답변) 6단계 진행 절차, 매니페스트 템플릿 2종, 비밀값 저장 · 웹후크 게시 · 멘션 응답 봇 · 자동 시작 등록 스크립트 4종. 2026.11.13 공유 리포 업데이트 안내 봇을 만든 실제 절차를 범용화</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[deckslide-design-guideline](skills/deckslide-design-guideline/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[dev-reading](skills/dev-reading/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[eli5](skills/eli5/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[flowchart-defense](skills/flowchart-defense/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[handoff](skills/handoff/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[ia-builder](skills/ia-builder/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[meeting-minutes](skills/meeting-minutes/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[proposal-slide-builder](skills/proposal-slide-builder/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[proposal-structure-validation](skills/proposal-structure-validation/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[qa-master](skills/qa-master/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[requirements-generator](skills/requirements-generator/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[rfp-analysis-research](skills/rfp-analysis-research/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[ux-journey-insight](skills/ux-journey-insight/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[wbs-generator](skills/wbs-generator/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[weekly-report](skills/weekly-report/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
 | <sub>2026.11.11</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>막대 · 마일스톤 그래프 컴포넌트 추가(`house-style.css` §23) — 수치 비교 `.hbars` · 시점 추이 `.cols` · 발주 일정 D-day `.ms` · 간트 마감 표시 `.gbar.mk`. 계열 하나 · 강조 막대만 `.key`(CI 문서는 포인트 색) · 같은 수치는 표로도 남김 · 인쇄 시 막대 색 유지. `base_template_doc.html` 팔레트에 견본 추가 — 2026.11.11 「그래프로 표현」 지시, 삼성자산운용 FunETF RFP 분석 v0.3에 첫 적용</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>S1 분석 보고서 양식 표준화 + 고객사 CI 기본 적용 — 삼성자산운용 FunETF v0.3 보고서를 기준본으로 골격(`template/rfp_report_template.html`)과 작성 규칙(`references/rfp-report-format.md`) 신설: PART Ⅰ RFP 분석 · Ⅱ 현황 · 시장 · Ⅲ 중점 과제 심층 · Ⅳ 제안 전략 · 실행 초안, LNB 2단 · 기본 그래프(D-day · 작업 간트 · 배점 · 시장 추이 · 로드맵 · 지면 배분)와 같은 수치 표. HTML 산출물(보고서 · 덱 · 변경분)은 고객사 로고 Primary 컬러를 기본 적용 — 대표 사이트 · 로고 확인 → 미확인 · 후보 복수면 먼저 질문 → Primary 실측 → 추출 전 한 줄 확인. `CLAUDE.md` ③ · `ORCHESTRATOR.md` · `rfp-analyst` · `design-system.md` · `slide-tokens.css` · `qa` 반영</sub> | <sub>김단영</sub> |
 | <sub>2026.11.10</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>외부링크 아이콘을 블랙 라인(투명도 제거)으로 변경하고, 본문 고유명사(사이트 · 서비스 · 기관 · 도구)도 같은 `a.ext`로 연결하는 규칙을 `house-style.css` §22에 명시 — 2026.11.10 지시, `~/.claude/house-style/` 사본과 동일 유지</sub> | <sub>김단영</sub> |
@@ -302,7 +326,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>수정 피드백 루프: feedback-curator(opus·on-demand) — 확정된 대화 수정을 취향(user)/공통개선(global) 분류해 corpus.py pref로 기록(prefs/{user}·feedback/agent-improvements). 취향=다음부터 자동, 공통=/harness 반영. 사용자가이드에 흐름 추가</sub> | <sub>—</sub> |
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>최종 HTML 자동 버전관리: corpus.py put-html(생성/수정시 버전 커밋·태그 이동)·get(최신/특정버전 받아보기). save의 index를 update-or-append로(재작업 중복 방지). 다중 사용자 대응</sub> | <sub>—</sub> |
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>기획 과소 가드: 기획 베이스=페이지수+난이도, 디자인 고도화 시 기획 동반 상승. build_report [WARN](agent/harness_st-etribe/기획 실무<디자인×0.5 / 기획1명vs디자인+퍼블4명+). 방법론§9·architect</sub> | <sub>—</sub> |
-|  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>커밋/푸시 포인트 정리: corpus.py save가 섹션 원자별 1커밋(kb(type):id</sub> | <sub>—</sub> |
+|  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>커밋/푸시 포인트 정리: corpus.py save가 섹션 원자별 1커밋(kb(type):id\|…)+kb(report)+태그 kb/{id}, snapshot/feedback 메시지 검색형 통일. ORCHESTRATOR "커밋/푸시 포인트" 정책+리치 05_meta 스키마. 옛 meta.md 구조 잔재 제거(CLAUDE·ORCHESTRATOR)</sub> | <sub>—</sub> |
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>corpus KB 재설계(사내 kb 규약 채택, 우리 산출물 정렬): 섹션 원자 9종(overview·direction·ia·approach·infra·estimates·scope·questions·decisions)+케이스별 종합 cases/(범위→확인→공수 밴드)+patterns 14. corpus.py search 강화(밴드 카드+사슬 ref). 7폴더 9건 적재</sub> | <sub>—</sub> |
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>버전 변천 학습 반영(웅진081·코스모진078 23판 분석): ⑤표현절제(과장네이밍 금지) ⑥불확실시나리오 본산정 분리 ①수치변동 1:1사유+확정도(탐색/제안/확정) ④범위경계 in/out표+기존소스인계 확인. architect·builder·analyst·qa(s)·report-spec§8</sub> | <sub>—</sub> |
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>corpus 참조 가시화·흔적 강제: Phase1.5 corpus 상태 한줄 보고(연결/0건/미연결사유) + analyst "참조 선례" 절·architect measure_note 선례 인용 필수 + 독립성 규칙에서 "corpus=허용된 참조(인용 대상)" 분리 + corpus.py 미연결 사유 명확화</sub> | <sub>—</sub> |
