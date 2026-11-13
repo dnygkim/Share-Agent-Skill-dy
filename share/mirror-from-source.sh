@@ -82,6 +82,8 @@ bash "$share/share/build-release-notes.sh" "$src_readme" "$src_sha" "$src_date"
 git add -A
 if git diff --cached --quiet; then
   echo "변경 없음 (원본 $src_sha)"
+  # 직전 게시가 실패했으면 여기서 다시 시도 (웹후크가 없으면 건너뜀)
+  [ "$no_push" -eq 1 ] || bash "$share/share/notify-slack.sh" || echo "슬랙 게시 실패 — 미러는 정상" >&2
   exit 0
 fi
 git commit -q -m "mirror: 원본 $src_sha 반영"
@@ -91,4 +93,6 @@ git diff --stat HEAD~1 HEAD 2>/dev/null | tail -1 || true
 if [ "$no_push" -eq 0 ]; then
   git push -q origin HEAD:main
   echo "푸시 완료"
+  # 슬랙 채널에 「MM/DD 항목 업데이트 내역」 게시 (share/notify-slack.sh · 웹후크가 없으면 건너뜀)
+  bash "$share/share/notify-slack.sh" || echo "슬랙 게시 실패 — 미러는 정상" >&2
 fi
