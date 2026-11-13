@@ -10,23 +10,33 @@
 **현재 반영본** — 원본 `040080d`(2026.11.13 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 130건(최신 2026.11.13)
 <!-- SYNC-STATUS:END -->
 
-김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포.
-원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지가 1:1로 들어 있고, 원본이 바뀌면 이 리포도 같이 바뀐다.
+김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
 
-- **이 리포는 받기 전용** — 여기서 고친 내용은 다음 업데이트 때 원본 내용으로 되돌아간다. 고칠 점은 관리자에게 전달
+- **받기 전용** — 여기서 고친 내용은 다음 업데이트 때 원본 내용으로 복귀. 고칠 점은 관리자에게 전달
 - **빠진 것**: 단이bot(`agent/danibot`) · Dan Jr. 스킬(`skills/danjr`) · 페르소나(`persona`) · 개인 메모리 · PC 동기화 스크립트
+
+## 한눈에 보기
+
+| <div align="center"><sub>구분</sub></div> | <sub>무엇</sub> | <sub>쓰는 법</sub> | <sub>예</sub> |
+|:---|:---:|:---:|:---:|
+| <sub>**스킬** `skills/`</sub> | <sub>한 가지 일을 끝내는 단독 도구</sub> | <sub>`share/update.sh`가 `~/.claude/skills/`에 설치 → 어느 폴더에서든 요청 한 줄</sub> | <sub>`회의록 작성해줘` · `이 프로젝트 WBS 짜줘`</sub> |
+| <sub>**하네스** `agent/`</sub> | <sub>여러 단계 · 승인 게이트(GATE)를 거치는 업무 파이프라인</sub> | <sub>이 리포의 `agent/<이름>/` 폴더에서 Claude Code 실행 → 요청</sub> | <sub>`이 RFP로 제안서 만들어줘` · `이 IA로 화면명세서 만들어줘`</sub> |
+| <sub>**공유 규칙** `global-house-style/`</sub> | <sub>HTML 하우스 스타일 · 거버닝 메시지 문체 · 산출물 파일명 · 자동화 창 위치 · HTML 수정 이력</sub> | <sub>`share/update.sh`가 `~/.claude/house-style/`에 설치 → `~/.claude/CLAUDE.md`에서 불러오기</sub> | <sub>모든 HTML 산출물의 기본 스타일</sub> |
+
+- 하네스 · 스킬마다 폴더 안 `README.md`가 사용 설명서 — 한눈에 보기 → 이렇게 요청 → 진행 단계 → 산출물 → 준비 · 설치 → 릴리즈노트 순
+- 아래 「들어 있는 것」 표의 「이렇게 요청」 문장을 그대로 입력하면 바로 시작
 
 ## 처음 설치 (1회)
 
-준비물: Git, Claude Code. Windows는 [Git for Windows](https://git-scm.com/download/win)에 포함된 **Git Bash**에서 실행한다(PowerShell의 `bash`는 WSL일 수 있어 쓰지 않는다).
+준비물: Git · Claude Code. Windows는 [Git for Windows](https://git-scm.com/download/win)에 포함된 **Git Bash**에서 실행(PowerShell의 `bash`는 WSL일 수 있어 사용 금지)
 
 ```bash
-# 1) 받기 — 처음 한 번 GitHub 로그인 창이 뜬다
+# 1) 받기 — 처음 한 번 GitHub 로그인 창 표시
 cd ~/Documents
 git clone https://github.com/dnygkim/Share-Agent-Skill-dy.git
 cd Share-Agent-Skill-dy
 
-# 2) 내 Claude Code 에 반영
+# 2) 내 Claude Code 에 반영 — 스킬 · 공유 규칙 · 하네스용 스킬 사본
 bash share/update.sh
 ```
 
@@ -40,19 +50,25 @@ powershell -ExecutionPolicy Bypass -File share\schedule-weekly-windows.ps1
 bash share/schedule-weekly-mac.sh
 ```
 
-등록 후에는 **매주 월요일 09:00**에 새 내용이 있을 때만 받아서 반영한다(이 리포는 그 전 금요일 24시에 원본 최신본으로 갱신된다). PC가 꺼져 있었으면 켜진 뒤 실행한다. 반영된 내용은 새로 여는 Claude Code 세션부터 적용된다. 실행 기록은 `~/.claude/dykim-share-update.log`.
+- 등록 후 **매주 월요일 09:00**에 새 내용이 있을 때만 받아서 반영(이 리포는 그 전 금요일 24시에 원본 최신본으로 갱신)
+- PC가 꺼져 있었으면 켜진 뒤 실행, 반영 내용은 새로 여는 Claude Code 세션부터 적용
+- 실행 기록 `~/.claude/dykim-share-update.log`
 
-## 업데이트가 내 PC에서 하는 일
+## 바로 써 보기
 
-| <sub>대상</sub> | <sub>동작</sub> |
-|:---|:---|
-| <sub>`~/.claude/skills/<스킬>`</sub> | <sub>이 리포의 스킬을 설치·교체. 리포에서 빠진 스킬은 이 리포가 설치했던 것만 지운다. 원래 있던 같은 이름 스킬은 처음 한 번 `~/.claude/skills-backup-날짜시각/`으로 옮겨 둔다</sub> |
-| <sub>`~/.claude/house-style/`</sub> | <sub>HTML 산출물 기본 스타일(`house-style.css` · `base_template_doc.html`)과 공유 규칙(`global-rules.md`) 교체</sub> |
-| <sub>`~/.claude/CLAUDE.md`</sub> | <sub>기존 내용은 그대로 두고, 맨 끝에 공유 규칙 불러오기 한 줄(`@~/.claude/house-style/global-rules.md`)만 1회 추가. 공유 규칙을 끄려면 이 줄을 지운다</sub> |
-| <sub>`agent/*/.claude/skills/`</sub> | <sub>하네스가 쓰는 스킬 사본을 다시 생성(`sync-skills.sh`)</sub> |
+```
+① 스킬 — 아무 폴더에서 Claude Code 실행 후 요청
+   회의록 작성해줘              → 녹취록 · 메모를 붙이면 표준 회의록 엑셀
+   이 프로젝트 WBS 짜줘          → WBS 엑셀(작업 계층 · 일정 · 진척률 · 간트)
 
-지금 바로 받고 싶으면 `bash share/update.sh`, 변경이 없어도 다시 반영하려면 `bash share/update.sh --force`.
-자동 업데이트 해제: Windows `Unregister-ScheduledTask -TaskName 'dykim-share-update' -Confirm:$false` · Mac은 `share/schedule-weekly-mac.sh` 머리말 참고.
+② 하네스 — 이 리포의 하네스 폴더에서 Claude Code 실행 후 요청
+   cd ~/Documents/Share-Agent-Skill-dy/agent/proposal
+   claude
+   이 RFP로 제안서 만들어줘      → 인테이크 질문(하나씩) → GATE 승인 → 단계별 산출물
+```
+
+- 하네스 입력 자료는 `agent/<이름>/input/{프로젝트}/`, 산출물은 `agent/<이름>/output/{프로젝트}/` — 둘 다 Git 업로드 제외
+- 하네스는 폴더를 열면 그 폴더의 `CLAUDE.md`가 자동 로딩되어 동작, 단계마다 사용자 승인(GATE) 대기
 
 ## 들어 있는 것
 
@@ -91,10 +107,39 @@ bash share/schedule-weekly-mac.sh
 스킬 제작자와 설치 방법은 [`skills/README.md`](skills/README.md). 신지은 제작 스킬의 출처는 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills). `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상이 아니다.
 <!-- CONTENTS:END -->
 
+## 업무 흐름으로 잇기
+
+하네스 · 스킬은 단독으로도 쓰지만, 앞 단계 산출물을 다음 단계 입력으로 넘기면 한 업무 흐름으로 연결
+
+```
+제안      rfp-analysis-research → ux-journey-insight → proposal-structure-validation → proposal-slide-builder
+          └ agent/proposal 7단계가 이 스킬들을 단계별로 자동 호출
+
+착수·설계  agent/prd (공수 · 기초 PRD) → ia-builder (IA) → agent/screen-spec-id (화면ID · 화면명세서)
+          → agent/feature-spec-sb (기능 PRD · SB) → requirements-generator · wbs-generator
+          └ 조합 예시, 순서 강제 없음 · feature-spec-sb 착수 모드는 ia-builder 자동 호출
+
+QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수행 · 결과 · 증적 기입)
+```
+
+## 업데이트가 내 PC에서 하는 일
+
+| <div align="center"><sub>대상</sub></div> | <sub>동작</sub> |
+|:---|:---:|
+| <sub>`~/.claude/skills/<스킬>`</sub> | <sub>이 리포의 스킬 설치 · 교체. 리포에서 빠진 스킬은 이 리포가 설치했던 것만 삭제. 원래 있던 같은 이름 스킬은 처음 한 번 `~/.claude/skills-backup-날짜시각/`으로 이동</sub> |
+| <sub>`~/.claude/house-style/`</sub> | <sub>HTML 산출물 기본 스타일(`house-style.css` · `base_template_doc.html`)과 공유 규칙(`global-rules.md`) 교체</sub> |
+| <sub>`~/.claude/CLAUDE.md`</sub> | <sub>기존 내용 유지, 맨 끝에 공유 규칙 불러오기 한 줄(`@~/.claude/house-style/global-rules.md`)만 1회 추가. 공유 규칙을 끄려면 이 줄 삭제</sub> |
+| <sub>`agent/*/.claude/skills/`</sub> | <sub>하네스가 쓰는 스킬 사본 재생성(`sync-skills.sh`)</sub> |
+
+- 지금 바로 받기 `bash share/update.sh` · 변경이 없어도 다시 반영 `bash share/update.sh --force`
+- 자동 업데이트 해제: Windows `Unregister-ScheduledTask -TaskName 'dykim-share-update' -Confirm:$false` · Mac은 `share/schedule-weekly-mac.sh` 머리말 참고
+
 ## 알아 둘 점
 
-- 하네스 문서에 나오는 「Dan Jr. 등급 조회」는 관리자 PC 전용 파일(`~/.claude/persona/persona.md`)을 가리킨다. 받는 PC에는 이 파일이 없으므로 하네스는 승인 단계마다 그대로 묻는다
-- `agent/*/input/` · `output/`에 넣은 고객 자료는 Git에 올라가지 않는다(`.gitignore`). `agent/*/examples/`의 완성본은 형식 참고용 — 고객명 · 수치 · 문장을 다른 문서에 재사용하지 않는다
+- 하네스 문서에 나오는 「Dan Jr. 등급 조회」는 관리자 PC 전용 파일(`~/.claude/persona/persona.md`) 기준 — 받는 PC에는 이 파일이 없으므로 하네스가 승인 단계마다 그대로 질문
+- `agent/*/input/` · `output/`에 넣은 고객 자료는 Git 업로드 제외(`.gitignore`)
+- `agent/*/examples/`의 완성본은 형식 참고용 — 고객명 · 수치 · 문장을 다른 문서에 재사용 금지
+- 업데이트 소식은 공유 리포 반영 직후 슬랙 채널에 자동 게시 — 항목별 변경 요약 불릿
 
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
@@ -325,16 +370,3 @@ bash share/schedule-weekly-mac.sh
 </details>
 
 <!-- RELEASE-NOTES:END -->
-
-## 관리자용
-
-원본 → 공유 리포 반영: `bash share/mirror-from-source.sh` — 관리자 PC 작업 스케줄러 `dykim-share-mirror`(토 00:10)가 실행하고 커밋 · 푸시까지 끝낸다. 원본 일일 커밋은 작업 스케줄러 `dykim-source-daily-commit`(매일 00:00, `~/.claude/tools/daily-commit-source.sh`). 시점은 맨 위 표 참고. PC가 꺼져 있었으면 켜진 직후 실행한다. 원본 `origin/main`에 푸시된 내용만 옮기고, 전역 규칙에서 Dan Jr. 조항을 뺀다. 제외 목록은 스크립트 머리의 `EXCLUDE`.
-README의 자동 영역 3곳(맨 위 배치 시점 · 「들어 있는 것」 · 릴리즈노트)은 미러할 때마다 `share/build-release-notes.sh`가 원본에서 다시 만든다 — 하네스 설명은 원본 루트 README 표, 스킬 설명은 `skills/README.md`, 릴리즈노트는 원본 각 폴더 README가 출처이므로 고칠 때는 원본 쪽을 고친다.
-
-| <sub>공유 리포 운영 이력</sub> | <sub>일자</sub> |
-|:---|:---:|
-| <sub>README 맨 위에 배치 시점 · 현재 반영본 표기, 「들어 있는 것」 하네스 · 스킬 표를 원본 기준 자동 갱신으로 전환</sub> | <sub>2026.11.11</sub> |
-| <sub>원본 반영 주기 변경 — 매일 08:30 → 매주 금요일 24시(토 00:10, 원본 일일 커밋 00:00 다음)</sub> | <sub>2026.11.11</sub> |
-| <sub>리포 이름 변경 — `dykim-claude-agents-skills-share` → `Share-Agent-Skill-dy` (예전 주소는 GitHub 이 자동 연결)</sub> | <sub>2026.11.11</sub> |
-| <sub>릴리즈노트 자동 생성 추가 — 일자별 업데이트 항목 · 월별 상세 · 공통 반영 사항</sub> | <sub>2026.11.11</sub> |
-| <sub>공유 리포 개설 — 원본 1:1 미러(단이bot · Dan Jr. · 페르소나 · 메모리 제외), 받는 쪽 주간 업데이트</sub> | <sub>2026.11.11</sub> |

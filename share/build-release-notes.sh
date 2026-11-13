@@ -107,11 +107,11 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
   echo '<!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->'
   echo '## 릴리즈노트'
   echo
-  echo "원본 각 폴더 README 의 릴리즈노트를 모아 일자별로 정리한 것 (총 ${total}건 · 최신 ${latest}). 상세는 항목 이름을 눌러 해당 README 에서 본다."
+  echo "원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 ${total}건 · 최신 ${latest}). 상세는 항목 이름을 눌러 해당 README 에서 확인"
   echo
   echo '### 공통 반영 사항'
   echo
-  echo '모든 하네스 · 스킬에 공통으로 적용되는 전역 규칙. 정본은 [`global-house-style/CLAUDE.md`](global-house-style/CLAUDE.md)이고, `share/update.sh` 가 `~/.claude/house-style/global-rules.md` 로 설치해 `~/.claude/CLAUDE.md` 에서 불러온다. 규칙이 바뀐 이력은 아래 표의 「공통」 구분.'
+  echo '모든 하네스 · 스킬에 공통으로 걸리는 전역 규칙. 정본 [`global-house-style/CLAUDE.md`](global-house-style/CLAUDE.md) → `share/update.sh` 가 `~/.claude/house-style/global-rules.md` 로 설치 → `~/.claude/CLAUDE.md` 에서 불러오기. 규칙 변경 이력은 아래 표의 「공통」 구분'
   echo
   echo '| <div align="center"><sub>#</sub></div> | <sub>전역 규칙</sub> |'
   echo '|:---:|:---|'
@@ -161,8 +161,8 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
 # ── 들어 있는 것: 하네스 표 + 스킬 표 ──────────────────────────────────────
 {
   echo '<!-- CONTENTS:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->'
-  echo '| <div align="center"><sub>에이전트(하네스)</sub></div> | <sub>역할</sub> |'
-  echo '|:---|:---|'
+  echo '| <div align="center"><sub>에이전트(하네스)</sub></div> | <sub>역할</sub> | <sub>이렇게 요청</sub> |'
+  echo '|:---|:---|:---|'
   # 원본 루트 README 의 에이전트 표 행 (공유 리포에 있는 폴더만, 원본 순서)
   if [ -n "$src_readme" ] && [ -f "$src_readme" ]; then
     awk '/^\| *<div align="center"><sub>에이전트<\/sub>/ { on = 1; next } on && /^\|:/ { next } on && !/^\|/ { exit } on { print }' "$src_readme"
@@ -172,15 +172,15 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
     row="$(grep -F "[\`agent/$name/\`]" "$work/agent_rows.md" | head -1 || true)"
     if [ -z "$row" ]; then   # 원본 표에 없는 하네스: 폴더 README 첫 문단
       desc="$(awk 'NR > 1 && /^[^# \t|>`-]/ { gsub(/\*\*/, ""); sub(/[. ]+$/, ""); print; exit }' "$d/README.md" 2>/dev/null || true)"
-      row="| <sub>[\`agent/$name/\`](agent/$name/)</sub> | <sub>${desc}</sub> |"
+      row="| <sub>[\`agent/$name/\`](agent/$name/)</sub> | <sub>${desc}</sub> | <sub>—</sub> |"
     fi
     printf '%s\t%s\n' "$(grep -nF "[\`agent/$name/\`]" "$work/agent_rows.md" | head -1 | cut -d: -f1 || true)" "$row"
   done | sort -t "$(printf '\t')" -k1,1n | awk -F '\t' '$1 != "" { print $2 } $1 == "" { tail[++t] = $2 } END { for (i = 1; i <= t; i++) print tail[i] }'
   echo
-  echo '하네스는 해당 폴더에서 Claude Code를 열어 쓴다. 쓰는 방법은 각 폴더의 `README.md`.'
+  echo '하네스 = 해당 폴더에서 Claude Code 실행 → 요청 한 줄. 단계 · 산출물 상세는 각 폴더 `README.md`'
   echo
-  echo '| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>제작</sub> |'
-  echo '|:---|:---|:---:|'
+  echo '| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>이렇게 요청</sub> | <sub>제작</sub> |'
+  echo '|:---|:---|:---|:---:|'
   awk '
     /^## 스킬 목록/ { on = 1; next }
     on && /^## / { exit }
@@ -188,11 +188,12 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
     on && /^\| *<sub>\[`/ {
       n = split($0, f, "|")
       gsub(/\]\(/, "](skills/", f[2])
-      printf "|%s|%s| <sub>%s</sub> |\n", f[2], f[3], by
+      ask = (n >= 5 ? f[4] : " ")   # 「이렇게 요청」 열 (없으면 빈칸)
+      printf "|%s|%s|%s| <sub>%s</sub> |\n", f[2], f[3], ask, by
     }
   ' "$share/skills/README.md"
   echo
-  echo '스킬 제작자와 설치 방법은 [`skills/README.md`](skills/README.md). 신지은 제작 스킬의 출처는 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills). `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상이 아니다.'
+  echo '스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상 제외'
   echo '<!-- CONTENTS:END -->'
 } > "$work/contents.md"
 n_agent="$(grep -c '^| <sub>\[`agent/' "$work/contents.md" || true)"
