@@ -7,7 +7,7 @@
 | <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `78d1c3b`(2026.11.11 커밋) · 하네스 7종 · 스킬 15종 · 릴리즈노트 128건(최신 2026.11.11)
+**현재 반영본** — 원본 `326cc00`(2026.11.13 커밋) · 하네스 7종 · 스킬 15종 · 릴리즈노트 129건(최신 2026.11.13)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포.
@@ -98,7 +98,7 @@ bash share/schedule-weekly-mac.sh
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 모아 일자별로 정리한 것 (총 128건 · 최신 2026.11.11). 상세는 항목 이름을 눌러 해당 README 에서 본다.
+원본 각 폴더 README 의 릴리즈노트를 모아 일자별로 정리한 것 (총 129건 · 최신 2026.11.13). 상세는 항목 이름을 눌러 해당 README 에서 본다.
 
 ### 공통 반영 사항
 
@@ -116,6 +116,7 @@ bash share/schedule-weekly-mac.sh
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
+| <sub>2026.11.13</sub> |  | <sub>[proposal](agent/proposal/README.md)</sub> |  |
 | <sub>2026.11.11</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> |  |
 | <sub>2026.11.10</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[rfp-analysis-research](skills/rfp-analysis-research/README.md)</sub> |
 | <sub>2026.11.06</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> |  |  |
@@ -145,10 +146,11 @@ bash share/schedule-weekly-mac.sh
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 10건</summary>
+<summary><b>2026.11</b> · 11건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
+| <sub>2026.11.13</sub> | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>장표 품질 기준 신설 — 드라이브 `! 사업제안&견적` 최종 제출본 12건(메리츠화재 2027 · GS칼텍스를 기준으로 KB손해보험 · 롯데지주 LIPUS · 수협 · 블루망고 · 계룡건설 · MG새마을금고 · 아시아나 · 삼성닷컴 · 현대오토에버)을 장표 단위로 읽고 `references/slide-quality-bar.md`로 정리: ① 덱 유형별 골격 · 분량(경쟁입찰 운영 · 구축 / 평가 목차 지정형 / 제언서 RFI 응답형 · 피치형 / 견적형 / 발표 요약본) ② 장표 한 장의 해부(헤더 · 태그라인 · 거버닝 · 리드 · 근거 캡션 · 결론 바 · ※ 단서 · 그룹마다 강조 1개) ③ 장표 유형 30여 종의 레이아웃 · 반드시 들어갈 내용 · 불합격 예 ④ 잘 쓴 문장 · 버릴 문장 ⑤ 완성도 점검표(수치 일치 · 콜아웃 번호 · 명칭 통일 · 스토리 회수). `writing-style.md` §5에 반례 5종(「~을 통한 ~ 확보」 · 최상급 · 인칭 · 반복 · 띄어쓰기), `check_style.pl` [주의] 확장, slide-builder 자기검증 · qa 체크리스트 · `CLAUDE.md` 3-1 · `ORCHESTRATOR.md` S4 · `skeleton-bid.md` §3 연결. 드라이브 폴더 번호 변경에 맞춰 기준 덱 경로를 이름 기준으로</sub> | <sub>김단영</sub> |
 | <sub>2026.11.11</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>막대 · 마일스톤 그래프 컴포넌트 추가(`house-style.css` §23) — 수치 비교 `.hbars` · 시점 추이 `.cols` · 발주 일정 D-day `.ms` · 간트 마감 표시 `.gbar.mk`. 계열 하나 · 강조 막대만 `.key`(CI 문서는 포인트 색) · 같은 수치는 표로도 남김 · 인쇄 시 막대 색 유지. `base_template_doc.html` 팔레트에 견본 추가 — 2026.11.11 「그래프로 표현」 지시, 삼성자산운용 FunETF RFP 분석 v0.3에 첫 적용</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>S1 분석 보고서 양식 표준화 + 고객사 CI 기본 적용 — 삼성자산운용 FunETF v0.3 보고서를 기준본으로 골격(`template/rfp_report_template.html`)과 작성 규칙(`references/rfp-report-format.md`) 신설: PART Ⅰ RFP 분석 · Ⅱ 현황 · 시장 · Ⅲ 중점 과제 심층 · Ⅳ 제안 전략 · 실행 초안, LNB 2단 · 기본 그래프(D-day · 작업 간트 · 배점 · 시장 추이 · 로드맵 · 지면 배분)와 같은 수치 표. HTML 산출물(보고서 · 덱 · 변경분)은 고객사 로고 Primary 컬러를 기본 적용 — 대표 사이트 · 로고 확인 → 미확인 · 후보 복수면 먼저 질문 → Primary 실측 → 추출 전 한 줄 확인. `CLAUDE.md` ③ · `ORCHESTRATOR.md` · `rfp-analyst` · `design-system.md` · `slide-tokens.css` · `qa` 반영</sub> | <sub>김단영</sub> |
 | <sub>2026.11.10</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>외부링크 아이콘을 블랙 라인(투명도 제거)으로 변경하고, 본문 고유명사(사이트 · 서비스 · 기관 · 도구)도 같은 `a.ext`로 연결하는 규칙을 `house-style.css` §22에 명시 — 2026.11.10 지시, `~/.claude/house-style/` 사본과 동일 유지</sub> | <sub>김단영</sub> |

@@ -10,6 +10,8 @@
 # [주의] 종료코드에 영향 없음 — 한 건씩 읽고 고칠지 판단
 #   · AI 상투어 · 근거 없는 형용사 · 번역투 연결어
 #   · 거버닝 메시지 40자 초과 · 2문장 · 누락, 한 장에 합니다체 문장 과다
+#   · (2026-11-13 최종본 학습 · references/slide-quality-bar.md §4) 거버닝의 「통한/통해」 · 「~으로」 미완결 ·
+#     장끼리 같은 거버닝 · 최상급/절대어 · 우리는/여러분 · 띄어쓰기(제한 된 · 강화 합니다) · 「A가 아닌 B」 덱 4회 이상
 # 의존성: perl 5 코어 모듈만. Git Bash(Windows) · macOS 기본 perl 에서 그대로 실행.
 use strict; use warnings; use utf8;
 use FindBin qw($Bin);
@@ -52,17 +54,20 @@ sub bad_ending {
 my @HONOR = ('당사', '저희', '귀사', '폐사');
 my @CLICHE = (
   # 근거 없는 형용사
-  '혁신적', '획기적', '최적의', '최적화된', '차별화된', '선도적', '다양한', '원활한', '효과적인', '체계적인', '지속적인', '종합적인', '전문적인', '탁월한', '완벽한',
+  '혁신적', '획기적', '최적의', '최적화된', '차별화된', '선도적', '다양한', '원활한', '효과적인', '체계적인', '지속적인', '종합적인', '전문적인', '탁월한', '완벽',
+  # 최상급 · 절대어 (2026-11-13 최종본 학습)
+  '업계 최고', '최초', '유일한', '무결점', '원천 차단', '원천 봉쇄', 'Zero',
   # AI · 보도자료 상투어
   '극대화', '시너지', '유기적', '패러다임', '원스톱', '토탈 솔루션', '고도화된', '한층', '궁극적으로', '나아가', '핵심은', '의 여정', '새로운 가치', '가치를 창출', '경쟁력을 강화', '니즈',
   # 번역투 연결어
-  '를 통해', '을 통해', '통하여', '뿐만 아니라', '에 있어', '함으로써', '로 인해', '에 대한', '가능하게', '할 수 있도록', '을 제공합니다', '를 제공합니다',
+  '를 통해', '을 통해', '을 통한', '를 통한', '통하여', '뿐만 아니라', '에 있어', '함으로써', '로 인해', '에 대한', '가능하게', '할 수 있도록', '을 제공합니다', '를 제공합니다',
 );
 my $TITLE_MAX = 40;     # 거버닝 메시지 길이(공백 포함)
 my $NIDA_MAX  = 8;      # 한 장의 합니다체 문장 수
 
 # ── 점검 ──────────────────────────────────────────────────
 my (@fail, @warn, %cl); my ($nlines, $nnida) = (0, 0);
+my (%titles, @anin);    # 장끼리 같은 거버닝 · 「A가 아닌 B」 횟수
 for my $sl (@slides) {
   my $where = "$sl->{label} (p$sl->{idx})";
   my @all = grep { length } ($sl->{title}, @{$sl->{lines}});
@@ -77,6 +82,9 @@ for my $sl (@slides) {
     for my $h (@HONOR) { push @fail, "[호칭 $h] $where: $line" if index($line, $h) >= 0; }
     push @fail, "[대시 —] $where: $line" if $line =~ /—/;
     push @fail, "[이모지] $where: $line" if $line =~ /[\x{1F300}-\x{1FAFF}]/;
+    push @warn, "[인칭] $where: $line" if $line =~ /(?:^|[\s「‘“'"(])우리(?:는|가)\s/ || $line =~ /여러분/;
+    push @warn, "[띄어쓰기] $where: $line" if $line =~ /[가-힣](?![야이가게록지고서을를은는도만에로와과])[가-힣]\s(?:된|합니다|됩니다)(?=[\s.,]|$)/;   # 명사 뒤 띄움만 (해야 합니다 · 시간이 됩니다 제외)
+    push @anin, $sl->{label} if $line =~ /(?:가|이)\s?아닌|아니라/;
     for my $c (@CLICHE) { if (index($line, $c) >= 0) { $cl{$c}{n}++; push @{$cl{$c}{w}}, $sl->{label}; } }
   }
   $nnida += $nida;
@@ -86,10 +94,18 @@ for my $sl (@slides) {
     else {
       push @warn, "[거버닝 " . length($t) . "자] $where: $t" if length($t) > $TITLE_MAX;
       push @warn, "[거버닝 2문장] $where: $t" if $t =~ /(?:니다|[가-힣])\.\s+\S/;
+      push @warn, "[거버닝 「통한」] $where: $t" if $t =~ /통한|통해/;
+      push @warn, "[거버닝 미완결 ~으로] $where: $t" if $t =~ /(?:으로|[가-힣]로)$/ && $t !~ /(?:그대로|바로|새로|서로|따로|주로|별로|날로|홀로)$/;
+      push @{$titles{$t}}, $sl->{label};
     }
     push @warn, "[합니다체 ${nida}문장] $where: 리드 · 결론 · 다짐에만 쓰고 항목은 명사구로" if $nida > $NIDA_MAX;
   }
 }
+for my $t (sort keys %titles) {
+  my @w = @{$titles{$t}};
+  push @warn, "[거버닝 중복 " . scalar(@w) . "장] " . join(', ', @w) . ": $t" if @w > 1;
+}
+push @warn, "[「A가 아닌 B」 × " . scalar(@anin) . "] 덱 전체 3회 이하로: " . join(', ', @anin[0 .. ($#anin > 9 ? 9 : $#anin)]) if @anin > 3;
 for my $c (sort { $cl{$b}{n} <=> $cl{$a}{n} } keys %cl) {
   my %seen; my @w = grep { !$seen{$_}++ } @{$cl{$c}{w}};
   push @warn, "[상투어 「$c」 × $cl{$c}{n}] " . join(', ', @w[0 .. ($#w > 9 ? 9 : $#w)]) . (@w > 10 ? ' …' : '');

@@ -4,7 +4,7 @@ S1(`agents/rfp-analyst.md`)이 사용자에게 보이는 **분석 보고서 HTML
 「삼성자산운용 Fun ETF 1단계 RFP 분석/리서치처럼, HTML 추출 때 고객사 로고 Primary 컬러를 차용하고 직전 추출 양식 · 내용으로」.
 
 - **기준본**: `삼성자산운용FunETF유지보수제안-RFP분석리서치보고서-v0.3-20261111.html`
-  (드라이브 `100. 워크스페이스/120. Output/! 사업제안&견적/22. [제안] 삼성자산운용 Fun ETF 운영 유지보수/02. Work/`).
+  (드라이브 `100. 워크스페이스/120. Output/! 사업제안&견적/{번호}. 261106-[제안] 삼성자산운용 Fun ETF 운영 유지보수/02. Work/` — 폴더 앞 번호는 바뀌므로 이름으로 찾는다).
   고객 자료라 리포에 넣지 않는다. 양식 · 구성만 따르고 고객명 · 수치 · 문장은 가져오지 않는다.
 - **골격 파일**: `template/rfp_report_template.html` — 하우스 스타일 문서형 + PART 2단 LNB + CI 오버라이드 블록 + 그래프 견본.
 - 하우스 스타일 정본(`~/.claude/house-style/house-style.css` = `../../global-house-style/house-style.css`)을 `@@HOUSE_STYLE@@` 자리에 전문 인라인한다. §22 외부링크 · §23 그래프 컴포넌트가 정본에 들어 있으니 산출물 `<style>`에 다시 덧대지 않는다.

@@ -26,11 +26,11 @@
 ### 0-3. 삽입 콘텐츠 수집
 `agents/reference-collector.md`를 돌려 `04_refs.md`(Figma 레퍼런스 · 경쟁사/레퍼런스 사이트 · 실적 자료)를 만든다. 「미수집」 항목의 대체안을 사용자와 정한 뒤 초안을 쓴다.
 
-### 0-4. 공통지침 읽기
-`references/writing-style.md`를 읽는다(S6에서는 §7 재검토 절차대로 다시 읽는다).
+### 0-4. 공통지침 · 장표 품질 기준 읽기
+`references/writing-style.md`를 읽는다(S6에서는 §7 재검토 절차대로 다시 읽는다). 이어서 `references/slide-quality-bar.md`(최종 제출본 12건에서 학습한 장표 유형별 합격선)를 읽고, 덱 유형(§1 — 경쟁입찰 운영 · 구축 / 평가 목차 지정형 / 제언서 RFI 응답형 · 피치형 / 견적형 / 발표 요약본)을 정해 `04_content.md` 머리말에 적는다.
 
 ## 3-step (건너뛰지 않는다)
-- **(a) 콘텐츠 초안** — `04_content.md`를 아래 서식으로 쓴다. 장표마다 자기검증 → `[통과/보완필요]`. `perl scripts/check_style.pl _workspace/{프로젝트}/04_content.md` [위반] 0건 → 저장 후 **사용자 확정**.
+- **(a) 콘텐츠 초안** — `04_content.md`를 아래 서식으로 쓴다. 장표마다 자기검증 → `[통과/보완필요]` — 기준은 `slide-quality-bar.md` §3 그 장표 유형의 「반드시」(하나라도 빠지면 보완필요)와 §2 해부(근거 캡션 · 결론 바 · ※ 단서). `perl scripts/check_style.pl _workspace/{프로젝트}/04_content.md` [위반] 0건 → 저장 후 **사용자 확정**.
 - **(b) HTML** — `references/design-system.md` 포맷 가이드를 읽고 확정한 골격 · 작업 사이즈로 덱(.html, CSS 변수 컬러, `@media print` PDF 대응) 생성 → `output/output-{프로젝트 폴더}/`에 저장 · 제시 → 렌더로 시각 확인 → `perl scripts/check_style.pl <덱.html>`.
 - **(c) 포맷 변환**(확정 후): pptx는 `pptx` 스킬 지침대로 .pptx 생성, Figma는 `use_figma`로 16:9 프레임. 표 · 복잡 IA 중심 슬라이드는 HTML/pptx 우선 권장(Figma 편차 고지).
 - **(c′) HTML 최종본 모드**: 변환 대신 취합 루틴 — 피그마 장표는 `download_assets(pdf)` → `scripts/fig2svg.py` → `scripts/deck_edit.py insert/replace`, 발표용 HTML 은 iframe srcdoc 삽입, 코드박스 · 페이지 번호는 스크립트로 통일, `scripts/render_pages.sh` 로 대표 페이지 렌더 확인, 요청 시 피그마 백업 업로드 · `scripts/deck_toc.py` 목차 시트. 편집마다 `_prev.html` 백업, 빠지는 장표는 별도 보관 · 고지.
@@ -72,12 +72,14 @@
 ## 원칙
 - 콘텐츠 확정 없이 포맷 파일 만들지 않는다.
 - **문체**: `references/writing-style.md`. 항목은 명사구 종결, 「~함 · ~임 · ~음」 금지, AI 상투어 금지, 한 장에 주장 하나.
+- **장표 품질**: `references/slide-quality-bar.md` — 진단 카드마다 숫자 · 측정 기준, 전략 표에 근거(과거 수행 사업) 열, 화면 콜아웃 번호 = 목록 번호, 그룹마다 강조 1개, 표지 컨셉어를 맺음에서 회수, 정형 관리 장에도 고객 고유 항목 1개 이상. 최종본에 남은 반례(§4 버릴 형태)를 따라 쓰지 않는다.
 - **공수(SECTION 5) ↔ 일정(SECTION 6) M/M 합계 교차검증 필수.** 외부 공수 정본이 있으면 인용.
 - 근거 없는 형용사 금지. `[미검증]`·`[정책 확인 필요]`·`[추가 제안]`·`[CI 확인 필요]` 표기 규율 준수.
 - 파일명 · 버전 · `<head>` 수정 이력 메타는 전역 규칙과 `ORCHESTRATOR.md` 「차수와 버전」.
 
 ## 참조 파일
 - `references/writing-style.md` — **초안 작성 전 · 매 차수 추출 전 반드시 읽는다.**
+- `references/slide-quality-bar.md` — **초안 작성 전 반드시 읽는다.** 덱 유형별 골격 · 장표 해부 · 장표 유형별 합격선 · 완성도 점검표
 - `references/skeleton-bid.md` — 경쟁입찰형 장표 유형별 작성 항목(§3)
 - `references/section-prompts.md` — 견적형 섹션 · 경쟁입찰형 안의 범위/공수/일정 절
 - `references/design-system.md` — **포맷 렌더링 직전 반드시 읽는다.**

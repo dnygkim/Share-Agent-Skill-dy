@@ -100,6 +100,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ q
 3. **삽입 콘텐츠 수집** — `agents/reference-collector.md`: Figma 레퍼런스 · 경쟁사/레퍼런스 사이트 · 실적 자료 → `04_refs.md`.
 4. **추출** — 콘텐츠 초안(`04_content.md`) → 사용자 확정 → HTML → (제출 포맷에 따라) PPT/Figma 변환 또는 HTML 최종본 취합 루틴(`references/deck-production-playbook.md`).
 5. **공통지침 적용** — `references/writing-style.md`를 읽고 쓴다. `perl scripts/check_style.pl`로 초안과 덱을 각각 점검해 [위반] 0건.
+6. **장표 품질 기준** — `references/slide-quality-bar.md`로 덱 유형(§1)을 정하고, 장표마다 유형별 「반드시」(§3)로 자기검증한다. qa는 §5 완성도 점검표로 검수한다.
 - 산출: 덱 **v0.1** → qa → `r1/qa.md`.
 
 ### S5 — 피드백 반영 (`agents/feedback-integrator.md`) → GATE ③
