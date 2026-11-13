@@ -37,6 +37,12 @@ cp -r rfp-analysis-research ~/.claude/skills/rfp-analysis-research
 |:---|:---:|
 | <sub>[`handoff`](handoff/SKILL.md)</sub> | <sub>`/clear` 전에 현재 세션 맥락을 `.claude/HANDOFF.md` 로 저장 → 다음 세션이 이어받기 (SessionStart 훅과 함께 사용)</sub> |
 
+### 협업 · 알림 — 제작: dykim
+
+| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> |
+|:---|:---:|
+| <sub>[`Slack-Bot`](Slack-Bot/SKILL.md)</sub> | <sub>슬랙 봇 만들기 — 채널 자동 게시(Incoming Webhook) · @멘션 질문에 정해 둔 자료로 스레드 답변(Socket Mode + Claude), 6단계 진행 · 비밀값 저장 · 자동 시작 등록 (호출 이름 `slack-bot`)</sub> |
+
 ### 기획 실무 스킬 — 제작: 신지은
 
 출처: [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) — **제작자 신지은**([@jieun994](https://github.com/jieun994)). 모두 독립 스킬이다.

@@ -1,0 +1,30 @@
+{
+  "bot_name": "my-bot",
+  "lock_port": 47900,
+  "model": "sonnet",
+  "claude_config_dir": "",
+  "default_question": "최근 업데이트 내역 알려줘",
+  "sources": [
+    {
+      "type": "git_log",
+      "title": "my-repo 최근 커밋 (최신순)",
+      "repo": "~/Documents/my-repo",
+      "ref": "origin/main",
+      "fetch": true,
+      "count": 40,
+      "exclude_paths": "^(memory/|\\.claude/|secrets/)",
+      "private_pattern": "(memory|메모리|개인)"
+    },
+    {
+      "type": "file",
+      "title": "README 릴리즈노트",
+      "repo": "~/Documents/my-repo",
+      "ref": "origin/main",
+      "path": "README.md",
+      "start": "## 릴리즈노트",
+      "end": "\n## ",
+      "private_pattern": "(memory|메모리|개인)",
+      "max_chars": 15000
+    }
+  ]
+}
