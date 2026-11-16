@@ -7,7 +7,7 @@
 | <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `4614a5c`(2026.11.14 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 154건(최신 2026.11.13)
+**현재 반영본** — 원본 `c89185e`(2026.11.16 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 155건(최신 2026.11.16)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -144,7 +144,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 154건 · 최신 2026.11.13). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 155건 · 최신 2026.11.16). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -162,6 +162,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
+| <sub>2026.11.16</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> |  |  |
 | <sub>2026.11.13</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md) · [harness_st-etribe](agent/harness_st-etribe/README.md) · [prd](agent/prd/README.md) · [proposal](agent/proposal/README.md) · [screen-spec-id](agent/screen-spec-id/README.md) · [test-runner](agent/test-runner/README.md) · [worker](agent/worker/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md) · [deckslide-design-guideline](skills/deckslide-design-guideline/README.md) · [dev-reading](skills/dev-reading/README.md) · [eli5](skills/eli5/README.md) · [flowchart-defense](skills/flowchart-defense/README.md) · [handoff](skills/handoff/README.md) · [ia-builder](skills/ia-builder/README.md) · [meeting-minutes](skills/meeting-minutes/README.md) · [proposal-slide-builder](skills/proposal-slide-builder/README.md) · [proposal-structure-validation](skills/proposal-structure-validation/README.md) · [qa-master](skills/qa-master/README.md) · [requirements-generator](skills/requirements-generator/README.md) · [rfp-analysis-research](skills/rfp-analysis-research/README.md) · [ux-journey-insight](skills/ux-journey-insight/README.md) · [wbs-generator](skills/wbs-generator/README.md) · [weekly-report](skills/weekly-report/README.md)</sub> |
 | <sub>2026.11.11</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> |  |
 | <sub>2026.11.10</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[rfp-analysis-research](skills/rfp-analysis-research/README.md)</sub> |
@@ -192,10 +193,11 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 36건</summary>
+<summary><b>2026.11</b> · 37건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
+| <sub>2026.11.16</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>컬러 질문 단계 신설 — 하네스 · 스킬 추출 직전 Primary · Secondary · Default 3색을 한 질문으로 확인(기존 「기본 스타일로 추출할까요?」 대체), 답 해석 표 · 색 조건을 전역 규칙에 추가. `house-style.css` §2에 역할 토큰 `--primary` · `--secondary` · `--on-primary-rgb` · `--paper-rgb` 추가, 반전 블록 · 강조선을 `--accent`로 연결해 토큰만 바꾸면 따라오는 구조(웜 rgba 10곳 덮기 대체 · 기본 렌더 동일), `base_template_doc.html`에 「컬러 3종」 자리 추가</sub> | <sub>김단영</sub> |
 | <sub>2026.11.13</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 변경 이력 맨 아래로 이동</sub> | <sub>—</sub> |

@@ -10,6 +10,7 @@
 | <sub>**정체**</sub> | <sub>하네스 아님 — `~/.claude/house-style/` · `~/.claude/CLAUDE.md`의 사본을 버전관리하는 폴더. 이 폴더 자체의 실행 기능 부재</sub> |
 | <sub>**적용 범위**</sub> | <sub>HTML 산출물 전부(문서형 · 슬라이드형). pptx · xlsx · docx는 각 스킬 규격 사용</sub> |
 | <sub>**스타일**</sub> | <sub>warm paper(`#F1EDE5`) + near-black ink 2톤 · Pretendard / Paperlogy · 강조는 색 대신 반전(ink 바탕 + paper 글자) · 어절 단위 줄바꿈 · A4 인쇄 대응</sub> |
+| <sub>**컬러 3종**</sub> | <sub>Primary(토프바 · 반전 블록 · 강조선) · Secondary(주의 · 미확정 표시) · Default(바탕 · 선 · 보조 글자) 역할 토큰 — 하네스 · 스킬은 추출 직전 컬러 질문 1회, 기본 렌더는 2톤 그대로</sub> |
 | <sub>**설치**</sub> | <sub>원본 리포 `bash install-global.sh` · 공유 리포 `bash share/update.sh` — 아래 「설치」</sub> |
 | <sub>**기준본**</sub> | <sub>`신승-비즈니스AI플래너_권한정책매트릭스_초안(260810).html` (토프바 + LNB + 표지 + 목차 + 섹션 + footer)</sub> |
 
@@ -18,15 +19,15 @@
 | <div align="center"><sub>상황</sub></div> | <sub>요청 예시</sub> | <sub>나오는 것</sub> |
 |:---|:---:|:---:|
 | <sub>일반 대화에서 문서형 HTML</sub> | <sub>`이 분석 내용 HTML 리포트로 정리해줘`</sub> | <sub>문서형 골격 하우스 스타일 단일 HTML — 확인 질문 없이 기본 적용</sub> |
-| <sub>하네스 · 스킬의 HTML 추출</sub> | <sub>인테이크 질문 「기본 스타일로 추출할까요?」에 `기본으로` · `네` · `알아서`</sub> | <sub>하우스 스타일 — 무응답 · 일괄 진행이어도 같은 기본 양식</sub> |
-| <sub>고객사 CI 컬러 적용</sub> | <sub>`CI 적용해줘` · `Primary #0050AA로 뽑아줘`</sub> | <sub>§2b 오버라이드 — 포인트 색 + 바탕 · 선 · 보조 글자색까지 CI 계열 저채도 중립색</sub> |
+| <sub>하네스 · 스킬의 HTML 추출</sub> | <sub>컬러 질문(Primary · Secondary · Default)에 `기본으로` · `네` · `알아서`</sub> | <sub>하우스 스타일 — 무응답 · 일괄 진행이어도 같은 기본 양식</sub> |
+| <sub>고객사 CI 컬러 적용</sub> | <sub>`CI 적용해줘` · `Primary #0050AA로 뽑아줘` · `Primary CI, Secondary #F5A200, Default 기본`</sub> | <sub>§2b 오버라이드 — Primary · Secondary 포인트 + Default 바탕 · 선 · 보조 글자색(기본이면 Primary 계열 저채도 중립색)</sub> |
 | <sub>수치 · 일정 시각화</sub> | <sub>`그래프로 표현해줘`</sub> | <sub>§23 막대 · 마일스톤(D-day) 그래프 + 같은 수치 표</sub> |
 | <sub>출처가 있는 리서치 문서</sub> | <sub>`출처 링크 걸어줘`(리서치 산출물은 기본 적용)</sub> | <sub>§22 `a.ext` — 항목 타이틀 · 구절에 외부링크, hover 반전 · 끝 아이콘</sub> |
 
 ## 진행 단계 (HTML 산출물이 만들어지는 순서)
 
 ```
-① 골격 선택 → ② 정본 CSS 인라인 → ③ 고정 영역 그대로 → ④ 콘텐츠 컴포넌트 선택 → ⑤ 스타일 확인 → ⑥ 수정 이력 기록
+① 골격 선택 → ② 정본 CSS 인라인 → ③ 고정 영역 그대로 → ④ 콘텐츠 컴포넌트 선택 → ⑤ 컬러 질문 → ⑥ 수정 이력 기록
 ```
 
 | <div align="center"><sub>단계</sub></div> | <sub>하는 일</sub> | <sub>사용자 할 일</sub> | <sub>결과물</sub> |
@@ -35,8 +36,24 @@
 | <sub>② 정본 CSS 인라인</sub> | <sub>`house-style.css` 전문을 `<style>`에 그대로 삽입 — 외부 `.css` 링크 금지(자기완결 단일 파일)</sub> | <sub>—</sub> | <sub>단일 HTML</sub> |
 | <sub>③ 고정 영역</sub> | <sub>GNB(토프바) · LNB · 표지 · 목차 · footer 구조와 스타일 그대로 사용</sub> | <sub>—</sub> | <sub>공통 틀</sub> |
 | <sub>④ 콘텐츠 선택</sub> | <sub>「콘텐츠 컴포넌트 팔레트」에서 내용 성격에 맞는 것만 골라 조합 — 팔레트 통째 나열 금지, 섹션마다 조합 상이 가능</sub> | <sub>—</sub> | <sub>섹션 본문</sub> |
-| <sub>⑤ 스타일 확인</sub> | <sub>하네스 · 스킬 세션은 추출 직전 「기본 스타일로 추출할까요?」 1회 확인 — CI를 답하면 그때 HEX 확정</sub> | <sub>**기본 / CI 선택**</sub> | <sub>확정 스타일</sub> |
+| <sub>⑤ 컬러 질문</sub> | <sub>하네스 · 스킬 세션은 추출 직전 Primary · Secondary · Default 3색을 한 질문으로 1회 확인 — 색마다 기본 · HEX · CI 중 하나, 무응답은 기본</sub> | <sub>**3색 답변**</sub> | <sub>확정 컬러</sub> |
 | <sub>⑥ 수정 이력</sub> | <sub>갱신 · 배포 때마다 `<head>`의 `<meta name="revision">` 날짜 갱신 + 수정 이력 주석 맨 위에 한 줄 추가</sub> | <sub>—</sub> | <sub>메타정보</sub> |
+
+## 컬러 질문 단계 (⑤)
+
+질문 1회 — 「HTML 컬러 3종을 확인합니다 — Primary(토프바 · 반전 블록 · 강조선) · Secondary(주의 · 미확정 표시) · Default(바탕 · 선 · 보조 글자). 각각 HEX · CI · 기본 중 하나로 답해 주세요. 전부 기본이면 「기본으로」」
+
+| <div align="center"><sub>답</sub></div> | <sub>Primary</sub> | <sub>Secondary</sub> | <sub>Default</sub> |
+|:---|:---:|:---:|:---:|
+| <sub>**기본** (`기본으로` · `네` · `알아서` · 무응답)</sub> | <sub>ink `#14130F`</sub> | <sub>Primary가 기본이면 웜 브라운 `#7A4A2C`, 아니면 Primary와 같은 값</sub> | <sub>Primary가 기본이면 웜 페이퍼 `#F1EDE5` 계열, 아니면 Primary 계열 저채도 중립</sub> |
+| <sub>**HEX**</sub> | <sub>그 값</sub> | <sub>그 값</sub> | <sub>그 값이 바탕, 선 · 보조 글자는 같은 계열 파생</sub> |
+| <sub>**CI**</sub> | <sub>고객사 로고 · 대표 사이트 실측 메인색</sub> | <sub>브랜드 보조색 실측값</sub> | <sub>사이트 그레이 팔레트, 없으면 Primary 계열 저채도 중립</sub> |
+
+- 토큰: Primary `--primary`(컴포넌트가 읽는 이름 = `--accent`) · Secondary `--secondary`(= `--warn`) · Default `--paper` · `--paper-2` · `--line` · `--line-2` · `--ink-2` · `--ink-3` — 값 넣는 자리는 `house-style.css` §2b 블록 · `base_template_doc.html` 「컬러 3종」
+- 반전 블록 · 강조선 · 반전 글자는 토큰 연동 — 선택자별 덮기 불필요(이전 웜 rgba 10곳 덮기는 `--on-primary-rgb` · `--paper-rgb` 두 줄로 대체)
+- 색 조건: Primary는 흰 글자 대비 4.5:1 이상의 짙은 색(밝은 브랜드색은 Secondary로) · Secondary는 주의 · 미확정 표시에만 · 본문 `--ink`는 거의 검정 유지
+- 하네스 상시 지시 우선 — `agent/proposal`은 고객사 로고 Primary를 질문 안 제안값으로 제시
+- 일반 대화는 질문 없이 기본, 사용자가 색을 먼저 지정한 경우에만 같은 표로 해석
 
 ## 산출물 골격 2종
 
@@ -52,7 +69,7 @@
 
 | <div align="center"><sub>§</sub></div> | <sub>내용</sub> | <sub>비고</sub> |
 |:---|:---:|:---:|
-| <sub>1 · 2 · 2b</sub> | <sub>서체 · 토큰 · CI 오버라이드</sub> | <sub>CI는 요청 시에만 §2b로</sub> |
+| <sub>1 · 2 · 2b</sub> | <sub>서체 · 토큰(컬러 3종 Primary · Secondary · Default) · 컬러 오버라이드</sub> | <sub>기본이 아닌 답일 때만 §2b로</sub> |
 | <sub>3 ~ 9</sub> | <sub>리셋 · 본문 · 토프바 · LNB 레이아웃 · 표지 · 목차 · 섹션 · 콘셉트 문장</sub> | <sub>고정 영역</sub> |
 | <sub>10 ~ 17</sub> | <sub>표 · 진단 박스 · 루프 / 플로우 도식 · 계층 트리(IA) · 모듈 · 노트 · 등급 목록 · 마무리 · mermaid</sub> | <sub>콘텐츠 팔레트</sub> |
 | <sub>18 · 19</sub> | <sub>반응형 · A4 인쇄</sub> | <sub>공통</sub> |
@@ -66,7 +83,7 @@
 
 | <div align="center"><sub>규칙</sub></div> | <sub>요지</sub> |
 |:---|:---:|
-| <sub>HTML 산출물 하우스 스타일</sub> | <sub>위 골격 · 토큰 기본 적용, 콘텐츠 컴포넌트는 내용에 맞춰 선택, 클라이언트 CI는 옵트인(CI를 얹으면 콘텐츠 영역도 CI 톤)</sub> |
+| <sub>HTML 산출물 하우스 스타일</sub> | <sub>위 골격 · 토큰 기본 적용, 콘텐츠 컴포넌트는 내용에 맞춰 선택, 하네스 · 스킬은 추출 직전 컬러 질문(Primary · Secondary · Default), 클라이언트 CI는 옵트인(CI를 얹으면 콘텐츠 영역도 CI 톤)</sub> |
 | <sub>거버닝 메시지 문체</sub> | <sub>장표 · 섹션 헤드라인 = 20~30자 짧은 상태 묘사, 수치는 본문으로, 본문은 명사형 종결 · 어절 단위 줄바꿈 · 출처 외부링크</sub> |
 | <sub>산출물 파일명</sub> | <sub>공식 `프로젝트코드-단계코드-문서명-버전-작성일자` · 업무 `업무명-문서명-버전-작성일자`, 버전 v0.1~v0.8 작성 · v0.9 PM 검토 · v1.0 고객 확정</sub> |
 | <sub>자동화 창은 서브모니터로</sub> | <sub>브라우저 · 앱 자동화 창은 주 모니터를 가리지 않게 서브모니터 새 창에서 진행</sub> |
@@ -117,6 +134,7 @@ global-house-style/
 
 | <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
 |:---|:---:|:---:|
+| <sub>컬러 질문 단계 신설 — 하네스 · 스킬 추출 직전 Primary · Secondary · Default 3색을 한 질문으로 확인(기존 「기본 스타일로 추출할까요?」 대체), 답 해석 표 · 색 조건을 전역 규칙에 추가. `house-style.css` §2에 역할 토큰 `--primary` · `--secondary` · `--on-primary-rgb` · `--paper-rgb` 추가, 반전 블록 · 강조선을 `--accent`로 연결해 토큰만 바꾸면 따라오는 구조(웜 rgba 10곳 덮기 대체 · 기본 렌더 동일), `base_template_doc.html`에 「컬러 3종」 자리 추가</sub> | <sub>2026.11.16</sub> | <sub>김단영</sub> |
 | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>2026.11.13</sub> | <sub>김단영</sub> |
 | <sub>막대 · 마일스톤 그래프 컴포넌트 추가(`house-style.css` §23) — 수치 비교 `.hbars` · 시점 추이 `.cols` · 발주 일정 D-day `.ms` · 간트 마감 표시 `.gbar.mk`. 계열 하나 · 강조 막대만 `.key`(CI 문서는 포인트 색) · 같은 수치는 표로도 남김 · 인쇄 시 막대 색 유지. `base_template_doc.html` 팔레트에 견본 추가 — 2026.11.11 「그래프로 표현」 지시, 삼성자산운용 FunETF RFP 분석 v0.3에 첫 적용</sub> | <sub>2026.11.11</sub> | <sub>김단영</sub> |
 | <sub>외부링크 아이콘을 블랙 라인(투명도 제거)으로 변경하고, 본문 고유명사(사이트 · 서비스 · 기관 · 도구)도 같은 `a.ext`로 연결하는 규칙을 `house-style.css` §22에 명시 — 2026.11.10 지시, `~/.claude/house-style/` 사본과 동일 유지</sub> | <sub>2026.11.10</sub> | <sub>김단영</sub> |

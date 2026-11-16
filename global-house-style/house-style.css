@@ -2,8 +2,10 @@
    하우스 스타일 (정본) — 하네스·스킬 밖 범용 HTML 산출물용
    ----------------------------------------------------------------------------
    기준본 : 신승-비즈니스AI플래너_권한정책매트릭스_초안(260810).html
-   갱신일 : 2026-11-11 (막대 · 마일스톤 그래프 §23 추가 — 수치 비교 · 시점 추이 · 발주 일정 D-day, 오너 지시 「그래프로 표현」)
-   이전   : 2026-11-10 (외부링크 아이콘 = 블랙 라인 · 투명도 제거, 본문 고유명사도 같은 a.ext 로 연결 — §22, 오너 지시)
+   갱신일 : 2026-11-16 (컬러 3종 토큰 Primary · Secondary · Default — 추출 전 컬러 질문 답을 §2 토큰으로 받는 구조,
+                        반전 블록 · 강조선 = --accent 연결, 반전 글자 rgba = --on-primary-rgb 토큰화 · 기본 렌더 동일)
+   이전   : 2026-11-11 (막대 · 마일스톤 그래프 §23 추가 — 수치 비교 · 시점 추이 · 발주 일정 D-day, 오너 지시 「그래프로 표현」)
+           2026-11-10 (외부링크 아이콘 = 블랙 라인 · 투명도 제거, 본문 고유명사도 같은 a.ext 로 연결 — §22, 오너 지시)
            2026-10-22 (상세 텍스트 조금 크게 — 본문·표·노트·목록 글자 1px 확대, 오너 지시)
            2026-09-17 (어절 단위 줄바꿈 keep-all · 제목 text-wrap:balance)
            2026-08-27 (LNB 상단 정렬 · 앵커 목적지 보정)
@@ -54,19 +56,29 @@
 
 /* ===== 2. 토큰 =============================================================
    warm paper(cream) + near-black ink + white surface.
-   클라이언트 CI 컬러는 기본값이 아니다 — §2b 오버라이드로만 얹는다.
+   컬러 역할 3종 (2026-11-16) — 추출 전 컬러 질문 단계의 답이 들어가는 자리
+     Primary   = --primary   : 토프바 · 반전 블록 · 강조선 · LNB 활성 · 강조 막대 (기본 = ink)
+     Secondary = --secondary : 주의 · 미확정 · 검토대기 표시 (기본 = 웜 브라운)
+     Default   = --paper · --paper-2 · --line · --line-2 · --ink-2 · --ink-3 : 바탕 · 선 · 보조 글자 (기본 = 웜 페이퍼)
+   기본 렌더는 2톤 그대로 — Primary 기본값이 ink 라서 반전 블록 · 강조선 모두 기존과 같은 검정.
+   클라이언트 CI · 지정 색은 기본값이 아니다 — §2b 오버라이드로만 얹는다.
+   --accent · --warn 은 기존 이름 유지(컴포넌트가 읽는 이름) — 값은 Primary · Secondary 를 따라간다.
    ========================================================================= */
 :root{
   --paper:#F1EDE5;      /* 페이지 바탕 */
+  --paper-rgb:241,237,229; /* --paper 의 RGB — 모바일 LNB 반투명 바탕 */
   --paper-2:#E8E3D9;    /* 표 헤더 · 그룹행 · hover */
   --surface:#FFFFFF;    /* 카드 · 표 · 박스 바탕 */
-  --ink:#14130F;        /* 본문 · 강조 · 다크 블록 */
+  --ink:#14130F;        /* 본문 · 다크 블록 */
   --ink-2:#56534C;      /* 보조 텍스트 */
   --ink-3:#8C887F;      /* 캡션 · 번호 · 비활성 */
   --line:#D9D3C7;       /* 기본 테두리 */
   --line-2:#E6E1D7;     /* 표 내부 구분선 */
-  --accent:#14130F;     /* 강조 (기본 = ink) */
-  --warn:#7A4A2C;       /* 주의 · 미확정 · 검토대기 */
+  --primary:var(--ink); /* Primary — 반전 블록 · 강조선 (기본 = ink) */
+  --secondary:#7A4A2C;  /* Secondary — 주의 · 미확정 · 검토대기 */
+  --on-primary-rgb:241,237,229; /* Primary 바탕 위 반투명 글자 · 선의 RGB (기본 = paper) */
+  --accent:var(--primary);   /* 강조 = Primary */
+  --warn:var(--secondary);   /* 주의 = Secondary */
   --navh:52px;          /* 상단 토프바 높이 */
 
   --font-title:'Paperlogy','Pretendard Variable','Pretendard','Malgun Gothic',sans-serif;
@@ -74,24 +86,35 @@
               'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
 }
 
-/* ----- 2b. CI 오버라이드 (선택) --------------------------------------------
-   클라이언트 CI 적용을 지시받은 경우에만 이 블록을 골격 <style> 끝에 추가한다.
-   기본 문서는 CI 를 쓰지 않는다 — 지시 없이 켜지 않는다.
-     :root{ --accent:{CI_포인트컬러}; --warn:{CI_포인트컬러}; }
-   ink(본문)는 거의 검정 범위를 벗어나지 않는다. 가독성 기준선이다.
+/* ----- 2b. 컬러 오버라이드 (선택) — Primary · Secondary · Default -----------
+   추출 전 컬러 질문 단계(2026-11-16)에서 기본이 아닌 답(HEX · CI)을 받은 경우에만
+   이 블록을 골격 <style> 끝(문서형 골격의 「컬러 3종」 자리)에 추가한다.
+   기본 문서는 오버라이드를 쓰지 않는다 — 지시 없이 켜지 않는다.
+     :root{
+       --primary:{Primary};              토프바 · 반전 블록 · 강조선 · LNB 활성 · 강조 막대
+       --secondary:{Secondary};          답이 「기본」이면 Primary 와 같은 값
+       --on-primary-rgb:255,255,255;     Primary 가 유채색이면 흰색
+       --paper:{Default 바탕}; --paper-rgb:{바탕 RGB}; --paper-2:{…}; --line:{…}; --line-2:{…};
+       --ink-2:{…}; --ink-3:{…};          Default — 답이 「기본」이면 Primary 색상 계열(쿨/웜) 저채도 중립
+     }
+   - ink(본문)는 거의 검정 범위를 벗어나지 않는다. 가독성 기준선이다. --surface 는 흰색 유지.
+   - Primary 위에는 paper 글자가 올라간다 — Primary 는 흰 글자 대비 4.5:1 이상의 짙은 색.
+     밝은 브랜드색(옐로 · 라임 등)은 Secondary 로 돌리고 Primary 는 같은 계열의 짙은 단계.
+   - Secondary 는 꼭 필요한 곳(주의 · 미확정 · 검토대기 태그 · 박스)에만 — 한 그룹 안 강조색은 하나.
 
    콘텐츠 영역도 CI 톤으로 맞춘다(2026-10-22 지시) — 포인트 색만 바꾸고 웜 베이지 바탕을
-   그대로 두면 톤이 따로 논다. 바탕 · 선 · 보조 글자를 CI 색상 계열(쿨/웜)의 저채도
-   중립색으로 함께 바꾼다. 토프바 · 반전 블록(.node.key · .fnode.key · .closing · .thead ·
-   .totop · .part-title .pno · .lnb a.active)은 CI 메인색으로.
-     예) 네이비 계열 CI(교보자산운용 #003477)
-     :root{ --paper:#F2F5F9; --paper-2:#E6ECF3; --surface:#FFFFFF; --ink:#141A24;
+   그대로 두면 톤이 따로 논다. Default 6개를 CI 색상 계열(쿨/웜)의 저채도 중립색으로 함께 바꾼다.
+   토큰만 바꾸면 따라오는 곳 (2026-11-16 연결 — 선택자별 덮기 불필요):
+     --accent(= Primary) : .topbar · .lnb a.active · header.cover 선 · h2 선 · .tag.pick · .concept 선 ·
+                           thead 선 · tr.grp 선 · .findings 점 · .node.key · .fnode.key · .thead ·
+                           .module .badge · .note.key 선 · .closing · .totop · a.ext hover · 그래프 .key
+     --on-primary-rgb    : .logo .divider · .logo .sub · .topbar-meta · .topbar-meta .divider ·
+                           .lnb a.active b · .thead .no · .rb.inv · .closing .sub · 어두운 블록 안 a.ext 밑줄
+     --paper-rgb         : 모바일 .lnb 반투명 바탕
+     예) 네이비 계열 CI(교보자산운용 #003477) — Primary 만 받고 Secondary · Default 는 「기본」
+     :root{ --primary:#003477; --secondary:#003477; --on-primary-rgb:255,255,255;
+            --paper:#F2F5F9; --paper-rgb:242,245,249; --paper-2:#E6ECF3; --surface:#FFFFFF; --ink:#141A24;
             --ink-2:#4A5466; --ink-3:#8790A0; --line:#D3DBE6; --line-2:#E5EAF1; }
-   아래 10곳은 웜 페이퍼 rgba(241,237,229,…)로 박혀 있어 토큰만 바꾸면 베이지가 남는다
-   — 흰색 rgba(255,255,255,…)로 함께 덮는다:
-     .logo .divider · .logo .sub · .topbar-meta · .topbar-meta .divider · .lnb a.active b ·
-     .thead .no · .rb.inv · .closing .sub · 모바일 .lnb 바탕(새 --paper 값 .96) ·
-     어두운 블록 안 a.ext 밑줄(.node.key/.fnode.key/.closing a.ext)
    -------------------------------------------------------------------------- */
 
 
@@ -112,7 +135,7 @@ h1,h2,h3,.concept p,.closing p,.cover .lead{text-wrap:balance;}
 
 
 /* ===== 4. 상단 토프바 (다크) ============================================= */
-.topbar{position:sticky;top:0;z-index:50;background:var(--ink);}
+.topbar{position:sticky;top:0;z-index:50;background:var(--accent);}
 .topbar-inner{
   max-width:1200px;margin:0 auto;padding:0 24px;height:var(--navh);
   display:flex;align-items:center;justify-content:space-between;gap:16px;
@@ -121,14 +144,14 @@ h1,h2,h3,.concept p,.closing p,.cover .lead{text-wrap:balance;}
   font-family:var(--font-title);font-weight:700;font-size:13.5px;letter-spacing:.02em;
   color:var(--paper);cursor:default;user-select:none;white-space:nowrap;
 }
-.logo .divider{font-weight:400;color:rgba(241,237,229,.5);margin:0 8px;}
-.logo .sub{font-weight:500;color:rgba(241,237,229,.82);}
+.logo .divider{font-weight:400;color:rgba(var(--on-primary-rgb),.5);margin:0 8px;}
+.logo .sub{font-weight:500;color:rgba(var(--on-primary-rgb),.82);}
 .topbar-meta{
   font-family:var(--font-title);font-weight:500;font-size:12px;letter-spacing:.03em;
-  color:rgba(241,237,229,.72);white-space:nowrap;cursor:default;user-select:none;
+  color:rgba(var(--on-primary-rgb),.72);white-space:nowrap;cursor:default;user-select:none;
 }
 .topbar-meta b{font-weight:600;color:var(--paper);}
-.topbar-meta .divider{color:rgba(241,237,229,.4);margin:0 7px;}
+.topbar-meta .divider{color:rgba(var(--on-primary-rgb),.4);margin:0 7px;}
 
 
 /* ===== 5. 레이아웃 — 좌측 LNB + 콘텐츠 =================================== */
@@ -153,13 +176,13 @@ h1,h2,h3,.concept p,.closing p,.cover .lead{text-wrap:balance;}
 }
 .lnb a b{font-weight:700;color:var(--ink-3);margin-right:7px;}
 .lnb a:hover{background:var(--paper-2);color:var(--ink);}
-.lnb a.active{background:var(--ink);color:var(--paper);}
-.lnb a.active b{color:rgba(241,237,229,.7);}
+.lnb a.active{background:var(--accent);color:var(--paper);}
+.lnb a.active b{color:rgba(var(--on-primary-rgb),.7);}
 .doc{flex:1;min-width:0;max-width:940px;padding:0 0 90px;}
 
 
 /* ===== 6. 표지 =========================================================== */
-header.cover{padding:52px 0 32px;border-bottom:2px solid var(--ink);margin-bottom:40px;}
+header.cover{padding:52px 0 32px;border-bottom:2px solid var(--accent);margin-bottom:40px;}
 .eyebrow{
   font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:.08em;
   color:var(--ink-2);margin:0 0 18px;
@@ -195,7 +218,7 @@ h1 .lead{display:block;font-weight:400;font-size:17px;color:var(--ink-2);margin-
 section{margin:0 0 42px;}
 h2{
   font-family:var(--font-title);font-weight:800;font-size:20px;margin:0 0 16px;
-  padding-bottom:9px;border-bottom:1px solid var(--ink);letter-spacing:-.025em;
+  padding-bottom:9px;border-bottom:1px solid var(--accent);letter-spacing:-.025em;
 }
 h2 .num{font-weight:500;color:var(--ink-3);margin-right:9px;}
 h3{
@@ -229,14 +252,14 @@ a{color:var(--ink);}
   white-space:nowrap;vertical-align:2px;
 }
 .tag.chk{border-color:var(--warn);color:var(--warn);}
-.tag.pick{border-color:var(--ink);color:var(--ink);font-weight:700;}
+.tag.pick{border-color:var(--accent);color:var(--accent);font-weight:700;}
 
 .jump{font-size:12.5px;color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line);}
 .jump:hover{color:var(--ink);border-bottom-color:var(--ink);}
 
 
 /* ===== 9. 콘셉트 (섹션 두괄식 한 문장) =================================== */
-.concept{border-left:3px solid var(--ink);background:var(--surface);padding:22px 26px;margin:0 0 20px;}
+.concept{border-left:3px solid var(--accent);background:var(--surface);padding:22px 26px;margin:0 0 20px;}
 .concept p{
   margin:0;font-family:var(--font-title);font-weight:800;font-size:20px;
   line-height:1.55;letter-spacing:-.025em;
@@ -253,13 +276,13 @@ caption{caption-side:top;text-align:left;font-size:13px;color:var(--ink-3);paddi
 th,td{border-bottom:1px solid var(--line-2);padding:10px 12px;text-align:left;vertical-align:top;}
 thead th{
   font-family:var(--font-title);font-weight:600;font-size:13.5px;letter-spacing:-.01em;
-  border-top:1px solid var(--ink);border-bottom:1px solid var(--line);
+  border-top:1px solid var(--accent);border-bottom:1px solid var(--line);
   background:var(--paper-2);white-space:nowrap;
 }
 tbody tr:last-child td{border-bottom:1px solid var(--line);}
 td.c,th.c{text-align:center;white-space:nowrap;}
 .col-n{width:44px;text-align:center;font-family:var(--font-title);font-weight:600;color:var(--ink-3);}
-tr.grp td{background:var(--paper-2);font-family:var(--font-title);font-weight:600;border-top:1px solid var(--ink);}
+tr.grp td{background:var(--paper-2);font-family:var(--font-title);font-weight:600;border-top:1px solid var(--accent);}
 tr.subgrp td{
   background:var(--paper);color:var(--ink-3);font-family:var(--font-title);
   font-weight:600;font-size:12px;padding:5px 12px;
@@ -276,7 +299,7 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
 .findings.alert{border-color:var(--warn);}
 .findings ul{list-style:none;padding-left:0;}
 .findings li{position:relative;padding-left:18px;margin-bottom:10px;}
-.findings li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;background:var(--ink);}
+.findings li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;background:var(--accent);}
 .findings.alert li:before{background:var(--warn);}
 
 .legend{
@@ -294,7 +317,7 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
   font-family:var(--font-title);font-weight:600;font-size:13.5px;letter-spacing:-.015em;
   text-align:center;min-width:210px;max-width:440px;
 }
-.node.key{border-color:var(--ink);background:var(--ink);color:var(--paper);}
+.node.key{border-color:var(--accent);background:var(--accent);color:var(--paper);}
 .node small{display:block;font-family:var(--font-body);font-weight:400;font-size:12px;opacity:.85;margin-top:3px;}
 .node.key small a{color:var(--paper);text-decoration:underline;}
 .arrow{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.4;padding:7px 0;}
@@ -312,7 +335,7 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
   font-family:var(--font-title);font-weight:600;font-size:12.5px;letter-spacing:-.015em;
   text-align:center;display:flex;flex-direction:column;justify-content:center;min-width:120px;
 }
-.flow .fnode.key{border-color:var(--ink);background:var(--ink);color:var(--paper);}
+.flow .fnode.key{border-color:var(--accent);background:var(--accent);color:var(--paper);}
 .flow .fnode small{font-family:var(--font-body);font-weight:400;font-size:11px;opacity:.8;margin-top:2px;}
 .flow .farrow{display:flex;align-items:center;padding:0 8px;color:var(--ink-3);font-size:14px;}
 
@@ -330,10 +353,10 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
 .tcol{flex:1;min-width:96px;position:relative;}
 .tcol::before{content:'';display:block;width:1px;height:12px;background:var(--ink-3);margin:-14px auto 2px;}
 .thead{
-  background:var(--ink);color:var(--paper);padding:7px 5px 6px;text-align:center;
+  background:var(--accent);color:var(--paper);padding:7px 5px 6px;text-align:center;
   font-family:var(--font-title);font-weight:600;font-size:12.5px;line-height:1.3;
 }
-.thead .no{display:block;font-weight:400;font-size:10px;color:rgba(241,237,229,.6);}
+.thead .no{display:block;font-weight:400;font-size:10px;color:rgba(var(--on-primary-rgb),.6);}
 .titem{
   background:var(--surface);border:1px solid var(--line);padding:5px 4px 4px;margin-top:6px;
   text-align:center;font-size:11.5px;line-height:1.35;word-break:keep-all;
@@ -343,7 +366,7 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
   display:inline-block;border:1px solid var(--line);background:var(--paper-2);font-size:9.5px;
   line-height:1.5;padding:0 3px;margin:0 1px;color:var(--ink-2);font-weight:600;
 }
-.rb.inv{background:rgba(241,237,229,.16);border-color:rgba(241,237,229,.3);color:rgba(241,237,229,.9);font-weight:400;}
+.rb.inv{background:rgba(var(--on-primary-rgb),.16);border-color:rgba(var(--on-primary-rgb),.3);color:rgba(var(--on-primary-rgb),.9);font-weight:400;}
 .rb.none{color:var(--ink-3);background:transparent;}
 .tcap{font-size:10.5px;color:var(--ink-3);text-align:center;margin-top:9px;letter-spacing:1.5px;}
 
@@ -354,14 +377,14 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
 .module h3{margin-top:0;}
 .module h3 .badge{
   display:inline-block;min-width:22px;height:22px;line-height:22px;text-align:center;
-  background:var(--ink);color:var(--paper);font-family:var(--font-title);font-weight:700;font-size:12px;
+  background:var(--accent);color:var(--paper);font-family:var(--font-title);font-weight:700;font-size:12px;
   border-radius:50%;margin-right:8px;vertical-align:1px;padding:0 6px;letter-spacing:0;
 }
 .module h3 .badge.sq{border-radius:2px;font-weight:800;}
 
 .note{border-left:2px solid var(--line);padding:2px 0 2px 14px;margin:12px 0;font-size:14.5px;color:var(--ink-2);}
 .note b{font-family:var(--font-title);font-weight:700;color:var(--ink);}
-.note.key{border-left-color:var(--ink);}
+.note.key{border-left-color:var(--accent);}
 .note.warn,.warn{border-left:2px solid var(--warn);padding:2px 0 2px 14px;margin:14px 0;font-size:14.5px;color:var(--ink-2);}
 .warn b{color:var(--warn);}
 
@@ -376,14 +399,14 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
 
 
 /* ===== 16. 마무리 · 푸터 · 맨위로 ======================================= */
-.closing{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:38px 26px;text-align:center;}
+.closing{background:var(--accent);color:var(--paper);border:1px solid var(--accent);padding:38px 26px;text-align:center;}
 .closing p{
   margin:0;font-family:var(--font-title);font-weight:900;font-size:22px;
   line-height:1.5;letter-spacing:-.03em;
 }
 .closing .sub{
   margin-top:12px;font-family:var(--font-body);font-size:14px;font-weight:400;
-  letter-spacing:-.003em;color:rgba(241,237,229,.78);
+  letter-spacing:-.003em;color:rgba(var(--on-primary-rgb),.78);
 }
 .closing .sub strong{color:var(--paper);}
 
@@ -392,10 +415,10 @@ footer a{color:var(--ink-2);}
 
 .totop{
   position:fixed;right:24px;bottom:24px;z-index:40;width:42px;height:42px;line-height:40px;
-  text-align:center;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  text-align:center;border:1px solid var(--accent);background:var(--accent);color:var(--paper);
   text-decoration:none;font-size:15px;border-radius:50%;
 }
-.totop:hover{background:var(--surface);color:var(--ink);}
+.totop:hover{background:var(--surface);color:var(--accent);}
 
 
 /* ===== 17. mermaid 도식 (오프라인 폴백 포함) ============================ */
@@ -417,7 +440,7 @@ pre.mermaid.mm-fail::before{
   .lnb{
     position:sticky;top:var(--navh);z-index:45;flex:none;max-height:none;
     overflow-y:visible;overflow-x:auto;border:0;border-bottom:1px solid var(--line);
-    background:rgba(241,237,229,.96);backdrop-filter:saturate(180%) blur(6px);
+    background:rgba(var(--paper-rgb),.96);backdrop-filter:saturate(180%) blur(6px);
     padding:6px 4px;margin:0 -16px;
   }
   .lnb ul{display:flex;gap:2px;white-space:nowrap;padding:0 12px;}
@@ -533,7 +556,7 @@ a.ext::after{content:"";display:inline-block;width:.8em;height:.8em;margin-left:
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E") center/contain no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E") center/contain no-repeat;
   transition:opacity .15s ease,transform .15s ease;}
-a.ext:hover,a.ext:focus-visible{background:var(--ink);color:var(--paper);text-decoration-color:transparent;outline:none;}
+a.ext:hover,a.ext:focus-visible{background:var(--accent);color:var(--paper);text-decoration-color:transparent;outline:none;}
 a.ext:hover::after,a.ext:focus-visible::after{opacity:1;transform:translate(1px,-1px);}
 /* [S번호] 출처 태그 — 링크 뒤에 그대로 둔다 */
 .src-tag{display:inline-block;font-size:11px;color:var(--ink-3);white-space:nowrap;}
@@ -541,7 +564,7 @@ a.ext:hover::after,a.ext:focus-visible::after{opacity:1;transform:translate(1px,
 table.src a.ext{font-size:inherit;word-break:keep-all;color:var(--ink);}
 table.src a.ext:hover,table.src a.ext:focus-visible{color:var(--paper);}
 /* 어두운 블록 안 링크 */
-.node.key a.ext,.flow .fnode.key a.ext,.closing a.ext{text-decoration-color:rgba(241,237,229,.4);}
+.node.key a.ext,.flow .fnode.key a.ext,.closing a.ext{text-decoration-color:rgba(var(--on-primary-rgb),.4);}
 .node.key a.ext:hover,.flow .fnode.key a.ext:hover,.closing a.ext:hover{background:var(--paper);color:var(--ink);}
 @media print{
   a.ext{text-decoration:none;padding:0;}

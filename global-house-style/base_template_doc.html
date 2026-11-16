@@ -18,6 +18,19 @@
 /* ▼▼▼ ~/.claude/house-style/house-style.css 전문 삽입 ▼▼▼ */
 @@HOUSE_STYLE@@
 /* ▲▲▲ 삽입 끝 ▲▲▲ */
+
+/* ===== 컬러 3종 — 추출 전 컬러 질문 답 (house-style.css §2b) ================
+   답이 「기본으로」면 이 블록 삭제. Primary · Secondary · Default 중 하나라도 HEX · CI 면
+   아래 :root 를 주석 밖으로 꺼내 값 치환 — 반전 블록 · 강조선 · 반전 글자는 토큰을 따라온다
+   Primary 가 「기본」이면 1 · 3번째 줄 제외(반전 글자 paper 유지), 답 해석 표 = 전역 규칙 「컬러 질문 단계」
+   :root{
+     --primary:{Primary HEX};
+     --secondary:{Secondary HEX — 「기본」이면 Primary 값, Primary 도 기본이면 줄 제외};
+     --on-primary-rgb:255,255,255;
+     --paper:{Default 바탕 HEX}; --paper-rgb:{바탕 R,G,B}; --paper-2:{HEX};
+     --line:{HEX}; --line-2:{HEX}; --ink-2:{HEX}; --ink-3:{HEX};
+   }
+   ========================================================================= */
 </style>
 </head>
 <body id="top">
