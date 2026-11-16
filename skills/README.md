@@ -36,7 +36,7 @@
 
 | <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>이렇게 요청</sub> |
 |:---|:---:|:---:|
-| <sub>[`Slack-Bot`](Slack-Bot/README.md)</sub> | <sub>슬랙 봇 만들기 — 채널 자동 게시(Incoming Webhook) · @멘션 질문에 정해 둔 자료로 스레드 답변(Socket Mode + Claude), 6단계 진행 · 비밀값 저장 · 자동 시작 등록 (호출 이름 `slack-bot`)</sub> | <sub>`슬랙 봇 만들어줘` · `봇 멘션하면 답하게 해줘`</sub> |
+| <sub>[`Slack-Bot`](Slack-Bot/README.md)</sub> | <sub>슬랙 봇 만들기 — 채널 자동 게시(Incoming Webhook) · @멘션 질문에 정해 둔 자료로 스레드 답변(Socket Mode + Claude) · 스레드 맥락 · 다른 사람에게 멘션 전달, 6단계 진행 · 비밀값 저장 · 자동 시작 등록 (호출 이름 `slack-bot`)</sub> | <sub>`슬랙 봇 만들어줘` · `봇 멘션하면 답하게 해줘`</sub> |
 
 ### 기획 실무 스킬 — 제작: 신지은
 

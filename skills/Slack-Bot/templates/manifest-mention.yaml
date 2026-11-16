@@ -11,6 +11,8 @@ oauth_config:
       - incoming-webhook
       - chat:write
       - app_mentions:read
+      - channels:history   # 스레드 맥락(공개 채널) — 비공개 채널도 쓰면 groups:history 추가
+      - users:read         # 이름으로 전달 대상 지정 · 스레드 화자 이름
 settings:
   event_subscriptions:
     bot_events:

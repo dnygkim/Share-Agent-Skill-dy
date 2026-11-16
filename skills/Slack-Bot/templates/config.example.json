@@ -4,6 +4,12 @@
   "model": "sonnet",
   "claude_config_dir": "",
   "default_question": "최근 업데이트 내역 알려줘",
+  "owner_user_ids": [],
+  "thread_context": true,
+  "thread_max_messages": 30,
+  "thread_max_chars": 6000,
+  "deliver": true,
+  "deliver_max_targets": 3,
   "sources": [
     {
       "type": "git_log",
