@@ -324,6 +324,7 @@ corpus 데이터는 별도 `corpus` 브랜치 — `corpus.py`가 git 미추적 `
 
 | <div align="center"><sub>날짜</sub></div> | <sub>변경</sub> | <sub>사유</sub> |
 |:---|:---:|:---:|
+| <sub>2026.11.16</sub> | <sub>공수 방법론 §12 산정 함정 4건 추가 — 1 M/M 환산 20.8일 고정 · 정본 → 제출 견적 압축 시 항목별 브리지 기록 · 고객본은 월별 × 등급 표만 · AI 공수표는 총괄 = 상세 = 월별표 검증 전 정본 제외, §13에 제안서 인력 장 = 제출 견적 = 정본 3자 일치 점검</sub> | <sub>드라이브 견적 · 공수산정서 전수 학습(제안 하네스 2차 학습)에서 환산 일수 20 · 20.8 · 21 · 22 혼재, 사유 없는 압축(174 → 121 M/M 등), 제안서 ↔ 견적 불일치(GS) 확인</sub> |
 | <sub>2026.11.13</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 변경 이력 맨 아래로 이동</sub> | <sub>README만 읽고 사용법을 이해하도록(오너 지시)</sub> |
 | <sub>2026.10.22</sub> | <sub>**Dan Jr. 등급 조회**(CLAUDE.md 동작 규칙 2): 인테이크·GATE 직전 `persona.md` 확인 — A 진행·B 보고·C 질문, 건너뛴 게이트는 완료 보고에 ID 표기</sub> | <sub>반복 결정을 Dan Jr.(사용자 골든셋)에 위임해 승인 게이트 축소(오너 지시)</sub> |
 | <sub>2026.09.03</sub> | <sub>**★ 민감자료 정책 명문화**(CLAUDE.md): 추적 금지·재활용 금지·외부 반출 금지 3원칙 + `examples/*.html` git 미추적(.gitignore) + `scripts/check_leak.py`(샘플 고객 토큰 잔존 0건, qa 게이트) + 부모 저장소 `.githooks/pre-commit`(input/output/_workspace/examples 스테이징 차단)</sub> | <sub>하네스를 `dykim-claude-agents-skills/agent/`로 이동하며 과거 고객 완성본이 저장소에 올라간 사고 정정. 기존 자료는 샘플로만 쓰고 다른 문서에 재사용·적용 금지(오너 지시)</sub> |

@@ -10,6 +10,10 @@
   "thread_max_chars": 6000,
   "deliver": true,
   "deliver_max_targets": 3,
+  "reactions": true,
+  "reaction_working": "hourglass_flowing_sand",
+  "reaction_done": "white_check_mark",
+  "reaction_failed": "warning",
   "sources": [
     {
       "type": "git_log",

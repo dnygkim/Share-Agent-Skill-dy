@@ -12,6 +12,9 @@
 #   · 거버닝 메시지 40자 초과 · 2문장 · 누락, 한 장에 합니다체 문장 과다
 #   · (2026-11-13 최종본 학습 · references/slide-quality-bar.md §4) 거버닝의 「통한/통해」 · 「~으로」 미완결 ·
 #     장끼리 같은 거버닝 · 최상급/절대어 · 우리는/여러분 · 띄어쓰기(제한 된 · 강화 합니다) · 「A가 아닌 B」 덱 4회 이상
+#   · (2026-11-16 2차 학습) 거버닝 미완결을 조사 · 부사 끝(~을/를 · ~에/에서 · 다시 · 바로 · 먼저 · 그대로 · ~게)까지 ·
+#     「자사」 · RFP 감점 표현 후보(~할 수 있 · 가능합니다) 개수 · 근거 확인이 필요한 개선율(n% 향상 · 절감)
+# [위반] 추가(2026-11-16) — 작업 흔적: XXXX · #REF! · 삽입예정 · 작성중 · [업무]/[문제] 자리 · 「2/13 추가」 같은 날짜 표식
 # 의존성: perl 5 코어 모듈만. Git Bash(Windows) · macOS 기본 perl 에서 그대로 실행.
 use strict; use warnings; use utf8;
 use FindBin qw($Bin);
@@ -68,6 +71,7 @@ my $NIDA_MAX  = 8;      # 한 장의 합니다체 문장 수
 # ── 점검 ──────────────────────────────────────────────────
 my (@fail, @warn, %cl); my ($nlines, $nnida) = (0, 0);
 my (%titles, @anin);    # 장끼리 같은 거버닝 · 「A가 아닌 B」 횟수
+my @canbe;              # RFP 감점 표현 후보(~할 수 있 · 가능합니다)가 나온 장
 for my $sl (@slides) {
   my $where = "$sl->{label} (p$sl->{idx})";
   my @all = grep { length } ($sl->{title}, @{$sl->{lines}});
@@ -85,6 +89,13 @@ for my $sl (@slides) {
     push @warn, "[인칭] $where: $line" if $line =~ /(?:^|[\s「‘“'"(])우리(?:는|가)\s/ || $line =~ /여러분/;
     push @warn, "[띄어쓰기] $where: $line" if $line =~ /[가-힣](?![야이가게록지고서을를은는도만에로와과])[가-힣]\s(?:된|합니다|됩니다)(?=[\s.,]|$)/;   # 명사 뒤 띄움만 (해야 합니다 · 시간이 됩니다 제외)
     push @anin, $sl->{label} if $line =~ /(?:가|이)\s?아닌|아니라/;
+    # 2026-11-16 2차 학습 — 작업 흔적 · 「자사」 · RFP 감점 표현 · 근거 확인이 필요한 개선율
+    push @fail, "[작업 흔적] $where: $line"
+      if $line =~ /X{4,}|#REF!|삽입\s?예정|작성중|\[(?:업무|문제)\]|(?:^|[^\d])\d{1,2}\/\d{1,2}\s?(?:추가|수정|삽입|반영)/;
+    push @warn, "[호칭 자사] $where: $line" if index($line, '자사') >= 0;
+    push @canbe, $sl->{label} if $line =~ /할\s?수\s?있|수\s?있습니다|가능합니다|가능하다/;
+    push @warn, "[수치 주장 — 근거 · 기준 확인] $where: $line"
+      if $line =~ /\d+(?:\.\d+)?\s?%\s?(?:이상\s?)?(?:향상|개선|절감|감소|증가|단축|상승)/;
     for my $c (@CLICHE) { if (index($line, $c) >= 0) { $cl{$c}{n}++; push @{$cl{$c}{w}}, $sl->{label}; } }
   }
   $nnida += $nida;
@@ -96,6 +107,10 @@ for my $sl (@slides) {
       push @warn, "[거버닝 2문장] $where: $t" if $t =~ /(?:니다|[가-힣])\.\s+\S/;
       push @warn, "[거버닝 「통한」] $where: $t" if $t =~ /통한|통해/;
       push @warn, "[거버닝 미완결 ~으로] $where: $t" if $t =~ /(?:으로|[가-힣]로)$/ && $t !~ /(?:그대로|바로|새로|서로|따로|주로|별로|날로|홀로)$/;
+      push @warn, "[거버닝 미완결 조사 · 부사 끝] $where: $t"
+        if ($t =~ /(?:을|를|에|에서|에게|까지|부터|처럼|보다)$/ && $t !~ /(?:마을|가을|고을)$/)
+        || $t =~ /(?:다시|바로|먼저|함께|이제|미리|모두|그대로)$/
+        || ($t =~ /[가-힣]게$/ && $t !~ /(?:무게|가게|지게|집게)$/);
       push @{$titles{$t}}, $sl->{label};
     }
     push @warn, "[합니다체 ${nida}문장] $where: 리드 · 결론 · 다짐에만 쓰고 항목은 명사구로" if $nida > $NIDA_MAX;
@@ -106,6 +121,11 @@ for my $t (sort keys %titles) {
   push @warn, "[거버닝 중복 " . scalar(@w) . "장] " . join(', ', @w) . ": $t" if @w > 1;
 }
 push @warn, "[「A가 아닌 B」 × " . scalar(@anin) . "] 덱 전체 3회 이하로: " . join(', ', @anin[0 .. ($#anin > 9 ? 9 : $#anin)]) if @anin > 3;
+if (@canbe) {
+  my %seen; my @w = grep { !$seen{$_}++ } @canbe;
+  push @warn, "[RFP 감점 표현 후보 × " . scalar(@canbe) . "] 「~할 수 있다 · ~가능하다」 — 01_rfp.md에 감점 조항이 있으면 [위반]으로 보고 고친다: "
+    . join(', ', @w[0 .. ($#w > 9 ? 9 : $#w)]) . (@w > 10 ? ' …' : '');
+}
 for my $c (sort { $cl{$b}{n} <=> $cl{$a}{n} } keys %cl) {
   my %seen; my @w = grep { !$seen{$_}++ } @{$cl{$c}{w}};
   push @warn, "[상투어 「$c」 × $cl{$c}{n}] " . join(', ', @w[0 .. ($#w > 9 ? 9 : $#w)]) . (@w > 10 ? ' …' : '');

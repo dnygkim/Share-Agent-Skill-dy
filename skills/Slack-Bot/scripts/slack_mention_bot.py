@@ -15,8 +15,10 @@
 - 스레드 맥락: 스레드 안 멘션이면 앞선 대화(최근 30개)를 함께 넘긴다 — 권한 channels:history (비공개 채널 groups:history)
 - 질문자 · 전달: 묻는 사람(이름 · 관리자/팀원)을 넘기고, 「@이름 에게 알려 줘」 「이 분한테 답변 드려」면 대상을 멘션해 답한다
   — 대상 = @멘션한 사람 · 그 스레드 참여자(이름 · 「이 분」), 3명까지. 이름 해석은 권한 users:read (없으면 @멘션만)
+- 진행 표시: 멘션 글에 ⏳(내용 확인 중) 반응 → 답변을 단 뒤 ✅(답변 완료)로 교체, 실패면 ⚠️
+  — 권한 reactions:write (없으면 표시만 빠지고 답변은 동작) · config 의 reactions · reaction_working/done/failed
 - 기록: config 의 log_file (기본 ~/.claude/<bot_name>-slack.log, 1MB 넘으면 .1 로 교체)
-- 원형: 공유 리포 업데이트 안내 봇 (2026-11-13 실사용 · 2026-11-16 스레드 맥락 · 전달 추가)
+- 원형: 공유 리포 업데이트 안내 봇 (2026-11-13 실사용 · 2026-11-16 스레드 맥락 · 전달 추가 · 2026-11-17 진행 표시 추가)
 """
 import base64, json, os, re, shutil, socket, ssl, struct, subprocess, sys, threading, time, urllib.parse, urllib.request
 from datetime import datetime
@@ -47,6 +49,10 @@ conf = {
     "thread_max_chars": 6000,
     "deliver": True,             # 「@이름 에게 알려 줘」 「이 분한테 답변 드려」 → 대상 멘션 + 답변
     "deliver_max_targets": 3,
+    "reactions": True,           # 진행 표시 — 멘션 글에 ⏳ → 답변 후 ✅ (실패 ⚠️), 이모지 이름은 콜론 없이
+    "reaction_working": "hourglass_flowing_sand",
+    "reaction_done": "white_check_mark",
+    "reaction_failed": "warning",
 }
 if os.path.exists(CONF):
     with open(CONF, encoding="utf-8") as f:
@@ -444,7 +450,8 @@ def check():
                                              headers={"Authorization": "Bearer " + secret(fname)}, method="POST")
                 with urllib.request.urlopen(req, timeout=30) as resp:
                     scopes = set((resp.headers.get("x-oauth-scopes") or "").split(","))
-                for sc, what in (("channels:history", "스레드 맥락(공개 채널)"), ("users:read", "이름으로 전달 대상 지정")):
+                for sc, what in (("channels:history", "스레드 맥락(공개 채널)"), ("users:read", "이름으로 전달 대상 지정"),
+                                 ("reactions:write", "진행 표시(⏳ → ✅)")):
                     print(f"  권한 {sc}: {'있음' if sc in scopes else '없음 — ' + what + ' 미동작'}")
             except Exception as e:
                 print(f"  권한 확인 실패 · {type(e).__name__}")
@@ -469,7 +476,43 @@ def post(bot_token, channel, thread, text):
 
 SIM = {"on": False}
 
+_react = {"denied_at": 0.0}
+
+def react(token, channel, ts, add="", remove=""):
+    """진행 표시 — 멘션 글의 이모지 반응 교체(add 를 붙이고 remove 를 뗀다). 실패해도 답변은 그대로 진행"""
+    if not conf.get("reactions", True) or not ts: return
+    if remove == add: remove = ""
+    if SIM["on"]:
+        acts = [x for x in ((f"+:{add}:" if add else ""), (f"-:{remove}:" if remove else "")) if x]
+        if acts: print(f"[반응 · {channel} · 글 {ts}] {' '.join(acts)}", flush=True)
+        return
+    if time.time() - _react["denied_at"] < 3600: return  # 권한 없음 — 1시간 뒤 재시도
+    for method, nm in (("reactions.add", add), ("reactions.remove", remove)):
+        if not nm: continue
+        try:
+            r = slack(method, token, {"channel": channel, "timestamp": ts, "name": nm})
+        except Exception as e:
+            log("반응 오류", method, type(e).__name__, e); continue
+        err = r.get("error")
+        if r.get("ok") or err in ("already_reacted", "no_reaction"): continue
+        log("반응 실패", method, nm, err, r.get("needed") or "")
+        if err == "missing_scope":
+            _react["denied_at"] = time.time(); return
+
 def handle(ev, bot_token):
+    """멘션 1건 — 받자마자 ⏳, 답을 단 뒤 ✅ · 답변 실패 · 게시 실패 · 처리 오류면 ⚠️"""
+    channel, ts = ev["channel"], ev.get("ts")
+    react(bot_token, channel, ts, add=conf.get("reaction_working", ""))
+    ok = False
+    try:
+        ok = answer(ev, bot_token)
+    except Exception as e:
+        log("처리 오류", type(e).__name__, e)
+    react(bot_token, channel, ts, add=conf.get("reaction_done" if ok else "reaction_failed", ""),
+          remove=conf.get("reaction_working", ""))
+
+def answer(ev, bot_token):
+    """질문 읽기 → 답변 → 스레드 게시. 답변을 제대로 달았으면 True"""
     question = clean_text(ev.get("text", ""), bot_token) or conf["default_question"]
     channel, thread, user = ev["channel"], ev.get("thread_ts") or ev["ts"], ev.get("user")
     msgs, labels = [], {}
@@ -485,18 +528,21 @@ def handle(ev, bot_token):
     except Exception as e:
         log("전달 대상 판별 오류", type(e).__name__, e); targets, note = [], ""
     if note:
-        log("전달 대상 확인 요청", channel, user, question[:120]); post(bot_token, channel, thread, note); return
+        log("전달 대상 확인 요청", channel, user, question[:120]); return post(bot_token, channel, thread, note)
     asker = label_of(user, bot_token, labels).replace("(", " · ").rstrip(")")
     log("질문", channel, user, question[:200], ("→ 전달 " + ",".join(targets)) if targets else "", f"스레드 {len(msgs)}개" if msgs else "")
+    made = True
     with _sem:
         try:
             ans = sanitize(ask(question, thread_block(msgs, bot_token, labels), asker, target_block(targets, msgs, bot_token, labels)))
         except Exception as e:
             log("답변 실패", e)
-            ans = conf["fail_message"]
+            ans, made = conf["fail_message"], False
     if targets:
         ans = " ".join(f"<@{u}>" for u in targets) + " " + ans
-    log("답변", "ok" if post(bot_token, channel, thread, ans) else "실패", len(ans))
+    posted = post(bot_token, channel, thread, ans)
+    log("답변", "ok" if posted else "실패", len(ans))
+    return made and posted
 
 def simulate(argv):
     """--sim 채널 스레드ts|- 시점ts|now 사용자ID 글 — 그 스레드 그 시점에 멘션이 온 것처럼 처리, 게시 대신 화면 출력"""

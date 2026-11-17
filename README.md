@@ -7,7 +7,7 @@
 | <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `2654810`(2026.11.16 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 156건(최신 2026.11.16)
+**현재 반영본** — 원본 `f6516ec`(2026.11.17 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 159건(최신 2026.11.17)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -144,7 +144,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 156건 · 최신 2026.11.16). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 159건 · 최신 2026.11.17). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -162,7 +162,8 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
-| <sub>2026.11.16</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> |  | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
+| <sub>2026.11.17</sub> |  |  | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
+| <sub>2026.11.16</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md) · [proposal](agent/proposal/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
 | <sub>2026.11.13</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md) · [harness_st-etribe](agent/harness_st-etribe/README.md) · [prd](agent/prd/README.md) · [proposal](agent/proposal/README.md) · [screen-spec-id](agent/screen-spec-id/README.md) · [test-runner](agent/test-runner/README.md) · [worker](agent/worker/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md) · [deckslide-design-guideline](skills/deckslide-design-guideline/README.md) · [dev-reading](skills/dev-reading/README.md) · [eli5](skills/eli5/README.md) · [flowchart-defense](skills/flowchart-defense/README.md) · [handoff](skills/handoff/README.md) · [ia-builder](skills/ia-builder/README.md) · [meeting-minutes](skills/meeting-minutes/README.md) · [proposal-slide-builder](skills/proposal-slide-builder/README.md) · [proposal-structure-validation](skills/proposal-structure-validation/README.md) · [qa-master](skills/qa-master/README.md) · [requirements-generator](skills/requirements-generator/README.md) · [rfp-analysis-research](skills/rfp-analysis-research/README.md) · [ux-journey-insight](skills/ux-journey-insight/README.md) · [wbs-generator](skills/wbs-generator/README.md) · [weekly-report](skills/weekly-report/README.md)</sub> |
 | <sub>2026.11.11</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> |  |
 | <sub>2026.11.10</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[rfp-analysis-research](skills/rfp-analysis-research/README.md)</sub> |
@@ -193,11 +194,14 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 38건</summary>
+<summary><b>2026.11</b> · 41건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
+| <sub>2026.11.17</sub> | <sub>스킬</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> | <sub>진행 표시 추가 — 멘션을 받으면 그 글에 ⏳(내용 확인 중), 답글을 단 뒤 ✅(답변 완료)로 교체, 답변 · 게시 실패면 ⚠️. 이모지 · 켜고 끄기를 `config.json`에서 지정, `reactions:write` 권한이 없으면 표시만 생략하고 답변 유지, `--check` 권한 표시 · `--sim` 반응 출력, 매니페스트에 `reactions:write` 추가</sub> | <sub>김단영</sub> |
 | <sub>2026.11.16</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>컬러 질문 단계 신설 — 하네스 · 스킬 추출 직전 Primary · Secondary · Default 3색을 한 질문으로 확인(기존 「기본 스타일로 추출할까요?」 대체), 답 해석 표 · 색 조건을 전역 규칙에 추가. `house-style.css` §2에 역할 토큰 `--primary` · `--secondary` · `--on-primary-rgb` · `--paper-rgb` 추가, 반전 블록 · 강조선을 `--accent`로 연결해 토큰만 바꾸면 따라오는 구조(웜 rgba 10곳 덮기 대체 · 기본 렌더 동일), `base_template_doc.html`에 「컬러 3종」 자리 추가</sub> | <sub>김단영</sub> |
+|  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>공수 방법론 §12 산정 함정 4건 추가 — 1 M/M 환산 20.8일 고정 · 정본 → 제출 견적 압축 시 항목별 브리지 기록 · 고객본은 월별 × 등급 표만 · AI 공수표는 총괄 = 상세 = 월별표 검증 전 정본 제외, §13에 제안서 인력 장 = 제출 견적 = 정본 3자 일치 점검</sub> | <sub>—</sub> |
+|  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>제안서 2차 학습 — 드라이브 `! 사업제안&견적` 31건 · 문서 1,182건(작업본 · 회의록 · 사용자 작성 md · 견적 · 공수산정서 포함) 전수 읽기. 역할 · 장 순서 판정(강제 목차 = RFP 순서, 그 밖 스토리 순서 + 조견표)과 변형 골격 3종(현 수행사 재입찰 · 운영 AX 배치 · 협력사 참여형, `skeleton-bid.md` §0 · §5), 대표 컨셉 2층 · 수위 · 맺음 점층 · 발표 대본(`writing-style.md` §6 · §8), AI 초안 채택 기준 · RFP 문체 조항 · 「자사」 · 관찰 원문 승계 · 구조 원인 · 약속 범위 한정, 새 덱 유형 3종 · 시기별 말투 변화 · 견적서 점검표 · 3자 일치 · KB 용어 사례 정정 · GS 기준 범위 한정(`slide-quality-bar.md`), S1 RFP 문체 조항 · 핵심 용어표(`rfp-analyst.md`), 견적형 단가 근거 · 환산 일수(`section-prompts.md`), `check_style.pl` 작업 흔적 · 미완결 조사 · 부사 끝 · 수치 주장 · RFP 감점 표현 점검 추가</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> | <sub>스레드 맥락 · 멘션 전달 추가 — 스레드 안 멘션이면 앞선 대화를 보고 답변(오답 정정 포함), 「@이름 에게 알려 줘」 · 「이 분한테 답변 드려」로 대상을 멘션해 답변(스레드 참여자 · @멘션만 · 3명까지 · 채널 전체 호출 제거), 질문자 권한(관리자 · 팀원) 전달, 다른 사람 멘션을 지워 전달 대상이 사라지던 문제 수정, `--check` 권한 표시 · `--sim` 시험 명령, 매니페스트에 `channels:history` · `users:read` 추가</sub> | <sub>김단영</sub> |
 | <sub>2026.11.13</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md)</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>김단영</sub> |
