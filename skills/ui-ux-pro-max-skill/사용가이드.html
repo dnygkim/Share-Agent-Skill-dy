@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="revision" content="20261119">
 <!-- ═══ 수정 이력 ═══
+[20261119] 김단영 · 수정 페이지: 전체(레이아웃 · 글자) · 내역: 본문 최대 폭 930 → 1130px(레이아웃 1200 → 1400px), 글자 크기 전체 한 단계 확대(본문 16 → 17px · 표 15 → 16px · 제목 +2px), 표지 소개 문단 폭 680 → 760px
 [20261119] 김단영 · 수정 페이지: 전체(§1~§6 · 부록) · 내역: 최초 작성 — 시작 방법 2가지 · 설치 · 한 번에 입력할 정보 · 단계별 진행 · 요청 예시 · 막힐 때 · 디자인 스킬 6종, Primary 보라 톤
 -->
 <title>UI UX Pro Max 사용 가이드</title>
@@ -663,6 +664,65 @@ code{font-family:'Cascadia Code','Consolas','D2Coding',ui-monospace,monospace;fo
 .sw{display:inline-block;width:.85em;height:.85em;border:1px solid var(--line);vertical-align:-.08em;margin-right:5px;}
 td code{font-size:.84em;}
 @media print{ .cmd button{display:none;} }
+
+/* ===== 이 문서 전용 — 본문 폭 확장 · 글자 한 단계 확대 (2026-11-19 사용자 지시, 정본 미변경) =====
+   폭: 레이아웃 1200 → 1400px · 본문 최대 930 → 1130px
+   글자: 16px 이하 +1px, 제목 · 결론 · 수치 +2px (인쇄 크기는 정본 유지) */
+.topbar-inner,.layout{max-width:1400px;}
+.doc{max-width:1130px;}
+body{font-size:17px;}
+.logo{font-size:14.5px;}
+.topbar-meta{font-size:13px;}
+.lnb a{font-size:13.5px;}
+.eyebrow{font-size:14px;}
+h1{font-size:34px;}
+h1 .lead{font-size:18px;}
+.meta{font-size:14px;}
+.toc h2{font-size:15px;}
+.toc > ol > li > a{font-size:15px;}
+.toc ul li a{font-size:13.5px;}
+h2{font-size:22px;}
+h3{font-size:17px;}
+.small{font-size:15.5px;}
+.sm{font-size:14.5px;}
+.tag{font-size:12.5px;}
+.jump{font-size:13.5px;}
+.concept p{font-size:22px;}
+.concept .sub{font-size:16px;}
+table{font-size:16px;}
+caption{font-size:14px;}
+thead th{font-size:14.5px;}
+table.src td{font-size:15.5px;}
+table.src a{font-size:13.5px;}
+.path{font-size:13px;}
+.flow .fnode{font-size:13.5px;}
+.flow .fnode small{font-size:12px;}
+.flow .farrow{font-size:15px;}
+.note,.note.warn,.warn{font-size:15.5px;}
+.tier{font-size:16px;}
+.tier dt small{font-size:13.5px;}
+.closing p{font-size:24px;}
+.closing .sub{font-size:15px;}
+footer{font-size:13px;}
+.stat .v{font-size:23px;}
+.stat .v .u{font-size:12.5px;}
+.stat .l{font-size:13.5px;}
+.module h3 .badge{font-size:13px;min-width:24px;height:24px;line-height:24px;}
+.cmd .cap{font-size:13px;}
+.cmd pre{font-size:14.5px;}
+.cmd button{font-size:12.5px;}
+@media (max-width:640px){
+  body{font-size:16.5px;}
+  h1{font-size:27px;}
+  h2{font-size:20px;}
+  .concept p{font-size:19px;}
+  .closing p{font-size:21px;}
+}
+@media print{
+  body{font-size:11pt;}
+  h1{font-size:21pt;} h2{font-size:13.5pt;} h3{font-size:11pt;}
+  .concept p{font-size:13.5pt;} .closing p{font-size:15pt;}
+}
 </style>
 </head>
 <body id="top">
@@ -701,7 +761,7 @@ td code{font-size:.84em;}
     <span class="lead">처음 쓰는 사람을 위한 요청 한 줄 공식</span>
     UI UX Pro Max 사용 가이드
   </h1>
-  <p class="muted" style="margin:0;max-width:680px;">
+  <p class="muted" style="margin:0;max-width:760px;">
     제품 유형 · 업종 · 분위기 키워드로 디자인 시스템(패턴 · 스타일 · 컬러 · 서체 · 피할 것)을 추천받고, 그 기준으로 화면 코드와 납품 전 점검까지 잇는 Claude Code 스킬.
     <strong>처음이면 §3 요청 템플릿 하나로 시작</strong>
   </p>
