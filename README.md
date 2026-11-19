@@ -7,7 +7,7 @@
 | <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `f6516ec`(2026.11.17 커밋) · 하네스 7종 · 스킬 16종 · 릴리즈노트 159건(최신 2026.11.17)
+**현재 반영본** — 원본 `2ddb343`(2026.11.19 커밋) · 하네스 8종 · 스킬 16종 · 릴리즈노트 162건(최신 2026.11.19)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -81,9 +81,10 @@ bash share/schedule-weekly-mac.sh
 | <sub>[`agent/screen-spec-id/`](agent/screen-spec-id/)</sub> | <sub>메뉴구조도(IA) 엑셀 → 화면ID 채번 → 화면명세서 v0.x 자동 생성</sub> | <sub>`이 IA로 화면명세서 만들어줘`</sub> |
 | <sub>[`agent/feature-spec-sb/`](agent/feature-spec-sb/)</sub> | <sub>PC/MO B2C 웹사이트 PRD(명세서) → SB(화면설계서·와이어프레임) 생성. 신규 서비스는 IA(`ia-builder` 연동)까지 잇는 프로젝트 착수 모드 지원. 별도 인증 없이 동작</sub> | <sub>`A-02 SB 만들어줘` · `A-02 PRD 만들어줘` · `테스트커머스 서비스 기획해줘`</sub> |
 | <sub>[`agent/test-runner/`](agent/test-runner/)</sub> | <sub>qa-master TC 엑셀을 브라우저(claude-in-chrome · Playwright)에서 직접 수행 → Pass/Fail/Block·전수 증적 기입 → 회차별 결과 엑셀 + HTML 리포트. qa-master(설계)의 짝(실행)</sub> | <sub>`PC에서 이 TC 돌려줘` · `어제 Fail 난 것만 다시 확인해줘`</sub> |
+| <sub>[`agent/ui-ux-pro-max-skill/`](agent/ui-ux-pro-max-skill/)</sub> | <sub>UI UX Pro Max(외부 스킬 v2.11.0 · MIT) 백업 — 제품 유형에 맞는 디자인 시스템(패턴 · 스타일 · 컬러 · 서체 · 효과 · 안티패턴) 추천 → 스택별 UI 구현 → 납품 전 UX 점검. 스타일 84 · 컬러 161 · 서체 조합 73 · UX 지침 99 검색 DB(Python 3), 폴더 안 디자인 스킬 6종(banner-design · brand · design · design-system · slides · ui-styling) 자동 로드</sub> | <sub>`내 SaaS 제품 랜딩 페이지 만들어줘` · `헬스케어 대시보드 디자인 시스템 추천해줘`</sub> |
 | <sub>[`agent/worker/`](agent/worker/)</sub> | <sub>단순작업 위임 로컬 서브에이전트(`~/.claude/agents/worker.md`)의 백업</sub> | <sub>요청 불필요 — 단순 작업이면 자동 위임</sub> |
 
-하네스 = 해당 폴더에서 Claude Code 실행 → 요청 한 줄. 단계 · 산출물 상세는 각 폴더 `README.md`
+하네스 = 해당 폴더에서 Claude Code 실행 → 요청 한 줄. 단계 · 산출물 상세는 각 폴더 `README.md`. `agent/ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상 제외
 
 | <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>이렇게 요청</sub> | <sub>제작</sub> |
 |:---|:---|:---|:---:|
@@ -104,7 +105,7 @@ bash share/schedule-weekly-mac.sh
 | <sub>[`weekly-report`](skills/weekly-report/README.md)</sub> | <sub>주간업무 보고서(PPT) 자동 작성 (W1/W2 선택, 진척률 6칸 자동 계산)</sub> | <sub>`이번주 주간보고 작성해줘`</sub> | <sub>신지은</sub> |
 | <sub>[`eli5`](skills/eli5/README.md)</sub> | <sub>어떤 주제든 그림 위주·적은 텍스트의 HTML 아티팩트로 쉽게 설명 (`/eli5 <주제>`)</sub> | <sub>`/eli5 DNS가 뭐야`</sub> | <sub>외부 백업</sub> |
 
-스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상 제외
+스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills)
 <!-- CONTENTS:END -->
 
 ## 업무 흐름으로 잇기
@@ -144,7 +145,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 159건 · 최신 2026.11.17). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 162건 · 최신 2026.11.19). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -162,7 +163,8 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
-| <sub>2026.11.17</sub> |  |  | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
+| <sub>2026.11.19</sub> |  | <sub>[ui-ux-pro-max-skill](agent/ui-ux-pro-max-skill/README.md)</sub> |  |
+| <sub>2026.11.17</sub> |  | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md) · [proposal](agent/proposal/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
 | <sub>2026.11.16</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md) · [proposal](agent/proposal/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
 | <sub>2026.11.13</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md) · [harness_st-etribe](agent/harness_st-etribe/README.md) · [prd](agent/prd/README.md) · [proposal](agent/proposal/README.md) · [screen-spec-id](agent/screen-spec-id/README.md) · [test-runner](agent/test-runner/README.md) · [worker](agent/worker/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md) · [deckslide-design-guideline](skills/deckslide-design-guideline/README.md) · [dev-reading](skills/dev-reading/README.md) · [eli5](skills/eli5/README.md) · [flowchart-defense](skills/flowchart-defense/README.md) · [handoff](skills/handoff/README.md) · [ia-builder](skills/ia-builder/README.md) · [meeting-minutes](skills/meeting-minutes/README.md) · [proposal-slide-builder](skills/proposal-slide-builder/README.md) · [proposal-structure-validation](skills/proposal-structure-validation/README.md) · [qa-master](skills/qa-master/README.md) · [requirements-generator](skills/requirements-generator/README.md) · [rfp-analysis-research](skills/rfp-analysis-research/README.md) · [ux-journey-insight](skills/ux-journey-insight/README.md) · [wbs-generator](skills/wbs-generator/README.md) · [weekly-report](skills/weekly-report/README.md)</sub> |
 | <sub>2026.11.11</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> |  |
@@ -182,7 +184,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 | <sub>2026.08.03</sub> |  | <sub>[feature-spec-sb](agent/feature-spec-sb/README.md)</sub> |  |
 | <sub>2026.07.21</sub> |  |  | <sub>[dev-reading](skills/dev-reading/README.md) · [flowchart-defense](skills/flowchart-defense/README.md) · [ia-builder](skills/ia-builder/README.md) · [meeting-minutes](skills/meeting-minutes/README.md) · [requirements-generator](skills/requirements-generator/README.md) · [wbs-generator](skills/wbs-generator/README.md) · [weekly-report](skills/weekly-report/README.md)</sub> |
 | <sub>2026.07.20</sub> |  | <sub>[screen-spec-id](agent/screen-spec-id/README.md)</sub> |  |
-| <sub>2026.07.16</sub> |  |  | <sub>[ui-ux-pro-max-skill](ui-ux-pro-max-skill/README.md)</sub> |
+| <sub>2026.07.16</sub> |  | <sub>[ui-ux-pro-max-skill](agent/ui-ux-pro-max-skill/README.md)</sub> |  |
 | <sub>2026.07.15</sub> |  | <sub>[proposal](agent/proposal/README.md) · [worker](agent/worker/README.md)</sub> |  |
 | <sub>2026.07.13</sub> |  | <sub>[screen-spec-id](agent/screen-spec-id/README.md)</sub> | <sub>[deckslide-design-guideline](skills/deckslide-design-guideline/README.md)</sub> |
 | <sub>2026.07.07</sub> |  | <sub>[prd](agent/prd/README.md) · [proposal](agent/proposal/README.md)</sub> | <sub>[proposal-slide-builder](skills/proposal-slide-builder/README.md) · [proposal-structure-validation](skills/proposal-structure-validation/README.md) · [rfp-analysis-research](skills/rfp-analysis-research/README.md) · [ux-journey-insight](skills/ux-journey-insight/README.md)</sub> |
@@ -194,11 +196,14 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 41건</summary>
+<summary><b>2026.11</b> · 44건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
-| <sub>2026.11.17</sub> | <sub>스킬</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> | <sub>진행 표시 추가 — 멘션을 받으면 그 글에 ⏳(내용 확인 중), 답글을 단 뒤 ✅(답변 완료)로 교체, 답변 · 게시 실패면 ⚠️. 이모지 · 켜고 끄기를 `config.json`에서 지정, `reactions:write` 권한이 없으면 표시만 생략하고 답변 유지, `--check` 권한 표시 · `--sim` 반응 출력, 매니페스트에 `reactions:write` 추가</sub> | <sub>김단영</sub> |
+| <sub>2026.11.19</sub> | <sub>하네스</sub> | <sub>[ui-ux-pro-max-skill](agent/ui-ux-pro-max-skill/README.md)</sub> | <sub>위치 이동 — 리포 루트에서 `agent/` 아래로, 원본 · 공유 리포 하네스 목록 등록</sub> | <sub>김단영</sub> |
+| <sub>2026.11.17</sub> | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>공수 방법론 §12 산정 함정 12 추가 — 견적 PDF 숨은 비율 셀(EQ 엑셀 상세내역 상단 흰 글자 · 인쇄 영역 안)을 인쇄 영역 밖으로 옮기고 `pdftotext`로 0 확인</sub> | <sub>—</sub> |
+|  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>제안서 학습 시각 확인 — 최종 PDF 13건(2025.06–2026.11)을 쪽 이미지로 그려 시각 합격선 보강: 스톡 사진 표지 · 간지 · 맺음, 인물 일러스트 · 아바타 잔존, 영문 슬로건 사진 장 · 인증서 월, 사례 1건 1쪽 목업 나열, 팔레트 사례 · 디자인 시안 장 색 예외(`slide-quality-bar.md` §2 · §3). 견적 PDF 숨은 비율 셀 · Figma PDF 뷰어 점검 추가(§5), 계룡 쪽수 136쪽 정정(§0), 쪽 이미지 렌더링 방법(§6)</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> | <sub>진행 표시 추가 — 멘션을 받으면 그 글에 ⏳(내용 확인 중), 답글을 단 뒤 ✅(답변 완료)로 교체, 답변 · 게시 실패면 ⚠️. 이모지 · 켜고 끄기를 `config.json`에서 지정, `reactions:write` 권한이 없으면 표시만 생략하고 답변 유지, `--check` 권한 표시 · `--sim` 반응 출력, 매니페스트에 `reactions:write` 추가</sub> | <sub>김단영</sub> |
 | <sub>2026.11.16</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>컬러 질문 단계 신설 — 하네스 · 스킬 추출 직전 Primary · Secondary · Default 3색을 한 질문으로 확인(기존 「기본 스타일로 추출할까요?」 대체), 답 해석 표 · 색 조건을 전역 규칙에 추가. `house-style.css` §2에 역할 토큰 `--primary` · `--secondary` · `--on-primary-rgb` · `--paper-rgb` 추가, 반전 블록 · 강조선을 `--accent`로 연결해 토큰만 바꾸면 따라오는 구조(웜 rgba 10곳 덮기 대체 · 기본 렌더 동일), `base_template_doc.html`에 「컬러 3종」 자리 추가</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[harness_st-etribe](agent/harness_st-etribe/README.md)</sub> | <sub>공수 방법론 §12 산정 함정 4건 추가 — 1 M/M 환산 20.8일 고정 · 정본 → 제출 견적 압축 시 항목별 브리지 기록 · 고객본은 월별 × 등급 표만 · AI 공수표는 총괄 = 상세 = 월별표 검증 전 정본 제외, §13에 제안서 인력 장 = 제출 견적 = 정본 3자 일치 점검</sub> | <sub>—</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>제안서 2차 학습 — 드라이브 `! 사업제안&견적` 31건 · 문서 1,182건(작업본 · 회의록 · 사용자 작성 md · 견적 · 공수산정서 포함) 전수 읽기. 역할 · 장 순서 판정(강제 목차 = RFP 순서, 그 밖 스토리 순서 + 조견표)과 변형 골격 3종(현 수행사 재입찰 · 운영 AX 배치 · 협력사 참여형, `skeleton-bid.md` §0 · §5), 대표 컨셉 2층 · 수위 · 맺음 점층 · 발표 대본(`writing-style.md` §6 · §8), AI 초안 채택 기준 · RFP 문체 조항 · 「자사」 · 관찰 원문 승계 · 구조 원인 · 약속 범위 한정, 새 덱 유형 3종 · 시기별 말투 변화 · 견적서 점검표 · 3자 일치 · KB 용어 사례 정정 · GS 기준 범위 한정(`slide-quality-bar.md`), S1 RFP 문체 조항 · 핵심 용어표(`rfp-analyst.md`), 견적형 단가 근거 · 환산 일수(`section-prompts.md`), `check_style.pl` 작업 흔적 · 미완결 조사 · 부사 끝 · 수치 주장 · RFP 감점 표현 점검 추가</sub> | <sub>김단영</sub> |
@@ -308,7 +313,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 |  | <sub>스킬</sub> | <sub>[wbs-generator](skills/wbs-generator/README.md)</sub> | <sub>최초 등록 — 신지은 스킬 이관 (jieun994/zinis_claude_skills)</sub> | <sub>신지은</sub> |
 |  | <sub>스킬</sub> | <sub>[weekly-report](skills/weekly-report/README.md)</sub> | <sub>최초 등록 — 신지은 스킬 이관 (jieun994/zinis_claude_skills)</sub> | <sub>신지은</sub> |
 | <sub>2026.07.20</sub> | <sub>하네스</sub> | <sub>[screen-spec-id](agent/screen-spec-id/README.md)</sub> | <sub>v0.3 출력 양식 선택 게이트 도입 + samples 양식 2종 추가</sub> | <sub>김단영</sub> |
-| <sub>2026.07.16</sub> | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](ui-ux-pro-max-skill/README.md)</sub> | <sub>백업 등록 — v2.11.0, README 한국어 번역</sub> | <sub>김단영</sub> |
+| <sub>2026.07.16</sub> | <sub>하네스</sub> | <sub>[ui-ux-pro-max-skill](agent/ui-ux-pro-max-skill/README.md)</sub> | <sub>백업 등록 — v2.11.0, README 한국어 번역 (외부 스킬 백업)</sub> | <sub>김단영</sub> |
 | <sub>2026.07.15</sub> | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>input 폴더 깃 추적 제외 (기업 민감정보 보호)</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[worker](agent/worker/README.md)</sub> | <sub>최초 등록 — 로컬 서브에이전트 worker 백업</sub> | <sub>김단영</sub> |
 | <sub>2026.07.13</sub> | <sub>하네스</sub> | <sub>[screen-spec-id](agent/screen-spec-id/README.md)</sub> | <sub>최초 등록 — IA→화면ID 채번→화면명세서 자동생성</sub> | <sub>김단영</sub> |
