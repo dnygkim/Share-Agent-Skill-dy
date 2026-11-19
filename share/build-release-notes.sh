@@ -12,7 +12,7 @@
 # - agent/<이름>/README.md · skills/<이름>/README.md · global-house-style/README.md 의 「## 릴리즈노트」 표
 # - agent/harness_st-etribe/README.md 의 「## 변경 이력」 표
 # - 원본 루트 README 의 agent/*(하네스 공통) 행 — 폴더 README 에 이력이 없는 항목
-#   (ui-ux-pro-max-skill 은 2026-11-19 agent/ 아래로 옮겨 폴더 README 릴리즈노트를 위 하네스 반복에서 읽는다)
+#   (ui-ux-pro-max-skill 은 2026-11-19 skills/ 아래로 옮겨 폴더 README 릴리즈노트를 위 스킬 반복에서 읽는다)
 # 공통 반영 사항은 global-house-style/CLAUDE.md 의 「# 전역 규칙 — …」 제목에서 뽑는다.
 # README.md 의 <!-- RELEASE-NOTES:START --> ~ <!-- RELEASE-NOTES:END --> 사이만 바꾼다.
 set -euo pipefail
@@ -177,7 +177,7 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
     printf '%s\t%s\n' "$(grep -nF "[\`agent/$name/\`]" "$work/agent_rows.md" | head -1 | cut -d: -f1 || true)" "$row"
   done | sort -t "$(printf '\t')" -k1,1n | awk -F '\t' '$1 != "" { print $2 } $1 == "" { tail[++t] = $2 } END { for (i = 1; i <= t; i++) print tail[i] }'
   echo
-  echo '하네스 = 해당 폴더에서 Claude Code 실행 → 요청 한 줄. 단계 · 산출물 상세는 각 폴더 `README.md`. `agent/ui-ux-pro-max-skill/`은 외부 스킬(MIT) 백업으로 자동 설치 대상 제외'
+  echo '하네스 = 해당 폴더에서 Claude Code 실행 → 요청 한 줄. 단계 · 산출물 상세는 각 폴더 `README.md`'
   echo
   echo '| <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>이렇게 요청</sub> | <sub>제작</sub> |'
   echo '|:---|:---|:---|:---:|'
@@ -193,11 +193,11 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
     }
   ' "$share/skills/README.md"
   echo
-  echo '스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills)'
+  echo '스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `skills/ui-ux-pro-max-skill/`은 외부 스킬(MIT) 리포 백업으로 자동 설치 대상 제외(폴더 맨 위 `SKILL.md` 없음) — 그 폴더에서 Claude Code 실행 또는 폴더 README 「설치」의 플러그인 · CLI 설치로 사용'
   echo '<!-- CONTENTS:END -->'
 } > "$work/contents.md"
 n_agent="$(grep -c '^| <sub>\[`agent/' "$work/contents.md" || true)"
-n_skill="$(find "$share/skills" -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l | tr -d ' ')"
+n_skill="$(find "$share/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"   # 스킬 폴더 수 (SKILL.md 가 안쪽에 있는 외부 백업 포함)
 
 # ── 최상단: 배치 시점 · 현재 반영본 ─────────────────────────────────────────
 {

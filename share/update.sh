@@ -7,6 +7,7 @@
 #
 # 반영하는 것
 # - skills/<이름>/          → ~/.claude/skills/<이름>/      (이 리포가 설치한 스킬만 교체 · 삭제)
+#                             맨 위에 SKILL.md 가 없는 폴더(외부 리포 백업 ui-ux-pro-max-skill)는 설치하지 않는다
 # - global-house-style/     → ~/.claude/house-style/        (house-style.css · base_template_doc.html · global-rules.md)
 # - ~/.claude/CLAUDE.md     → 맨 끝에 「@~/.claude/house-style/global-rules.md」 한 줄만 추가 (기존 내용은 그대로)
 # - agent/<이름>/.claude/skills/ → sync-skills.sh 로 다시 생성 (하네스용)
@@ -43,6 +44,7 @@ backup=""
 new_list=""
 for d in "$repo"/skills/*/; do
   [ -d "$d" ] || continue
+  [ -f "$d/SKILL.md" ] || continue   # 외부 리포 백업(SKILL.md 가 안쪽에 있음)은 설치 대상 아님
   name="$(basename "$d")"
   if [ -e "$dest/skills/$name" ] && ! is_ours "$name"; then
     # 이 리포가 설치한 적 없는 같은 이름 스킬 → 지우지 않고 보관
