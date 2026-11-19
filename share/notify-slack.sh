@@ -93,14 +93,26 @@ bullets_of() {   # 커밋 본문 「- 」 줄 → 「• 」, 없으면 제목(�
 }
 
 git -C "$src" fetch -q origin main 2>/dev/null || true
+# 부분 반영(mirror(<폴더>): …)으로 이미 실은 원본 커밋 — 뒤 전체 미러 범위에서 다시 싣지 않는다
+partial_done="$(git -C "$share" log --format=%b "$head" | tr -d '\r' | sed -n 's/^원본 커밋: \([0-9a-f]\{40\}\)$/\1/p')"
 while IFS=$'\t' read -r sh_full sh subj; do
   case "$subj" in
+    "mirror("*"): 원본 "*" 반영")
+      c="$(git -C "$share" log -1 --format=%b "$sh_full" | tr -d '\r' | sed -n 's/^원본 커밋: \([0-9a-f]\{40\}\)$/\1/p' | awk 'NR==1')"
+      [ -n "$c" ] || c="$(echo "$subj" | sed -n 's/^mirror([^)]*): 원본 \([0-9a-f]*\) 반영$/\1/p')"
+      if git -C "$src" cat-file -e "$c^{commit}" 2>/dev/null; then
+        csubj="$(git -C "$src" log -1 --format=%s "$c")"
+        cd="$(git -C "$src" log -1 --format=%cd --date=format:%m/%d "$c")"
+        add_block "${csubj%%: *}" "$cd" "$(bullets_of "$c" "$csubj")"$'\n' "$(git -C "$src" rev-parse --short "$c")" "$sh"
+      fi
+      ;;
     "mirror: 원본 "*" 반영")
       to="$(echo "$subj" | sed -n 's/^mirror: 원본 \([0-9a-f]*\) 반영$/\1/p')"
       from="$(git -C "$share" log --format=%s "$sh_full~1" 2>/dev/null | sed -n 's/^mirror: 원본 \([0-9a-f]*\) 반영$/\1/p' | head -1)"
       range="${from:+$from..}$to"; [ -n "$from" ] || range="$to~1..$to"
       last_src="$to"
       while IFS=$'\t' read -r c ch cd csubj; do
+        grep -qxF -- "$c" <<< "$partial_done" && continue
         files="$(git -C "$src" diff-tree --no-commit-id --name-only -r "$c" | grep -vE "$EXCL_RE" || true)"
         [ -n "$files" ] || continue
         if [[ "$csubj" == daily:* ]]; then
