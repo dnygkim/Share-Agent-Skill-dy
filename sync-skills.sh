@@ -5,6 +5,7 @@
 #   bash:  ./sync-skills.sh
 #
 # 새 에이전트가 이 스킬들을 쓰려면 아래 agents 목록에 폴더명을 추가한다.
+# 맨 위에 SKILL.md 가 없는 폴더(외부 리포 백업 ui-ux-pro-max-skill)는 복사하지 않는다.
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,7 +18,10 @@ for a in "${agents[@]}"; do
   dst="$root/agent/$a/.claude/skills"
   rm -rf "$dst"
   mkdir -p "$dst"
-  cp -r "$src/"* "$dst/"
+  for s in "$src/"*; do
+    if [ -d "$s" ] && [ ! -f "$s/SKILL.md" ]; then continue; fi
+    cp -r "$s" "$dst/"
+  done
   echo "Synced skills -> agent/$a/.claude/skills/"
   ls -1 "$dst"
 done

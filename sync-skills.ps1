@@ -4,6 +4,7 @@
 #   PowerShell:  ./sync-skills.ps1
 #
 # 새 에이전트가 이 스킬들을 쓰려면 아래 $agents 목록에 폴더명을 추가한다.
+# 맨 위에 SKILL.md 가 없는 폴더(외부 리포 백업 ui-ux-pro-max-skill)는 복사하지 않는다.
 
 $root   = $PSScriptRoot
 $src    = Join-Path $root 'skills'
@@ -15,7 +16,9 @@ foreach ($a in $agents) {
   $dst = Join-Path $root "agent/$a/.claude/skills"
   if (Test-Path $dst) { Remove-Item -Recurse -Force $dst }
   New-Item -ItemType Directory -Force -Path $dst | Out-Null
-  Copy-Item -Recurse -Force (Join-Path $src '*') $dst
+  Get-ChildItem $src |
+    Where-Object { -not ($_.PSIsContainer -and -not (Test-Path (Join-Path $_.FullName 'SKILL.md'))) } |
+    ForEach-Object { Copy-Item -Recurse -Force $_.FullName $dst }
   Write-Host "Synced skills -> agent/$a/.claude/skills/"
   Get-ChildItem $dst -Directory | ForEach-Object { Write-Host "  - $($_.Name)" }
 }

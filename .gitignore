@@ -1,8 +1,6 @@
 # 스킬 자동 로드용 생성물 (정본은 /skills, sync-skills 스크립트가 생성)
 # 모든 에이전트(agent/<이름>/) 공통
 agent/*/.claude/skills/
-# 예외: agent/ui-ux-pro-max-skill 은 외부 스킬 백업 — 폴더 안 .claude/skills 가 원본 구성(생성물 아님)
-!agent/ui-ux-pro-max-skill/.claude/skills/
 
 # Large example files
 agent/*/examples/*.pptx

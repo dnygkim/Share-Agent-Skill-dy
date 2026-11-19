@@ -55,11 +55,14 @@
 
 ### 외부 스킬 백업
 
-출처 [anthropics/claude-plugins-community](https://github.com/anthropics/claude-plugins-community/blob/main/eli5/skills/eli5/SKILL.md) · 원본 그대로 보관
+원본 그대로 보관 · 출처 `eli5` [anthropics/claude-plugins-community](https://github.com/anthropics/claude-plugins-community/blob/main/eli5/skills/eli5/SKILL.md) · `ui-ux-pro-max-skill` [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)(v2.11.0 · MIT)
 
 | <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>이렇게 요청</sub> |
 |:---|:---:|:---:|
 | <sub>[`eli5`](eli5/README.md)</sub> | <sub>어떤 주제든 그림 위주·적은 텍스트의 HTML 아티팩트로 쉽게 설명 (`/eli5 <주제>`)</sub> | <sub>`/eli5 DNS가 뭐야`</sub> |
+| <sub>[`ui-ux-pro-max-skill`](ui-ux-pro-max-skill/README.md)</sub> | <sub>UI 디자인 시스템 추천 — 제품 유형별 패턴 · 스타일 · 컬러 · 서체 · 안티패턴 → 스택별 UI 구현 → 납품 전 UX 점검, 스타일 84 · 컬러 161 · 서체 조합 73 · UX 지침 99 검색 DB(Python 3) · 디자인 스킬 6종 동봉</sub> | <sub>`내 SaaS 제품 랜딩 페이지 만들어줘` · `헬스케어 대시보드 디자인 시스템 추천해줘`</sub> |
+
+- `ui-ux-pro-max-skill`은 외부 리포 통째 백업(플러그인 매니페스트 · `.claude/skills/` 스킬 7종 · 검색 DB · CLI) — 폴더 맨 위에 `SKILL.md`가 없어 `install-global.sh` · `share/update.sh` · `sync-skills` 자동 설치 대상 제외, 그 폴더에서 Claude Code 실행 또는 폴더 README 「설치」의 플러그인 · CLI 설치로 사용
 
 ## 설치 (개별)
 
