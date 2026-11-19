@@ -1,4 +1,4 @@
-# harness_st-etribe — IA·공수산정 HTML 리포트 생성 하네스
+# Sales & Quotes — IA·공수산정 HTML 리포트 생성 하네스
 
 RFP · 요건서 · 기능목록 · 기존 사이트 URL을 넣으면 IA 정보구조도와 공수 6표를 담은 이트라이브 IA·공수산정 HTML 리포트를 정합성 검수까지 거쳐 한 번에 생성하는 에이전트 하네스
 
@@ -11,7 +11,7 @@ RFP · 요건서 · 기능목록 · 기존 사이트 URL을 넣으면 IA 정보�
 | <sub>넣는 것</sub> | <sub>`input/`의 RFP · 요건정의서 · 개발계획서(.md · .docx · .pdf) · 기능목록(.xls) · 인프라 구성도 이미지 · 사이트 URL(.txt) 또는 대화로 준 경로 · URL · 고객 Q&A, 투입공수표(이미지 · 표)는 최우선 정본</sub> |
 | <sub>나오는 것</sub> | <sub>`output/{NN}_{주제}_v{X.Y}.html` 자기완결 단일 HTML(하우스 스타일 · CSS 인라인) + 단계별 중간물 `_workspace/{slug}/` + corpus(KB) 버전 저장</sub> |
 | <sub>산출물 유형</sub> | <sub>타입 A IA 정보구조도 · 타입 B 공수산정 리포트(기본) · 타입 C 제출용 공수산정안, 변형 4종(단독 · 통합 · 옵션 비교 · 동시진행)</sub> |
-| <sub>시작 방법</sub> | <sub>`agent/harness_st-etribe/` 폴더에서 Claude Code 실행 → `CLAUDE.md` 자동 로딩, 별도 호출 · 설치 불필요 · 대화 흐름 예시는 `사용자가이드.html`</sub> |
+| <sub>시작 방법</sub> | <sub>`agent/sales-quotes/` 폴더에서 Claude Code 실행 → `CLAUDE.md` 자동 로딩, 별도 호출 · 설치 불필요 · 대화 흐름 예시는 `사용자가이드.html`</sub> |
 | <sub>연계</sub> | <sub>corpus(KB, 사내 git `corpus` 브랜치)의 선례 검색 · 완성본 환원 · Dan Jr.(`persona.md`)의 인테이크 · GATE 등급 조회 · 다른 하네스 · 스킬 의존 부재</sub> |
 | <sub>주의</sub> | <sub>고객 자료 전부 민감자료 — 추적 · 재활용 · 외부 반출 금지(아래 「민감자료 정책」)</sub> |
 
@@ -147,7 +147,7 @@ corpus 조회 · 실제 공수 회수 · 피드백 요청은 아래 「corpus(KB
 ## 폴더 구성
 
 ```
-harness_st-etribe/
+sales-quotes/
 ├── CLAUDE.md                 폴더를 열면 자동 로딩되는 현관문 — 동작 규칙 · 민감자료 정책
 ├── ORCHESTRATOR.md           실행 워크플로우(메인이 읽고 구동) · 파일 네이밍 표준 정본
 ├── README.md                 이 파일(개요 · 사용법 · 변경 이력)
@@ -310,7 +310,7 @@ corpus 데이터는 별도 `corpus` 브랜치 — `corpus.py`가 git 미추적 `
 
 ### 설계 결정 메모
 
-- 위치: `.claude/` 대신 자급식 독립 폴더(당초 `works/` 하위 · 사용자 선택, 현재 리포 `agent/harness_st-etribe/`), 자동 트리거가 필요해지면 `.claude/skills/`로 승격 가능
+- 위치: `.claude/` 대신 자급식 독립 폴더(당초 `works/` 하위 · 사용자 선택, 현재 리포 `agent/sales-quotes/` · 2026.11.19 `harness_st-etribe`에서 이름 변경), 자동 트리거가 필요해지면 `.claude/skills/`로 승격 가능
 - 모델 티어링: 추론(analyst · architect · solution-architect · persona-review · feedback-curator) = opus / 기계적(site-analyst · builder · qa) = sonnet, 실행 모드 = 서브에이전트(general-purpose에 역할 정의 주입)
 - 인프라 기본 = AWS 형식 · AWS 공식 아이콘(외부 PNG) — 사용자 선호
 - 렌더 기본 = 스크립트 결정적 렌더(`build_report.py`), LLM 수기 렌더는 폴백
@@ -324,6 +324,7 @@ corpus 데이터는 별도 `corpus` 브랜치 — `corpus.py`가 git 미추적 `
 
 | <div align="center"><sub>날짜</sub></div> | <sub>변경</sub> | <sub>사유</sub> |
 |:---|:---:|:---:|
+| <sub>2026.11.19</sub> | <sub>이름 변경 — `harness_st-etribe` → **Sales & Quotes**(폴더 `agent/sales-quotes/`), 사용자 가이드 · 연계 하네스(prd · proposal) · 민감자료 정책 경로 갱신</sub> | <sub>하네스 이름을 영업 · 견적 용도로 정리(오너 지시)</sub> |
 | <sub>2026.11.17</sub> | <sub>공수 방법론 §12 산정 함정 12 추가 — 견적 PDF 숨은 비율 셀(EQ 엑셀 상세내역 상단 흰 글자 · 인쇄 영역 안)을 인쇄 영역 밖으로 옮기고 `pdftotext`로 0 확인</sub> | <sub>제안 하네스 시각 확인에서 이트라이브 견적 PDF 46건 중 38건의 텍스트 층에 특급 · 고급 이하 제안단가 비율 잔존 확인</sub> |
 | <sub>2026.11.16</sub> | <sub>공수 방법론 §12 산정 함정 4건 추가 — 1 M/M 환산 20.8일 고정 · 정본 → 제출 견적 압축 시 항목별 브리지 기록 · 고객본은 월별 × 등급 표만 · AI 공수표는 총괄 = 상세 = 월별표 검증 전 정본 제외, §13에 제안서 인력 장 = 제출 견적 = 정본 3자 일치 점검</sub> | <sub>드라이브 견적 · 공수산정서 전수 학습(제안 하네스 2차 학습)에서 환산 일수 20 · 20.8 · 21 · 22 혼재, 사유 없는 압축(174 → 121 M/M 등), 제안서 ↔ 견적 불일치(GS) 확인</sub> |
 | <sub>2026.11.13</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 변경 이력 맨 아래로 이동</sub> | <sub>README만 읽고 사용법을 이해하도록(오너 지시)</sub> |

@@ -12,7 +12,7 @@ IT 서비스 · 플랫폼 사업의 RFP · 과업지시서 · 회의록을 넣�
 | <sub>넣는 것</sub> | <sub>RFP · 과업지시서 · 기능목록 · 구성도 · 기존 제안서 · 회의록 → `input/YYMMDD. [제안] {사업명}/`. 사이트 주소는 대화로, 임원 보고 회의록(md · pdf · docx)은 그 폴더의 `feedback/r{n}/`</sub> |
 | <sub>나오는 것</sub> | <sub>RFP 분석 보고서 HTML · 제안서 덱 HTML(필요 시 PPT · Figma) · 변경분 HTML 간략본(2차 추출부터) · 제출본 v1.0(PDF · HTML · PPT) → `output/output-{프로젝트 폴더}/`. 단계별 중간물 md → `_workspace/{프로젝트}/`. 파일명 = `업무명-문서명-버전-작성일자`</sub> |
 | <sub>시작 방법</sub> | <sub>`agent/proposal/` 폴더에서 Claude Code 실행 → `CLAUDE.md` 자동 로딩 → `이 RFP로 제안서 만들어줘`</sub> |
-| <sub>연계</sub> | <sub>단계별 스킬 4종 호출(`rfp-analysis-research` · `ux-journey-insight` · `proposal-structure-validation` · `proposal-slide-builder`). 견적(M/M)은 자매 하네스 [`harness_st-etribe`](../harness_st-etribe/) 담당, 공수 · 일정 수치는 그 산출물이 정본. HTML 스타일 정본 = 리포 `global-house-style/house-style.css`. PPT = `pptx` 스킬(최종본은 `deckslide-design-guideline` 규격)</sub> |
+| <sub>연계</sub> | <sub>단계별 스킬 4종 호출(`rfp-analysis-research` · `ux-journey-insight` · `proposal-structure-validation` · `proposal-slide-builder`). 견적(M/M)은 자매 하네스 [`sales-quotes`](../sales-quotes/) 담당, 공수 · 일정 수치는 그 산출물이 정본. HTML 스타일 정본 = 리포 `global-house-style/house-style.css`. PPT = `pptx` 스킬(최종본은 `deckslide-design-guideline` 규격)</sub> |
 
 ## 이렇게 요청
 

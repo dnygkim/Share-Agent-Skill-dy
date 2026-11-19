@@ -11,7 +11,7 @@ RFP · 회의록 · AS-IS 실측 자료를 넣으면 산정 단위 정의부터 
 | <sub>넣는 것</sub> | <sub>`input/{프로젝트}/`에 RFP(`.md` · `.docx` · `.pdf`) · 회의록 · 추가자료 · 가견적 요청 메일 · AS-IS 실측 자료(URL · 캡처 · HTML · DB 스키마)<br>유입 차수별 하위폴더 권장(`00_rfp/` · `01_meeting_0707/`) · 경로 · URL을 대화로 전달해도 가능</sub> |
 | <sub>나오는 것</sub> | <sub>PRD 본문 `output/{프로젝트}/{NN}_{사업명}_PRD_v{X.Y}.{html\|md\|docx}` · 헤더 + 10섹션 + 자기검증 8항목 판정표<br>지속 상태 `_workspace/{프로젝트}/STATE.md` + 단계 산출물 6종(`01_diagnosis.md` – `06_qa.md`)</sub> |
 | <sub>시작 방법</sub> | <sub>`agent/prd/` 폴더에서 Claude Code 실행 → `CLAUDE.md` 자동 로딩 → 「이 RFP로 PRD 만들어줘」 요청</sub> |
-| <sub>연계</sub> | <sub>뒤 단계: `../proposal` 제안서 본문 슬라이드 · 스킬 `rfp-analysis-research` · `ux-journey-insight` · `proposal-structure-validation`의 입력으로 활용<br>공수 정본: `../harness_st-etribe`(공수산정 HTML) 산출물이 있으면 그 수치가 최우선 정본 · 재산정 생략</sub> |
+| <sub>연계</sub> | <sub>뒤 단계: `../proposal` 제안서 본문 슬라이드 · 스킬 `rfp-analysis-research` · `ux-journey-insight` · `proposal-structure-validation`의 입력으로 활용<br>공수 정본: `../sales-quotes`(공수산정 HTML) 산출물이 있으면 그 수치가 최우선 정본 · 재산정 생략</sub> |
 
 ## 이렇게 요청
 
@@ -202,7 +202,7 @@ agent/prd/
 - 근거 규율: 자료 · 실측에 없는 내용 추측 금지 → `[확인 필요]` 또는 `[자료 미제공]` · `[확인 필요]`는 즉시 STATE.md Q-레지스터 등록(섹션 10과 동기)
 - 범위 안 · 밖 명확 구분 · 범위 밖 항목은 사유 필수 · 절감 로직은 수치로 · 조건부 전제는 재산정 트리거와 함께
 - 공수 정합 불일치(±10% 초과)는 숨기지 않고 표면화 → 정본 값 사용자 확인 → STATE.md 갱신
-- 공수 하네스(`../harness_st-etribe`) 산출물이 있으면 그 공수 수치를 정본으로 인용 · 재산정 생략
+- 공수 하네스(`../sales-quotes`) 산출물이 있으면 그 공수 수치를 정본으로 인용 · 재산정 생략
 - §10-3 협상 전략은 내부 참고용 · 고객 전달본 제외
 - 단계 실패 시 1회 재시도 · 재실패면 해당 섹션 `[생성 실패]` 표기 후 진행 + 최종 보고에 누락 명시
 - 실측 대상 접근 차단 시 접근 가능 범위만 실측 + §2에 미접근 영역 명시 · 임의 추정 금지
