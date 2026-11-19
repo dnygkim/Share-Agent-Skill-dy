@@ -206,6 +206,7 @@ n_skill="$(find "$share/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d 
   echo '|:---|:---:|:---|'
   echo '| <sub>원본 일일 커밋</sub> | <sub>매일 00:00</sub> | <sub>관리자 PC의 그날 작업분을 원본 리포에 커밋 · 푸시</sub> |'
   echo '| <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |'
+  echo '| <sub>슬랙 알림</sub> | <sub>매일 09:10</sub> | <sub>전일 업데이트 내역을 채널에 한 건으로 묶어 게시 — 업데이트 없는 날은 생략</sub> |'
   echo '| <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |'
   echo
   printf '**현재 반영본** — 원본 `%s`(%s 커밋) · 하네스 %s종 · 스킬 %s종 · 릴리즈노트 %s건(최신 %s)\n' \

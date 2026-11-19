@@ -8,6 +8,7 @@
 # - 제외: 개인 전용(Dan Jr. · 페르소나 · 단이bot · 메모리 · PC 동기화 스크립트 · 인수인계 파일)
 # - 공유 리포 고유 파일(README.md · share/)은 원본에 없어도 지우지 않는다.
 # - 원본에서 지운 파일은 공유 리포에서도 지운다.
+# - 슬랙 채널 게시는 하지 않는다 — 매일 09:10 share/notify-slack.sh --daily 가 전일분을 한 건으로 묶어 게시(2026-11-19 변경)
 set -euo pipefail
 
 no_push=0
@@ -82,8 +83,7 @@ bash "$share/share/build-release-notes.sh" "$src_readme" "$src_sha" "$src_date"
 git add -A
 if git diff --cached --quiet; then
   echo "변경 없음 (원본 $src_sha)"
-  # 직전 게시가 실패했으면 여기서 다시 시도 (웹후크가 없으면 건너뜀)
-  [ "$no_push" -eq 1 ] || bash "$share/share/notify-slack.sh" || echo "슬랙 게시 실패 — 미러는 정상" >&2
+  echo "슬랙: 새 반영 없음 — 게시 대상 아님"
   exit 0
 fi
 git commit -q -m "mirror: 원본 $src_sha 반영"
@@ -93,6 +93,6 @@ git diff --stat HEAD~1 HEAD 2>/dev/null | tail -1 || true
 if [ "$no_push" -eq 0 ]; then
   git push -q origin HEAD:main
   echo "푸시 완료"
-  # 슬랙 채널에 「MM/DD 항목 업데이트 내역」 게시 (share/notify-slack.sh · 웹후크가 없으면 건너뜀)
-  bash "$share/share/notify-slack.sh" || echo "슬랙 게시 실패 — 미러는 정상" >&2
+  # 슬랙 채널 게시는 바로 하지 않고 매일 09:10 하루치 묶음으로 (작업 스케줄러 dykim-share-slack-daily)
+  echo "슬랙: 다음 09:10 하루치 묶음 게시 예정"
 fi
