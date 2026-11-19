@@ -8,7 +8,7 @@
 | <sub>슬랙 알림</sub> | <sub>매일 09:10</sub> | <sub>전일 업데이트 내역을 채널에 한 건으로 묶어 게시 — 업데이트 없는 날은 생략</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `28533b2`(2026.11.19 커밋) · 하네스 7종 · 스킬 17종 · 릴리즈노트 166건(최신 2026.11.19)
+**현재 반영본** — 원본 `28533b2`(2026.11.19 커밋) · 하네스 7종 · 스킬 17종 · 릴리즈노트 167건(최신 2026.11.19)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -146,7 +146,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 166건 · 최신 2026.11.19). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 167건 · 최신 2026.11.19). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -197,11 +197,12 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 48건</summary>
+<summary><b>2026.11</b> · 49건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
 | <sub>2026.11.19</sub> | <sub>하네스</sub> | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>이름 변경 — `harness_st-etribe` → **Sales & Quotes**(폴더 `agent/sales-quotes/`), 사용자 가이드 · 연계 하네스(prd · proposal) · 민감자료 정책 경로 갱신</sub> | <sub>—</sub> |
+|  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.11.0 → v2.15.0 · 커밋 102건(2de1134까지): ZCode·Kimi Code·Amazon Q·OpenClaw·AutoClaw 설치 대상과 에이전트 공용 플러그인 마켓플레이스 추가 · 디자인 시스템의 정적 미리보기 페이지와 디자인 토큰(DTCG·CSS) 내보내기 지원 · RTL 호환성 수준과 `--rtl` 필터, 웹 지도·IME 안전 Enter UX 가이드라인 추가 · 한국어 README 번역 갱신</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>사용 가이드 가독성 조정 — 본문 최대 폭 930 → 1130px(레이아웃 1400px), 글자 크기 전체 한 단계 확대(본문 17px · 표 16px · 제목 +2px)</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>사용 가이드 `사용가이드.html` 추가 — 처음 쓰는 사람용 설치 · 한 번에 입력할 정보(핵심 5 · 선택 4) · 요청 템플릿 · 단계별 진행 · 상황별 요청 예시 · 막힐 때, 하우스 스타일 · Primary 보라</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>스킬로 재분류 — `agent/`에서 `skills/` 아래로 이동, 원본 · 공유 리포 스킬 목록 「외부 스킬 백업」 등록, 자동 설치 · 하네스 사본 대상 제외 유지</sub> | <sub>김단영</sub> |
