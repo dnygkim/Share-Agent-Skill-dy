@@ -10,7 +10,7 @@
 #
 # 모으는 곳 (공유 리포에 들어 있는 것만)
 # - agent/<이름>/README.md · skills/<이름>/README.md · global-house-style/README.md 의 「## 릴리즈노트」 표
-# - agent/harness_st-etribe/README.md 의 「## 변경 이력」 표
+# - agent/sales-quotes/README.md(구 harness_st-etribe) 의 「## 변경 이력」 표
 # - 원본 루트 README 의 agent/*(하네스 공통) 행 — 폴더 README 에 이력이 없는 항목
 #   (ui-ux-pro-max-skill 은 2026-11-19 skills/ 아래로 옮겨 폴더 README 릴리즈노트를 위 스킬 반복에서 읽는다)
 # 공통 반영 사항은 global-house-style/CLAUDE.md 의 「# 전역 규칙 — …」 제목에서 뽑는다.
