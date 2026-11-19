@@ -7,7 +7,7 @@
 | <sub>공유 리포 반영</sub> | <sub>매주 금 24:00 (토 00:10)</sub> | <sub>원본 최신본을 이 리포에 1:1 반영 · 커밋 · 푸시 — 바뀐 게 없으면 건너뜀</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `5b98ee5`(2026.11.19 커밋) · 하네스 7종 · 스킬 17종 · 릴리즈노트 164건(최신 2026.11.19)
+**현재 반영본** — 원본 `f1d44ec`(2026.11.19 커밋) · 하네스 7종 · 스킬 17종 · 릴리즈노트 165건(최신 2026.11.19)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -145,7 +145,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 164건 · 최신 2026.11.19). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 165건 · 최신 2026.11.19). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -196,11 +196,12 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 46건</summary>
+<summary><b>2026.11</b> · 47건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
 | <sub>2026.11.19</sub> | <sub>하네스</sub> | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>이름 변경 — `harness_st-etribe` → **Sales & Quotes**(폴더 `agent/sales-quotes/`), 사용자 가이드 · 연계 하네스(prd · proposal) · 민감자료 정책 경로 갱신</sub> | <sub>—</sub> |
+|  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>사용 가이드 `사용가이드.html` 추가 — 처음 쓰는 사람용 설치 · 한 번에 입력할 정보(핵심 5 · 선택 4) · 요청 템플릿 · 단계별 진행 · 상황별 요청 예시 · 막힐 때, 하우스 스타일 · Primary 보라</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>스킬로 재분류 — `agent/`에서 `skills/` 아래로 이동, 원본 · 공유 리포 스킬 목록 「외부 스킬 백업」 등록, 자동 설치 · 하네스 사본 대상 제외 유지</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>위치 이동 — 리포 루트에서 `agent/` 아래로, 원본 · 공유 리포 하네스 목록 등록</sub> | <sub>김단영</sub> |
 | <sub>2026.11.17</sub> | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>제안서 학습 시각 확인 — 최종 PDF 13건(2025.06–2026.11)을 쪽 이미지로 그려 시각 합격선 보강: 스톡 사진 표지 · 간지 · 맺음, 인물 일러스트 · 아바타 잔존, 영문 슬로건 사진 장 · 인증서 월, 사례 1건 1쪽 목업 나열, 팔레트 사례 · 디자인 시안 장 색 예외(`slide-quality-bar.md` §2 · §3). 견적 PDF 숨은 비율 셀 · Figma PDF 뷰어 점검 추가(§5), 계룡 쪽수 136쪽 정정(§0), 쪽 이미지 렌더링 방법(§6)</sub> | <sub>김단영</sub> |
