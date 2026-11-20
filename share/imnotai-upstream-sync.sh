@@ -199,6 +199,25 @@ do_finish() {
   # shellcheck disable=SC1091
   . "$WORK/vars.env"
   [ -d "$D" ] || fail "작업 클론에 $DIR 없음"
+
+  # proposal 하네스 호환 점검 — agent/proposal 1차 윤문(antiai_units.py)이 기대는 파일 · 인자가 새 원본에 있는지.
+  # 경고여도 동기화는 계속하고, 결과를 커밋 메시지 · 릴리즈노트(경고일 때)에 남긴다.
+  compat=""; compat_warn=0
+  chk="$WC/agent/proposal/scripts/antiai_units.py"
+  if [ -f "$chk" ]; then
+    if "$PY" -X utf8 -I "$chk" doctor --skill-root "$D" > "$T/compat.txt" 2>&1; then
+      compat="proposal 1차 윤문 호환 점검 통과"
+    else
+      compat_warn=1
+      w="$(grep '^WARN' "$T/compat.txt" | head -3 | sed 's/^WARN *//' | paste -sd';' - | sed 's/;/ · /g' || true)"
+      [ -n "$w" ] || w="점검 실행 실패 — $(head -c 200 "$T/compat.txt" | tr '\n' ' ')"
+      compat="proposal 1차 윤문 호환 점검 경고: ${w} → agent/proposal/scripts/antiai_units.py · references/antiai-pass.md 확인 필요"
+    fi
+    n="$(grep '^NOTE' "$T/compat.txt" | head -1 | sed 's/^NOTE *//' || true)"
+    [ -z "$n" ] || compat="${compat} (${n})"
+    log "$compat"
+  fi
+
   bullets="$(tr -d '\r' < "$WORK/summary.txt" 2>/dev/null | sed -n 's/^[[:space:]]*[-•][[:space:]]\{1,\}//p' | sed 's/[.。]$//; s/|/·/g' | awk 'NF && NR<=6' || true)"
   if [ -z "$bullets" ]; then
     [ "$cmd" = run ] || fail "변경 요약(summary.txt 「- 」 줄) 없음"
@@ -211,6 +230,7 @@ do_finish() {
   top="$(printf '%s\n' "$bullets" | awk 'NR<=3' | paste -sd'|' - | sed 's/|/ · /g')"
   if [ -z "$old" ]; then row_text="백업 등록 — 원본 깃허브 ${UP_NAME} ${new_tag}(MIT) 1:1 백업, 매주 금 23:00 원본 확인 후 자동 반영"
   else row_text="원본 깃허브 업데이트 반영 — ${span}: ${top}"; fi
+  [ "$compat_warn" -eq 0 ] || row_text="${row_text} · proposal 1차 윤문 호환 점검 경고(커밋 본문 참고)"
   new_date="$(git -C "$UP" log -1 --format=%cs "$new")"
   ours="-"; [ ! -f "$WORK/ours-README.md" ] || ours="$WORK/ours-README.md"
   py assemble "$ours" "$WORK/upstream-README.md" "$D/README.md" "| ${row_text} | ${today} | 김단영 |" "$new" "$new_date" "$note_label"
@@ -233,6 +253,7 @@ do_finish() {
     echo
     echo "- 원본 깃허브 ${UP_NAME} 업데이트 반영: ${span}"
     printf '%s\n' "$bullets" | sed 's/^/- /'
+    [ -z "$compat" ] || echo "- ${compat}"
     echo
     [ -z "$old" ] || echo "원본 비교: ${UP_URL}/compare/${old:0:7}...${new:0:7}"
     echo "자동 동기화: 공유 리포 share/imnotai-upstream-sync.sh (${where})"
