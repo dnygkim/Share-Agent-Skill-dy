@@ -71,16 +71,19 @@ for p in "${EXCLUDE[@]}"; do rm -rf "${tmp:?}/$p"; done
 #     Windows(core.symlinks=false)에선 tar · cp 가 링크를 대상 폴더 사본으로 풀어 공유 리포에 엉뚱한 폴더가 생긴다.
 #     원본 트리의 링크(모드 120000)를 「링크 대상 경로를 담은 작은 파일 + 인덱스 모드 120000」으로 되돌린다(git 의 Windows 체크아웃과 같은 모양).
 #     리눅스(클라우드)는 tar · cp 가 링크를 그대로 두므로 건너뛴다.
-links="$(mktemp)"
-trap 'rm -rf "$tmp" "$src_readme" "$links"' EXIT
-if [ "$(git -C "$share" config --bool core.symlinks 2>/dev/null || echo true)" = false ]; then
+#     실행 권한(100755)도 같은 이유로 Windows(core.filemode=false)에선 새 파일이 100644 로 들어가므로 인덱스에서 되돌린다.
+links="$(mktemp)"; execs="$(mktemp)"
+trap 'rm -rf "$tmp" "$src_readme" "$links" "$execs"' EXIT
+list_mode() {  # $1 = 모드 → 「sha<TAB>경로」 (공유 제외 경로 빼고)
   git -C "$src" -c core.quotepath=off ls-tree -r origin/main ${only:+-- "$only"} \
-    | awk -F'\t' '{ split($1, a, " "); if (a[1] == "120000") print a[3] "\t" $2 }' \
+    | awk -F'\t' -v m="$1" '{ split($1, a, " "); if (a[1] == m) print a[3] "\t" $2 }' \
     | while IFS="$(printf '\t')" read -r sha path; do
         skip=0; for p in "${EXCLUDE[@]}"; do case "$path" in "$p"|"$p"/*) skip=1 ;; esac; done
         [ "$skip" -eq 1 ] || printf '%s\t%s\n' "$sha" "$path"
-      done > "$links"
-fi
+      done
+}
+[ "$(git -C "$share" config --bool core.symlinks 2>/dev/null || echo true)" = true ] || list_mode 120000 > "$links"
+[ "$(git -C "$share" config --bool core.filemode 2>/dev/null || echo true)" = true ] || list_mode 100755 > "$execs"
 fix_links_tree() {   # 복사 직후: 사본 폴더를 지우고 링크 대상 경로 파일로
   while IFS="$(printf '\t')" read -r sha path; do
     [ -n "$path" ] || continue
@@ -88,12 +91,17 @@ fix_links_tree() {   # 복사 직후: 사본 폴더를 지우고 링크 대상 �
     git -C "$src" cat-file blob "$sha" > "$share/$path"
   done < "$links"
 }
-fix_links_index() {  # git add 직후: 인덱스 모드를 링크(120000)로
+fix_links_index() {  # git add 직후: 인덱스 모드를 링크(120000) · 실행 권한(100755)으로
   while IFS="$(printf '\t')" read -r sha path; do
     [ -n "$path" ] || continue
     [ "$(git -C "$share" hash-object -w -- "$path")" = "$sha" ] || { echo "링크 복원 실패: $path" >&2; exit 1; }
     git -C "$share" update-index --add --cacheinfo "120000,$sha,$path"
   done < "$links"
+  while IFS="$(printf '\t')" read -r sha path; do
+    [ -n "$path" ] || continue
+    [ "$(git -C "$share" -c core.quotepath=off ls-files -s -- "$path" | awk '{ print $1 }')" = 100644 ] || continue
+    git -C "$share" update-index --chmod=+x -- "$path"
+  done < "$execs"
 }
 
 # 3) 전역 규칙에서 Dan Jr. 조항을 뺀다 (하우스 스타일 · 문체 · 파일명 · 창 위치 · 수정 이력 규칙은 유지)
