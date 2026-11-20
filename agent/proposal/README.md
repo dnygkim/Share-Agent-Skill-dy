@@ -125,8 +125,9 @@ _workspace/ACME보험-홈페이지운영/
 | <sub>②</sub> | <sub>리포 받기 `git clone https://github.com/dnygkim/dykim-claude-agents-skills.git`</sub> | <sub>비공개 리포. 접근 권한 필요</sub> |
 | <sub>③</sub> | <sub>리포 루트에서 `./sync-skills.ps1`(Windows) 또는 `bash ./sync-skills.sh`(macOS) 실행</sub> | <sub>스킬 정본(`skills/`)을 `agent/proposal/.claude/skills/`로 복사. 스킬이 갱신되면 다시 실행</sub> |
 | <sub>④</sub> | <sub>perl 확인 `perl -v`</sub> | <sub>문체 점검 · 변경분 비교 스크립트용. Windows는 Git Bash에 포함, macOS는 기본 설치</sub> |
-| <sub>⑤ (선택)</sub> | <sub>Python 3 설치</sub> | <sub>덱 편집 · 피그마 PDF 취합 · 목차 시트 등 보조 스크립트용. 패키지는 「의존성 · 알려진 제한」. 없어도 7단계 진행 가능</sub> |
+| <sub>⑤ (선택)</sub> | <sub>Python 3 설치</sub> | <sub>im-not-ai 1차 윤문(추출 · 반영 · 정량 점수) · 덱 편집 · 피그마 PDF 취합 · 목차 시트 등 보조 스크립트용. 패키지는 「의존성 · 알려진 제한」. 없어도 7단계 진행 가능(1차 윤문은 건너뛰고 보고)</sub> |
 | <sub>⑥ (선택)</sub> | <sub>Figma · Chrome 연결</sub> | <sub>Figma 양식 · 레퍼런스 확인, 사이트 캡처, PDF 렌더에 사용</sub> |
+| <sub>⑦</sub> | <sub>im-not-ai 플러그인 설치 `claude plugin marketplace add epoko77-ai/im-not-ai` → `claude plugin install humanize-korean@im-not-ai --scope user`</sub> | <sub>제안서 문구 1차 윤문(AI 티 제거)용 `humanize-korean` 스킬. 설치 뒤 새 세션부터 인식, 미설치면 리포 백업 `skills/im-not-ai/`를 직접 읽는 폴백(`references/antiai-pass.md` §5)</sub> |
 
 ## 폴더 구성
 
@@ -146,7 +147,8 @@ agent/proposal/
 │   ├── release-packager.md     # S7 최종본 · 제출 포맷
 │   └── qa.md                   # 추출마다 검수
 ├── references/
-│   ├── writing-style.md            # 문체 공통지침
+│   ├── writing-style.md            # 문체 공통지침 (2차 · 하우스 문체)
+│   ├── antiai-pass.md              # im-not-ai 1차 윤문 절차 · 제안서 보존 지침 · 하우스 문체와 어긋날 때
 │   ├── slide-quality-bar.md        # 장표 품질 기준 (최종 제출본 학습)
 │   ├── slide-layout-guide.md       # 장표 도식 · 레이아웃 · 면/선/색 (FunETF 기준 덱 33종)
 │   ├── skeleton-bid.md             # 경쟁입찰형 골격 (기본)
@@ -163,6 +165,7 @@ agent/proposal/
 ├── scripts/
 │   ├── check_style.pl · diff_deck.pl · deck_lib.pl      # 문체 점검 · 변경분 비교 · 공용 함수 (perl)
 │   ├── check_slides.py                                  # 잔존 표기 · 자리표시자 · 쪽 번호 점검
+│   ├── antiai_units.py                                  # im-not-ai 1차 윤문 — 장표 문구 추출 · 줄마다 검증 반영
 │   ├── deck_edit.py · codebox_overlay.py · fig2svg.py   # 덱 편집 · 코드박스 통일 · 피그마 벡터 취합
 │   ├── deck_toc.py · build_compressed_pdf.py            # 목차 시트 · 피그마 PDF 병합 압축
 │   └── render_pages.sh                                  # headless Chrome 페이지 렌더
@@ -312,7 +315,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ �
 | <sub>ⓑ</sub> | <sub>전체 볼륨 확인</sub> | <sub>목차의 확정 장수 재확인. 양식을 보고 장수가 달라지면 이 시점에 조정</sub> |
 | <sub>ⓒ</sub> | <sub>삽입 콘텐츠 수집</sub> | <sub>`reference-collector`가 Figma 레퍼런스 · 경쟁사/레퍼런스 사이트 캡처 · 실적 자료를 모아 레퍼런스 대장(`04_refs.md`) 작성. 못 구한 항목은 대체안 합의</sub> |
 | <sub>ⓓ</sub> | <sub>추출</sub> | <sub>콘텐츠 초안(마크다운) → 사용자 확정 → HTML 슬라이드 → 제출 포맷에 따라 PPT/Figma 변환 또는 HTML 최종본 취합</sub> |
-| <sub>ⓔ</sub> | <sub>공통지침 적용</sub> | <sub>문체 지침(`references/writing-style.md`)대로 작성, `check_style.pl`로 초안 · 덱 각각 [위반] 0건 확인</sub> |
+| <sub>ⓔ</sub> | <sub>공통지침 적용</sub> | <sub>문체 지침(`references/writing-style.md`)대로 작성 → 쓴 직후 **im-not-ai 1차 윤문**(`references/antiai-pass.md` — AI 티 제거, 표지 · 목차 · 간지 제외) → 2차 `check_style.pl`로 초안 · 덱 각각 [위반] 0건 확인. 사용자 확정 때 윤문 전 · 후 표 함께 제시</sub> |
 | <sub>ⓕ</sub> | <sub>장표 품질 기준</sub> | <sub>`references/slide-quality-bar.md`로 덱 유형(§1) 확정, 장표마다 유형별 「반드시」(§3) 자기검증 → [통과/보완필요]</sub> |
 
 - **HTML 최종본 모드**: 1600×900 골격(`template/deck_1600_template.html`) + `references/deck-production-playbook.md`. HTML 직접 작성 · 피그마 장표 벡터 취합 · 발표용 HTML iframe을 한 덱에 혼합 가능, 편집은 스크립트로만(「HTML 최종본 편집 스크립트」), 대표 페이지 렌더 확인, 요청 시 피그마 백업 · 목차 시트
@@ -336,7 +339,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ �
 - **필요한 이유**: 다시 보고받는 사람은 전체를 처음부터 읽지 않는 독자. 바뀐 곳만 골라 볼 수 있는 자료가 있어야 재검토가 빨라지는 구조
 - **Claude가 하는 일**
   1. 문체 공통지침 재검토 (직전 피드백에 문체 지적이 있으면 지침에 먼저 반영)
-  2. 직전본을 `old/`에 보관하고, 대장의 「반영」 항목만 고친 새 버전 작성(버전 +0.1 · 그날 날짜). 상위 변경은 `02_concept.md` → `03_structure.md` → `04_content.md` 순서로 반영. **대장에 없는 장표는 수정 금지**, 고치다 보인 문제는 보고만
+  2. 직전본을 `old/`에 보관하고, 대장의 「반영」 항목만 고친 새 버전 작성(버전 +0.1 · 그날 날짜). 상위 변경은 `02_concept.md` → `03_structure.md` → `04_content.md` 순서로 반영. **대장에 없는 장표는 수정 금지**, 고치다 보인 문제는 보고만. 새로 쓴 문구는 반영 장표만 im-not-ai 1차 윤문(사용자 확정 문장 제외) → `check_style.pl`
   3. `diff_deck.pl`로 직전본과 신규본 비교 → 대장과 대조해 의도하지 않은 변경 · 미반영 항목 확인. 「시각」 변경 장표는 렌더로 실제 차이 확인
   4. **변경분 HTML 간략본** 작성: 요약 수치 / 목차별 변경 표 / 헤드라인 변경 / 신규 · 삭제 · 이동 / 미반영 · 보류 / 분량. 장표 본문은 옮겨 적지 않는 간략본, 회의록 인명 대신 역할과 F-번호만
   5. 검수
@@ -361,7 +364,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ �
 
 - S4 · S6 · S7 뒤에 `qa` 에이전트가 자동 수행. 불합격 항목은 slide-builder 보정 후 재검수, 2라운드 뒤 남은 항목은 리포트에 적고 사용자 판단
 - 점검 항목
-  - 문체: `check_style.pl` [위반] 0건 · 거버닝 메시지 40자 이내 · 짝 장표 대구 · 컨셉 키워드는 헤드라인 2–3곳만
+  - 문체: im-not-ai 1차 윤문 기록(`antiai/{run_id}/diff.md` · 게이트 · 자동 원문 유지 사유) · `check_style.pl` [위반] 0건 · 거버닝 메시지 40자 이내 · 짝 장표 대구 · 컨셉 키워드는 헤드라인 2–3곳만
   - 정합 · 누락: 잔존 표기(`[CI 확인 필요]` 등) · 공수 ↔ 일정 M/M 합계 · 장표 사이 수치 · 목차 대비 누락 · RFP 요구 항목 대응 · `04_content.md`와 덱 문구 일치 · 작업 사이즈 일치
   - 장표 품질: `slide-quality-bar.md` §5 완성도 점검표(수치 · 근거 / 화면 · 구조 / 형식 / 스토리) · 유형별 「반드시」 누락 장표
   - HTML: 외부링크 · 쪽 번호 연속 · 자리표시자(`B0X` · `00`) · 간지 목차와 실제 장 구성 일치 · `<head>` 수정 이력 메타 · 파일명 · 버전
@@ -420,6 +423,21 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ �
 | <sub>§5 교정표</sub> | <sub>「흐름이 안 읽혀」 · 「너무 지저분」 · 「빈약해 보임」 · 「여백」 · 「너무 블루톤만」에서 나온 고친 방법, 고객이 볼 필요 없는 메모 · 배점 · 절 번호 참조 삭제 목록</sub> |
 
 - HTML 최종본 기본 골격 = `template/deck_1600_lockup_template.html`(같은 규격의 CSS · 견본 장 6종). 디자인파트 코드박스 양식이 있으면 `deck_1600_template.html`
+
+### im-not-ai 1차 윤문 (`references/antiai-pass.md`)
+
+분석을 거쳐 쓴 제안서 문구에서 AI 티를 먼저 걷어 내는 단계. 외부 스킬 im-not-ai(`humanize-korean` · 한국어 AI 티 85개 패턴 + 걸리는 낱말 111개)를 1차로, 하우스 문체(`writing-style.md` · `check_style.pl`)를 2차로 거는 순서
+
+| <div align="center"><sub>순서</sub></div> | <sub>도구</sub> | <sub>내용</sub> |
+|:---|:---:|:---:|
+| <sub>① 추출</sub> | <sub>`python -X utf8 scripts/antiai_units.py extract <04_content.md · 덱.html> --project _workspace/{프로젝트} [--codes …]`</sub> | <sub>거버닝 · 항목 · 표 칸 · 결론 바를 `[NNNN] 문구` 줄로(강조 · 줄바꿈 · 코드 · 링크는 표식), 표지 · 목차 · 간지 · 작업 메모 · 머리 · 꼬리 라벨 제외 → `_workspace/{프로젝트}/antiai/{run_id}/`</sub> |
+| <sub>② 윤문</sub> | <sub>`humanize-korean` 스킬</sub> | <sub>장르 리포트 · 제안서 보존 지침 블록(§3) 동봉 → 진단(지배 패턴 3–6개) → 윤문 → 게이트(문자 변경률 50% 이상 불채택) → `final.md`</sub> |
+| <sub>③ 반영</sub> | <sub>`python -X utf8 scripts/antiai_units.py apply {run 폴더} [--keep …]`</sub> | <sub>줄마다 표식 · 수치 · 영문 토큰 · 새 ㅁ 어미 · 확정 문장 검증 → 걸리면 원문 유지, 원본 제자리 갱신(`_prev` 백업 · 덱은 수정 이력 자동), `diff.md` 전 · 후 표</sub> |
+| <sub>④ 2차</sub> | <sub>`check_style.pl` · `writing-style.md` §4-1</sub> | <sub>ㅁ 어미 · 용어의 표현 · 거버닝 형식 마무리 → 사용자 확정</sub> |
+
+- 언제: S4 초안(전 장표) · S6 반영 장표만. S7 동결본 · 사용자 확정 문장 · 고객 원문 자료는 제외
+- 어긋날 때: 불릿 · 개조식 유지, 거버닝 대비 틀 유지, 거버닝 · 결론 바 안 쉼표 유지 — 하우스 문체 우선(§4 표)
+- 근거: FunETF 취합본 시험 2회(2026-11-20 · 1,124줄 중 45줄 · 67줄 교정, 문자 변경률 0.6%) — 이 결과가 「용어의 표현」(§4-1)의 출처
 
 ### 문체 점검 `check_style.pl`
 
@@ -564,6 +582,7 @@ Claude: [S7] 제출 조건을 확인하겠습니다. RFP 기준 PDF 1부 · 40�
 - **컨셉 먼저**: 컨셉 · 스토리 승인 → 목차 승인 → 본문. 컨셉 없는 목차 작성 금지
 - **순서 고정**: 추출 전 확인(양식 · 볼륨 · 레퍼런스) → 콘텐츠 초안(마크다운) → HTML → PPT/Figma. 콘텐츠 확정 전 포맷 파일 제작 금지
 - **문체**: `references/writing-style.md` 기준. `check_style.pl` [위반] 0건에서 추출
+- **윤문 순서**: 1차 im-not-ai(AI 티 제거 · `references/antiai-pass.md`) → 2차 하우스 문체. 어긋나면 하우스 우선, 윤문안은 줄마다 자동 검증 후 반영
 - **장표 품질**: `references/slide-quality-bar.md` 유형별 「반드시」가 빠진 장표는 보완필요. 최종본에 남은 반례 답습 금지
 - **도식 · 배치**: `references/slide-layout-guide.md` — 장마다 주 도식 1 · 흐름 방향 1 · 결론 바, 강조선 금지 · 강조 면은 블랙
 - **차수**: 피드백은 대장으로 승인. 대장에 없는 장표는 수정 금지. 2차 추출부터 변경분 HTML 동반
@@ -581,6 +600,7 @@ Claude: [S7] 제출 조건을 확인하겠습니다. RFP 기준 PDF 1부 · 40�
 |:---|:---:|:---:|
 | <sub>`check_style.pl` · `diff_deck.pl` (`deck_lib.pl`)</sub> | <sub>perl 5 (기본 모듈만)</sub> | <sub>Git Bash(Windows) · macOS 기본 perl에서 그대로 실행</sub> |
 | <sub>`check_slides.py` · `deck_edit.py` · `codebox_overlay.py` · `deck_toc.py`(md 출력)</sub> | <sub>Python 3 (표준 라이브러리)</sub> | <sub>Python이 없는 PC에서는 실행 불가. 착수 때 `python --version`으로 확인</sub> |
+| <sub>`antiai_units.py` + im-not-ai 1차 윤문</sub> | <sub>Python 3 (표준 라이브러리) · 플러그인 `humanize-korean@im-not-ai`</sub> | <sub>플러그인 미설치면 리포 백업 `skills/im-not-ai/` 폴백. 덱 전체 heavy 경로 5–8분 · LLM 3콜</sub> |
 | <sub>`fig2svg.py`</sub> | <sub>Python + PyMuPDF</sub> | <sub>피그마 장표 벡터 취합</sub> |
 | <sub>`build_compressed_pdf.py`</sub> | <sub>Python + pypdf · Pillow</sub> | <sub>피그마 PDF 병합 · 압축</sub> |
 | <sub>`deck_toc.py --xlsx`</sub> | <sub>Python + openpyxl</sub> | <sub>목차 시트</sub> |
@@ -624,7 +644,7 @@ python3 -m pip install --user pymupdf pypdf pillow openpyxl
 |:---|:---:|
 | <sub>**컨셉이 서 있는 제안서**</sub> | <sub>컨셉 한 줄이 표지 → 지향점 → 맺음에서 다시 등장하도록 스토리 9단계로 설계</sub> |
 | <sub>**만들기 전에 합의하는 목차**</sub> | <sub>목차 표의 한 행 = 장표 1장. 장마다 들어갈 내용 · 근거 · 필요한 레퍼런스까지 미리 확정</sub> |
-| <sub>**사람이 쓴 것 같은 문장**</sub> | <sub>기준 덱의 문체를 규칙으로 정리 + `check_style.pl` 자동 점검</sub> |
+| <sub>**사람이 쓴 것 같은 문장**</sub> | <sub>im-not-ai 1차 윤문으로 AI 티 제거 → 기준 덱의 문체 규칙 + `check_style.pl` 자동 점검(2차)</sub> |
 | <sub>**빠짐없는 피드백 반영**</sub> | <sub>회의록을 발언 단위로 쪼갠 피드백 대장. 반영 · 보류 · 미반영을 항목마다 기록</sub> |
 | <sub>**바뀐 곳만 보는 재검토**</sub> | <sub>`diff_deck.pl`이 직전본과 비교한 결과로 목차 기준 변경분 HTML 간략본 작성</sub> |
 | <sub>**실수 없는 제출**</sub> | <sub>제출 포맷 · 쪽수 · 파일명 · 분리 제출물을 점검표로 확인</sub> |
@@ -633,6 +653,7 @@ python3 -m pip install --user pymupdf pypdf pillow openpyxl
 
 | <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
 |:---|:---:|:---:|
+| <sub>im-not-ai 1차 윤문 단계 신설 — 분석을 거쳐 쓴 제안서 문구(S4 초안 · S6 반영 장표)에 외부 스킬 im-not-ai(`humanize-korean`)를 먼저 걸어 AI 티를 걷고, 그 위에 하우스 문체(`writing-style.md` · `check_style.pl`)를 2차로 거는 순서로 변경. 절차 · 제안서 보존 지침 블록 · 어긋날 때 처리 · 폴백(`references/antiai-pass.md`), 장표 문구 추출 · 줄마다 검증 반영 스크립트(`scripts/antiai_units.py` — 04_content.md · 덱 HTML 둘 다, 표식 · 수치 · 영문 · ㅁ 어미 · 확정 문장 자동 원문 유지, 전 · 후 표 생성) 추가, slide-builder · qa · ORCHESTRATOR · CLAUDE.md · writing-style 연결</sub> | <sub>2026.11.20</sub> | <sub>김단영</sub> |
 | <sub>용어의 표현 · 장표 도식 지침 신설 — 삼성자산운용 FunETF 제안서 im-not-ai 윤문 시험 47줄로 문체 지침에 「용어의 표현」 절 추가(문장 서술어는 쉬운 동사 · 항목 끝은 한자어 명사 · 본문 연결어미 뒤 쉼표 삭제, 전 · 후 표 10줄 · 어미 변환 20줄), `check_style.pl`에 ㅁ 어미(만듦 · 다시 씀 · 찾기 어려움)와 「표현」 [주의] 추가. FunETF 취합본 91장 · 사용자 수정 이력 121건에서 장표 도식 · 레이아웃 지침(`references/slide-layout-guide.md` — 내용 성격별 도식 33종 · 장표 골격 · 화면 예시 · 면/선/색 · 피드백 교정표) 신설, 강조선 금지 · 강조 면 블랙 · 청록 AI 한정을 디자인 시스템 · 품질 기준에 반영, 로고 락업형 1600×900 골격(`template/deck_1600_lockup_template.html`) 추가, 덱 도구가 락업형 헤더를 읽도록 보강</sub> | <sub>2026.11.20</sub> | <sub>김단영</sub> |
 | <sub>제안서 학습 시각 확인 — 최종 PDF 13건(2025.06–2026.11)을 쪽 이미지로 그려 시각 합격선 보강: 스톡 사진 표지 · 간지 · 맺음, 인물 일러스트 · 아바타 잔존, 영문 슬로건 사진 장 · 인증서 월, 사례 1건 1쪽 목업 나열, 팔레트 사례 · 디자인 시안 장 색 예외(`slide-quality-bar.md` §2 · §3). 견적 PDF 숨은 비율 셀 · Figma PDF 뷰어 점검 추가(§5), 계룡 쪽수 136쪽 정정(§0), 쪽 이미지 렌더링 방법(§6)</sub> | <sub>2026.11.17</sub> | <sub>김단영</sub> |
 | <sub>제안서 2차 학습 — 드라이브 `! 사업제안&견적` 31건 · 문서 1,182건(작업본 · 회의록 · 사용자 작성 md · 견적 · 공수산정서 포함) 전수 읽기. 역할 · 장 순서 판정(강제 목차 = RFP 순서, 그 밖 스토리 순서 + 조견표)과 변형 골격 3종(현 수행사 재입찰 · 운영 AX 배치 · 협력사 참여형, `skeleton-bid.md` §0 · §5), 대표 컨셉 2층 · 수위 · 맺음 점층 · 발표 대본(`writing-style.md` §6 · §8), AI 초안 채택 기준 · RFP 문체 조항 · 「자사」 · 관찰 원문 승계 · 구조 원인 · 약속 범위 한정, 새 덱 유형 3종 · 시기별 말투 변화 · 견적서 점검표 · 3자 일치 · KB 용어 사례 정정 · GS 기준 범위 한정(`slide-quality-bar.md`), S1 RFP 문체 조항 · 핵심 용어표(`rfp-analyst.md`), 견적형 단가 근거 · 환산 일수(`section-prompts.md`), `check_style.pl` 작업 흔적 · 미완결 조사 · 부사 끝 · 수치 주장 · RFP 감점 표현 점검 추가</sub> | <sub>2026.11.16</sub> | <sub>김단영</sub> |

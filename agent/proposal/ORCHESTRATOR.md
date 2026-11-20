@@ -99,7 +99,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ q
 2. **전체 볼륨 확인** — `03_structure.md`의 확정 장수를 다시 보이고 확인받는다(양식을 보고 장수가 달라지면 여기서 고친다).
 3. **삽입 콘텐츠 수집** — `agents/reference-collector.md`: Figma 레퍼런스 · 경쟁사/레퍼런스 사이트 · 실적 자료 → `04_refs.md`.
 4. **추출** — 콘텐츠 초안(`04_content.md`) → 사용자 확정 → HTML → (제출 포맷에 따라) PPT/Figma 변환 또는 HTML 최종본 취합 루틴(`references/deck-production-playbook.md`).
-5. **공통지침 적용** — `references/writing-style.md`를 읽고 쓴다. `perl scripts/check_style.pl`로 초안과 덱을 각각 점검해 [위반] 0건.
+5. **공통지침 적용** — `references/writing-style.md`를 읽고 쓴다. 초안을 쓴 직후 **im-not-ai 1차 윤문**(`references/antiai-pass.md` — `scripts/antiai_units.py extract` → `humanize-korean` → `apply`)으로 AI 티를 걷고, 2차로 `perl scripts/check_style.pl`을 초안과 덱에 각각 돌려 [위반] 0건. 사용자 확정 때 윤문 전 · 후 표(`antiai/{run_id}/diff.md`)를 같이 보인다.
 6. **장표 품질 기준** — `references/slide-quality-bar.md`로 덱 유형(§1)을 정하고, 장표마다 유형별 「반드시」(§3)로 자기검증한다. qa는 §5 완성도 점검표로 검수한다.
 - 산출: 덱 **v0.1** → qa → `r1/qa.md`.
 
@@ -109,7 +109,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ q
 
 ### S6 — 제안서 2차(n차) 추출 (`agents/slide-builder.md` + `agents/feedback-integrator.md`)
 1. 공통지침 재검토(`writing-style.md` §7 · 문체 지적 반영).
-2. 직전본을 `old/`에 보관하고, 대장의 「반영」 항목만 반영한 새 버전을 만든다(버전 +0.1 · 그날 날짜).
+2. 직전본을 `old/`에 보관하고, 대장의 「반영」 항목만 반영한 새 버전을 만든다(버전 +0.1 · 그날 날짜). 새로 쓴 문구는 반영 장표만 im-not-ai 1차 윤문(`--codes` · 확정 문장 `--keep`) → `check_style.pl`.
 3. `perl scripts/diff_deck.pl <직전본> <신규본> --md {ws}/r{n}/06_changes.md --json …` → 대장과 대조(의도하지 않은 변경 · 미반영 확인).
 4. **변경분 HTML 간략본**을 별도 파일로 만든다 — 목차 기준 항목별 변경사항. 2차 추출부터 덱과 항상 한 쌍으로 전달한다.
 5. qa → `r{n}/qa.md`. 추가 피드백이 오면 S5로 돌아가 차수를 올린다.
@@ -130,6 +130,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ q
 | `03_structure.md` | S3 | 목차 · 페이지별 삽입내용 · 확정 장수 |
 | `04_content.md` | S4 · S6 | 장표별 콘텐츠 초안(차수마다 갱신 — 항상 최신 덱과 같은 내용) |
 | `04_refs.md` | S4 | 삽입 콘텐츠 · 레퍼런스 대장 |
+| `antiai/{YYYY-MM-DD-NNN-TAG}/` | S4 · S6 | im-not-ai 1차 윤문 run — `01_input.txt` · `units.json` · `02_diagnosis.md` · `final.md` · `diff.md`(전 · 후 표) |
 | `r{n}/05_feedback.md` | S5 | n차 추출용 피드백 대장 |
 | `r{n}/06_changes.md` · `.json` | S6 | 직전 대비 변경분 데이터 |
 | `r{n}/qa.md` | 추출마다 | 검수 리포트(`r1` = 1차 추출) |
