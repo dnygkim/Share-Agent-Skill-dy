@@ -193,7 +193,7 @@ latest="$(head -1 "$work/sorted.tsv" | cut -f1)"
     }
   ' "$share/skills/README.md"
   echo
-  echo '스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `skills/ui-ux-pro-max-skill/`은 외부 스킬(MIT) 리포 백업으로 자동 설치 대상 제외(폴더 맨 위 `SKILL.md` 없음) — 그 폴더에서 Claude Code 실행 또는 폴더 README 「설치」의 플러그인 · CLI 설치로 사용'
+  echo '스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `skills/ui-ux-pro-max-skill/` · `skills/im-not-ai/`은 외부 스킬(MIT) 리포 백업으로 자동 설치 대상 제외(폴더 맨 위 `SKILL.md` 없음) — 원본 깃허브 변경을 자동으로 따라가며(ui-ux 매일 · im-not-ai 매주), 그 폴더에서 Claude Code 실행 또는 폴더 README 「설치」의 플러그인 설치로 사용'
   echo '<!-- CONTENTS:END -->'
 } > "$work/contents.md"
 n_agent="$(grep -c '^| <sub>\[`agent/' "$work/contents.md" || true)"

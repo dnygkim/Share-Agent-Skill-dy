@@ -11,7 +11,8 @@
 # - 원본에서 지운 파일은 공유 리포에서도 지운다.
 # - 슬랙 채널 게시는 하지 않는다 — 매일 09:10 share/notify-slack.sh --daily 가 전일분을 한 건으로 묶어 게시(2026-11-19 변경)
 # - 부분 반영(--only, 2026-11-19 신설): 외부 스킬 원본 깃허브 일일 동기화(~/.claude/tools/uiux-upstream-sync.sh)가
-#   skills/ui-ux-pro-max-skill 만 그날 바로 반영할 때 쓴다. 나머지 폴더는 주간 전체 미러 몫.
+#   skills/ui-ux-pro-max-skill 만 그날 바로 반영할 때 쓴다(2026-11-20부터 im-not-ai 주간 동기화도 skills/im-not-ai 로). 나머지 폴더는 주간 전체 미러 몫.
+# - 심볼릭 링크(2026-11-20): Windows 에서도 원본 트리의 링크를 링크로 유지(아래 2b)
 #   커밋 = 「mirror(<폴더 이름>): 원본 <sha> 반영」 + 본문 「원본 커밋: <전체 sha>」(notify-slack.sh 가 중복 게시를 막는 데 사용).
 #   README 자동 영역의 「현재 반영본」은 마지막 전체 미러 기준을 유지하고 릴리즈노트만 새로 모은다.
 set -euo pipefail
@@ -66,6 +67,35 @@ trap 'rm -rf "$tmp" "$src_readme"' EXIT
 cp "$tmp/README.md" "$src_readme" 2>/dev/null || : > "$src_readme"   # 릴리즈노트 생성용 (README 자체는 제외 대상)
 for p in "${EXCLUDE[@]}"; do rm -rf "${tmp:?}/$p"; done
 
+# 2b) 심볼릭 링크 복원 준비 (2026-11-20 · 외부 스킬 im-not-ai 의 codex/skills/humanize-korean/references 등)
+#     Windows(core.symlinks=false)에선 tar · cp 가 링크를 대상 폴더 사본으로 풀어 공유 리포에 엉뚱한 폴더가 생긴다.
+#     원본 트리의 링크(모드 120000)를 「링크 대상 경로를 담은 작은 파일 + 인덱스 모드 120000」으로 되돌린다(git 의 Windows 체크아웃과 같은 모양).
+#     리눅스(클라우드)는 tar · cp 가 링크를 그대로 두므로 건너뛴다.
+links="$(mktemp)"
+trap 'rm -rf "$tmp" "$src_readme" "$links"' EXIT
+if [ "$(git -C "$share" config --bool core.symlinks 2>/dev/null || echo true)" = false ]; then
+  git -C "$src" -c core.quotepath=off ls-tree -r origin/main ${only:+-- "$only"} \
+    | awk -F'\t' '{ split($1, a, " "); if (a[1] == "120000") print a[3] "\t" $2 }' \
+    | while IFS="$(printf '\t')" read -r sha path; do
+        skip=0; for p in "${EXCLUDE[@]}"; do case "$path" in "$p"|"$p"/*) skip=1 ;; esac; done
+        [ "$skip" -eq 1 ] || printf '%s\t%s\n' "$sha" "$path"
+      done > "$links"
+fi
+fix_links_tree() {   # 복사 직후: 사본 폴더를 지우고 링크 대상 경로 파일로
+  while IFS="$(printf '\t')" read -r sha path; do
+    [ -n "$path" ] || continue
+    rm -rf "${share:?}/$path"; mkdir -p "$(dirname "$share/$path")"
+    git -C "$src" cat-file blob "$sha" > "$share/$path"
+  done < "$links"
+}
+fix_links_index() {  # git add 직후: 인덱스 모드를 링크(120000)로
+  while IFS="$(printf '\t')" read -r sha path; do
+    [ -n "$path" ] || continue
+    [ "$(git -C "$share" hash-object -w -- "$path")" = "$sha" ] || { echo "링크 복원 실패: $path" >&2; exit 1; }
+    git -C "$share" update-index --add --cacheinfo "120000,$sha,$path"
+  done < "$links"
+}
+
 # 3) 전역 규칙에서 Dan Jr. 조항을 뺀다 (하우스 스타일 · 문체 · 파일명 · 창 위치 · 수정 이력 규칙은 유지)
 rules="$tmp/global-house-style/CLAUDE.md"
 if [ -f "$rules" ]; then
@@ -91,6 +121,7 @@ if [ -n "$only" ]; then
     if [ ! -e "$tmp/$f" ]; then git rm -q -f -- "$f"; fi
   done
   if [ -d "$tmp/$only" ]; then mkdir -p "$share/$only"; cp -R "$tmp/$only/." "$share/$only/"; fi
+  fix_links_tree
   # 「현재 반영본」은 마지막 전체 미러 기준 유지, 릴리즈노트 · 목록만 다시 모은다
   only_full="$(git -C "$src" log -1 --format=%H origin/main -- "$only")"
   only_sha="$(git -C "$src" rev-parse --short "$only_full")"
@@ -101,6 +132,7 @@ if [ -n "$only" ]; then
     bash "$share/share/build-release-notes.sh" "$src_readme" "$last_full" "$last_date"
   fi
   git add -A -- "$only" README.md
+  fix_links_index
   if git diff --cached --quiet; then
     echo "변경 없음 ($only · 원본 $only_sha)"
     exit 0
@@ -128,9 +160,11 @@ done
 
 # 5) 덮어쓰기 + 커밋
 cp -R "$tmp/." "$share/"
+fix_links_tree
 src_date="$(git -C "$src" log -1 --format=%cd --date=format:%Y.%m.%d origin/main)"
 bash "$share/share/build-release-notes.sh" "$src_readme" "$src_sha" "$src_date"
 git add -A
+fix_links_index
 if git diff --cached --quiet; then
   echo "변경 없음 (원본 $src_sha)"
   echo "슬랙: 새 반영 없음 — 게시 대상 아님"
