@@ -8,7 +8,7 @@
 | <sub>슬랙 알림</sub> | <sub>매일 09:10</sub> | <sub>전일 업데이트 내역을 채널에 한 건으로 묶어 게시 — 업데이트 없는 날은 생략</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `28533b2`(2026.11.19 커밋) · 하네스 7종 · 스킬 17종 · 릴리즈노트 167건(최신 2026.11.19)
+**현재 반영본** — 원본 `1da6013`(2026.11.20 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 168건(최신 2026.11.20)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -105,8 +105,9 @@ bash share/schedule-weekly-mac.sh
 | <sub>[`weekly-report`](skills/weekly-report/README.md)</sub> | <sub>주간업무 보고서(PPT) 자동 작성 (W1/W2 선택, 진척률 6칸 자동 계산)</sub> | <sub>`이번주 주간보고 작성해줘`</sub> | <sub>신지은</sub> |
 | <sub>[`eli5`](skills/eli5/README.md)</sub> | <sub>어떤 주제든 그림 위주·적은 텍스트의 HTML 아티팩트로 쉽게 설명 (`/eli5 <주제>`)</sub> | <sub>`/eli5 DNS가 뭐야`</sub> | <sub>외부 백업</sub> |
 | <sub>[`ui-ux-pro-max-skill`](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>UI 디자인 시스템 추천 — 제품 유형별 패턴 · 스타일 · 컬러 · 서체 · 안티패턴 → 스택별 UI 구현 → 납품 전 UX 점검, 스타일 84 · 컬러 161 · 서체 조합 73 · UX 지침 99 검색 DB(Python 3) · 디자인 스킬 6종 동봉</sub> | <sub>`내 SaaS 제품 랜딩 페이지 만들어줘` · `헬스케어 대시보드 디자인 시스템 추천해줘`</sub> | <sub>외부 백업</sub> |
+| <sub>[`im-not-ai`](skills/im-not-ai/README.md)</sub> | <sub>AI가 쓴 한글 윤문 — 번역투 · AI 티 10대 카테고리 85개 패턴 + 걸리는 낱말 111개 탐지 → 사실 · 수치는 그대로 두고 문체만 교정, AI 티 측정(`/humanize-scan`) · 재윤문(`/humanize-redo`) 포함</sub> | <sub>`이 글 AI 티 없애줘` · `/humanize`</sub> | <sub>외부 백업</sub> |
 
-스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `skills/ui-ux-pro-max-skill/`은 외부 스킬(MIT) 리포 백업으로 자동 설치 대상 제외(폴더 맨 위 `SKILL.md` 없음) — 그 폴더에서 Claude Code 실행 또는 폴더 README 「설치」의 플러그인 · CLI 설치로 사용
+스킬 = `share/update.sh` 가 `~/.claude/skills/` 에 설치 → 어느 폴더에서든 요청 한 줄. 사용법은 각 스킬 폴더 `README.md`, 제작자 · 설치 상세는 [`skills/README.md`](skills/README.md). 신지은 제작 스킬 출처 [jieun994/zinis_claude_skills](https://github.com/jieun994/zinis_claude_skills) · `skills/ui-ux-pro-max-skill/` · `skills/im-not-ai/`은 외부 스킬(MIT) 리포 백업으로 자동 설치 대상 제외(폴더 맨 위 `SKILL.md` 없음) — 원본 깃허브 변경을 자동으로 따라가며(ui-ux 매일 · im-not-ai 매주), 그 폴더에서 Claude Code 실행 또는 폴더 README 「설치」의 플러그인 설치로 사용
 <!-- CONTENTS:END -->
 
 ## 업무 흐름으로 잇기
@@ -146,7 +147,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 167건 · 최신 2026.11.19). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 168건 · 최신 2026.11.20). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -164,6 +165,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
+| <sub>2026.11.20</sub> |  |  | <sub>[im-not-ai](skills/im-not-ai/README.md)</sub> |
 | <sub>2026.11.19</sub> |  | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.17</sub> |  | <sub>[proposal](agent/proposal/README.md) · [sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
 | <sub>2026.11.16</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md) · [sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
@@ -197,10 +199,11 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 49건</summary>
+<summary><b>2026.11</b> · 50건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
+| <sub>2026.11.20</sub> | <sub>스킬</sub> | <sub>[im-not-ai](skills/im-not-ai/README.md)</sub> | <sub>백업 등록 — 원본 깃허브 epoko77-ai/im-not-ai v2.4.7(MIT) 1:1 백업, 매주 금 23:00 원본 확인 후 자동 반영</sub> | <sub>김단영</sub> |
 | <sub>2026.11.19</sub> | <sub>하네스</sub> | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>이름 변경 — `harness_st-etribe` → **Sales & Quotes**(폴더 `agent/sales-quotes/`), 사용자 가이드 · 연계 하네스(prd · proposal) · 민감자료 정책 경로 갱신</sub> | <sub>—</sub> |
 |  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.11.0 → v2.15.0 · 커밋 102건(2de1134까지): ZCode·Kimi Code·Amazon Q·OpenClaw·AutoClaw 설치 대상과 에이전트 공용 플러그인 마켓플레이스 추가 · 디자인 시스템의 정적 미리보기 페이지와 디자인 토큰(DTCG·CSS) 내보내기 지원 · RTL 호환성 수준과 `--rtl` 필터, 웹 지도·IME 안전 Enter UX 가이드라인 추가 · 한국어 README 번역 갱신</sub> | <sub>김단영</sub> |
 |  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>사용 가이드 가독성 조정 — 본문 최대 폭 930 → 1130px(레이아웃 1400px), 글자 크기 전체 한 단계 확대(본문 17px · 표 16px · 제목 +2px)</sub> | <sub>김단영</sub> |
