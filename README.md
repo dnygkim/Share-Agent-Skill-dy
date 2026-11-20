@@ -8,7 +8,7 @@
 | <sub>슬랙 알림</sub> | <sub>매일 09:10</sub> | <sub>전일 업데이트 내역을 채널에 한 건으로 묶어 게시 — 업데이트 없는 날은 생략</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `1da6013`(2026.11.20 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 171건(최신 2026.11.20)
+**현재 반영본** — 원본 `6f9d2f0`(2026.11.20 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 171건(최신 2026.11.20)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -76,7 +76,7 @@ bash share/schedule-weekly-mac.sh
 <!-- CONTENTS:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 | <div align="center"><sub>에이전트(하네스)</sub></div> | <sub>역할</sub> | <sub>이렇게 요청</sub> |
 |:---|:---|:---|
-| <sub>[`agent/proposal/`](agent/proposal/)</sub> | <sub>제안서 작성 7단계 파이프라인 (RFP 분석 · 리서치 → 컨셉 · 스토리 GATE → 목차 GATE → 1차 추출 → 피드백 대장 GATE → n차 추출 + 변경분 HTML → 최종본)</sub> | <sub>`이 RFP로 제안서 만들어줘` · `표지만 만들어줘`</sub> |
+| <sub>[`agent/proposal/`](agent/proposal/)</sub> | <sub>제안서 작성 7단계 파이프라인 (RFP 분석 · 리서치 → 컨셉 · 스토리 GATE → 목차 GATE → 1차 추출 → 피드백 대장 GATE → n차 추출 + 변경분 HTML → 최종본) · 매주 드라이브 제안서를 학습한 레퍼런스(`deck-references/` — 문장 · 도식 · 인포그래픽 · 디자인 요소)를 작업 시작 때 참고</sub> | <sub>`이 RFP로 제안서 만들어줘` · `표지만 만들어줘`</sub> |
 | <sub>[`agent/prd/`](agent/prd/)</sub> | <sub>공수산정·기초 PRD(RRD) 생성 + STATE.md 기반 살아있는 문서 갱신</sub> | <sub>`이 자료로 PRD 만들어줘` · `회의록 반영해서 PRD 업데이트해줘`</sub> |
 | <sub>[`agent/sales-quotes/`](agent/sales-quotes/)</sub> | <sub>Sales & Quotes — 요건정의서 · 개발계획서 · RFP · 기존 사이트 → 분석 · IA 추출 → IA · 공수 설계 → 이트라이브 IA · 공수산정 HTML 리포트 생성 + 정합성 검수</sub> | <sub>`이 계획서로 산출물 만들어줘` · `공수 HTML 뽑아줘`</sub> |
 | <sub>[`agent/screen-spec-id/`](agent/screen-spec-id/)</sub> | <sub>메뉴구조도(IA) 엑셀 → 화면ID 채번 → 화면명세서 v0.x 자동 생성</sub> | <sub>`이 IA로 화면명세서 만들어줘`</sub> |
