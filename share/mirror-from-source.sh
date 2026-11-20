@@ -84,13 +84,14 @@ list_mode() {  # $1 = 모드 → 「sha<TAB>경로」 (공유 제외 경로 빼�
 }
 [ "$(git -C "$share" config --bool core.symlinks 2>/dev/null || echo true)" = true ] || list_mode 120000 > "$links"
 [ "$(git -C "$share" config --bool core.filemode 2>/dev/null || echo true)" = true ] || list_mode 100755 > "$execs"
-fix_links_tree() {   # 복사 직후: 사본 폴더를 지우고 링크 대상 경로 파일로
-  while IFS="$(printf '\t')" read -r sha path; do
-    [ -n "$path" ] || continue
-    rm -rf "${share:?}/$path"; mkdir -p "$(dirname "$share/$path")"
-    git -C "$src" cat-file blob "$sha" > "$share/$path"
-  done < "$links"
-}
+# 복사 전: 임시 폴더의 링크 사본 폴더를 「링크 대상 경로 파일」로 바꿔 둔다 — 공유 리포에 이미 있는 같은 모양 파일과
+# 충돌 없이 덮어쓰이고, 원본에서 지운 파일 판정(-e)도 그대로 맞는다. 예전 미러가 남긴 사본 폴더가 공유 리포에 있으면 지운다.
+while IFS="$(printf '\t')" read -r sha path; do
+  [ -n "$path" ] || continue
+  rm -rf "${tmp:?}/$path"; mkdir -p "$(dirname "$tmp/$path")"
+  git -C "$src" cat-file blob "$sha" > "$tmp/$path"
+  if [ -d "$share/$path" ] && [ ! -L "$share/$path" ]; then rm -rf "${share:?}/$path"; fi
+done < "$links"
 fix_links_index() {  # git add 직후: 인덱스 모드를 링크(120000) · 실행 권한(100755)으로
   while IFS="$(printf '\t')" read -r sha path; do
     [ -n "$path" ] || continue
@@ -129,7 +130,6 @@ if [ -n "$only" ]; then
     if [ ! -e "$tmp/$f" ]; then git rm -q -f -- "$f"; fi
   done
   if [ -d "$tmp/$only" ]; then mkdir -p "$share/$only"; cp -R "$tmp/$only/." "$share/$only/"; fi
-  fix_links_tree
   # 「현재 반영본」은 마지막 전체 미러 기준 유지, 릴리즈노트 · 목록만 다시 모은다
   only_full="$(git -C "$src" log -1 --format=%H origin/main -- "$only")"
   only_sha="$(git -C "$src" rev-parse --short "$only_full")"
@@ -168,7 +168,6 @@ done
 
 # 5) 덮어쓰기 + 커밋
 cp -R "$tmp/." "$share/"
-fix_links_tree
 src_date="$(git -C "$src" log -1 --format=%cd --date=format:%Y.%m.%d origin/main)"
 bash "$share/share/build-release-notes.sh" "$src_readme" "$src_sha" "$src_date"
 git add -A
