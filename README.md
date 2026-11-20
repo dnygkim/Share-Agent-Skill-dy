@@ -142,6 +142,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 - 하네스 문서에 나오는 「Dan Jr. 등급 조회」는 관리자 PC 전용 파일(`~/.claude/persona/persona.md`) 기준 — 받는 PC에는 이 파일이 없으므로 하네스가 승인 단계마다 그대로 질문
 - `agent/*/input/` · `output/`에 넣은 고객 자료는 Git 업로드 제외(`.gitignore`)
 - `agent/*/examples/`의 완성본은 형식 참고용 — 고객명 · 수치 · 문장을 다른 문서에 재사용 금지
+- `agent/proposal/deck-references/`는 관리자 클라우드 예약 작업이 매주 토요일 드라이브 제안서를 학습해 갱신하는 사례 모음(문장 · 도식 · 인포그래픽 · 디자인 요소) — 고객 고유명사 · 수치는 자리 표시로만 남고 학습 상태 파일은 공유 제외. 받는 PC는 읽기만 하면 되고, proposal 하네스가 작업 시작 때 자동으로 참고
 - 업데이트 소식은 공유 리포 반영 직후 슬랙 채널에 자동 게시 — 항목별 변경 요약 불릿
 
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->

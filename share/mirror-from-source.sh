@@ -7,11 +7,13 @@
 #
 # - 원본에 푸시된 내용(origin/main)만 옮긴다. 원본 작업 폴더의 미커밋 변경은 나가지 않는다.
 # - 제외: 개인 전용(Dan Jr. · 페르소나 · 단이bot · 메모리 · PC 동기화 스크립트 · 인수인계 파일)
+#   + 제안서 레퍼런스 학습 상태 agent/proposal/deck-references/_state.json(드라이브 파일 ID · 제목 · 고객 거부 목록, 2026-11-20)
 # - 공유 리포 고유 파일(README.md · share/)은 원본에 없어도 지우지 않는다.
 # - 원본에서 지운 파일은 공유 리포에서도 지운다.
 # - 슬랙 채널 게시는 하지 않는다 — 매일 09:10 share/notify-slack.sh --daily 가 전일분을 한 건으로 묶어 게시(2026-11-19 변경)
 # - 부분 반영(--only, 2026-11-19 신설): 외부 스킬 원본 깃허브 일일 동기화(~/.claude/tools/uiux-upstream-sync.sh)가
-#   skills/ui-ux-pro-max-skill 만 그날 바로 반영할 때 쓴다(2026-11-20부터 im-not-ai 주간 동기화도 skills/im-not-ai 로). 나머지 폴더는 주간 전체 미러 몫.
+#   skills/ui-ux-pro-max-skill 만 그날 바로 반영할 때 쓴다(2026-11-20부터 im-not-ai 주간 동기화도 skills/im-not-ai 로,
+#   제안서 레퍼런스 주간 학습도 agent/proposal/deck-references 로). 나머지 폴더는 주간 전체 미러 몫.
 # - 심볼릭 링크(2026-11-20): Windows 에서도 원본 트리의 링크를 링크로 유지(아래 2b)
 #   커밋 = 「mirror(<폴더 이름>): 원본 <sha> 반영」 + 본문 「원본 커밋: <전체 sha>」(notify-slack.sh 가 중복 게시를 막는 데 사용).
 #   README 자동 영역의 「현재 반영본」은 마지막 전체 미러 기준을 유지하고 릴리즈노트만 새로 모은다.
@@ -44,6 +46,7 @@ EXCLUDE=(
   README.md              # 원본 README — 공유 리포는 자체 README 사용
   install-global.sh      # 원본 PC 동기화용 — 공유 리포는 share/update.sh 사용
   push-memory.sh         # 메모리 올리기
+  agent/proposal/deck-references/_state.json   # 제안서 레퍼런스 학습 상태(드라이브 파일 ID · 제목 · 고객 거부 목록) — 비공개
 )
 # 공유 리포에만 있는 파일 (미러가 지우지 않음)
 OWN_RE='^(README\.md|share/)'
