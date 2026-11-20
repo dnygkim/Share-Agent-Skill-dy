@@ -40,6 +40,7 @@ slide-builder 문구 작성 ─▶ ① extract ─▶ ② humanize-korean ─▶
   - 작성자 PC는 설치 완료 상태이고 토요일 01:00 예비 동기화 때 플러그인도 함께 갱신된다.
 - **Python 3**(`python -X utf8`) — 추출 · 반영 스크립트와 스킬의 정량 점수 · 게이트가 쓴다.
 - 스킬이 안 잡히는 세션(설치 전 · 다른 도구)은 §5 폴백.
+- **원본 갱신 · 호환 점검(자동)**: 원본 주간 동기화(금 23:00 클라우드 · 토 01:00 작성자 PC 예비)가 리포 백업 `skills/im-not-ai/`(폴백이 읽는 폴더)와 작성자 PC 플러그인을 최신으로 맞추고, 새 원본을 반영할 때마다 `python -X utf8 scripts/antiai_units.py doctor`로 이 문서 · 스크립트가 기대는 파일 12개 · 인자/표기 9개를 점검해 결과를 커밋 메시지와 릴리즈노트에 남긴다. 「호환 점검 경고」가 나오면 `antiai_units.py`(DEPS · CONTRACT · TESTED)와 이 문서를 원본에 맞춘다. 다른 PC 플러그인은 `claude plugin update humanize-korean@im-not-ai`로 직접 갱신.
 
 ### ① 추출 — 장표 문구 → 줄 단위
 ```

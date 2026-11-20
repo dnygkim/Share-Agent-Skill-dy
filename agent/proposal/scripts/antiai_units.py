@@ -9,6 +9,8 @@
              [--out 다른파일] [--dry-run] [--force]
          → 원본 제자리 갱신(직전본 *_prev.* 백업) · diff.tsv · diff.md(장표 · 전 · 후 표) · apply.json
            덱 HTML 은 <head> 수정 이력 한 줄 + revision 메타 날짜 자동 갱신
+  점검:  python -X utf8 scripts/antiai_units.py doctor [--skill-root <im-not-ai 폴더>]
+         → im-not-ai 쪽 파일 · 인자 · 플러그인 이름이 이 스크립트 기대와 맞는지(원본 주간 동기화가 자동 실행)
 
 단위(unit) = 장표 텍스트 요소 하나.
   - 덱 HTML: 안쪽이 텍스트 + 인라인 태그(span · b · strong · em · i · u · small · sup · sub · mark · a · br)뿐인
@@ -538,9 +540,83 @@ def cmd_apply(a):
     print(f"report: {run / 'diff.md'}")
 
 
+# ───────────────────────── doctor — im-not-ai 쪽 계약 점검 ─────────────────────────
+# 이 스크립트와 references/antiai-pass.md 가 기대는 im-not-ai 파일 · 인자 · 표기.
+# 원본 주간 동기화(공유 리포 share/imnotai-upstream-sync.sh)가 새 원본을 반영할 때마다 이 점검을 돌려
+# 결과를 커밋 메시지 · 릴리즈노트에 남긴다. 원본이 바뀌어 WARN 이 나오면 이 파일과 antiai-pass.md 를 맞춘다.
+TESTED = '2.4'   # 실제로 검증한 humanize-korean 버전(major.minor)
+DEPS = [
+    '.claude-plugin/plugin.json',
+    'skills/humanize-korean/SKILL.md',
+    'skills/humanize-korean/references/quick-rules.md',
+    'skills/humanize-korean/references/diagnosis-rules.md',
+    'scripts/prepare_monolith_input.py',
+    'scripts/verify_gates.py',
+    'scripts/restore_modality.py',
+    'scripts/strip_injected_commas.py',
+    'scripts/lexical_layer.py',
+    'agents/humanize-diagnostician.md',
+    'agents/humanize-monolith.md',
+    'agents/humanize-finalizer.md',
+]
+CONTRACT = [
+    ('scripts/prepare_monolith_input.py', '--run-dir', 'run 폴더 지정 인자'),
+    ('scripts/prepare_monolith_input.py', '01_input.txt', 'run 폴더 입력 파일명'),
+    ('scripts/prepare_monolith_input.py', '--genre', '장르 인자'),
+    ('scripts/verify_gates.py', '--before', '게이트 인자'),
+    ('scripts/verify_gates.py', '--after', '게이트 인자'),
+    ('scripts/strip_injected_commas.py', '--all', '쉼표 제거 격상 인자'),
+    ('skills/humanize-korean/SKILL.md', 'final.md', '윤문 결과 파일명'),
+    ('skills/humanize-korean/SKILL.md', 'HUMANIZE-SUMMARY', '결과 요약 블록 표식'),
+    ('skills/humanize-korean/SKILL.md', 'route_hint', '경로 결정 값'),
+]
+
+
+def cmd_doctor(a):
+    root = Path(a.skill_root) if a.skill_root else Path(__file__).resolve().parents[3] / 'skills' / 'im-not-ai'
+    warn, out = 0, []
+    if not root.is_dir():
+        print(f'WARN im-not-ai 폴더 없음: {root}')
+        sys.exit(1)
+    for rel in DEPS:
+        if not (root / rel).is_file():
+            warn += 1
+            out.append(f'WARN {rel} 없음')
+    for rel, needle, what in CONTRACT:
+        p = root / rel
+        if p.is_file() and needle not in p.read_text(encoding='utf-8', errors='replace'):
+            warn += 1
+            out.append(f'WARN {rel} 에 「{needle}」({what}) 없음')
+    ver = ''
+    pj = root / '.claude-plugin' / 'plugin.json'
+    if pj.is_file():
+        try:
+            meta = json.loads(pj.read_text(encoding='utf-8'))
+            ver = str(meta.get('version', ''))
+            if meta.get('name') != 'humanize-korean':
+                warn += 1
+                out.append(f"WARN 플러그인 이름 {meta.get('name')} (humanize-korean 기대)")
+        except ValueError:
+            warn += 1
+            out.append('WARN plugin.json 해석 실패')
+    if ver and '.'.join(ver.split('.')[:2]) != TESTED:
+        out.append(f'NOTE 검증 기준 v{TESTED}.x → 원본 v{ver}: 다음 제안 건에서 1차 윤문 결과를 한 번 눈으로 확인')
+    cache = Path.home() / '.claude' / 'plugins' / 'cache' / 'im-not-ai' / 'humanize-korean'
+    if cache.is_dir():
+        out.append('INFO 이 PC 플러그인 설치본: ' + ', '.join(sorted(p.name for p in cache.iterdir() if p.is_dir())))
+    else:
+        out.append('INFO 이 PC 플러그인 미설치 — 1차 윤문은 리포 백업 폴백(antiai-pass.md §5)')
+    for ln in out:
+        print(ln)
+    print(f"{'OK' if not warn else 'FAIL'} im-not-ai v{ver or '?'} · 파일 {len(DEPS)} · 계약 {len(CONTRACT)} · 경고 {warn}")
+    sys.exit(1 if warn else 0)
+
+
 def main():
-    ap = argparse.ArgumentParser(description='im-not-ai 1차 윤문용 추출 · 되돌려 넣기')
+    ap = argparse.ArgumentParser(description='im-not-ai 1차 윤문용 추출 · 되돌려 넣기 · 호환 점검')
     sub = ap.add_subparsers(dest='cmd', required=True)
+    d = sub.add_parser('doctor', help='im-not-ai 쪽 파일 · 인자가 이 스크립트 기대와 맞는지 점검')
+    d.add_argument('--skill-root', help='im-not-ai 폴더(기본 = 리포 skills/im-not-ai)')
     e = sub.add_parser('extract')
     e.add_argument('source')
     e.add_argument('--project', required=True, help='_workspace/{프로젝트} — run 폴더가 그 아래 antiai/ 에 생김')
@@ -554,7 +630,7 @@ def main():
     p.add_argument('--dry-run', action='store_true', help='원본은 그대로, 보고서만')
     p.add_argument('--force', action='store_true', help='추출 뒤 원본이 바뀌어도 진행(바뀐 줄은 원문 유지)')
     a = ap.parse_args()
-    (cmd_extract if a.cmd == 'extract' else cmd_apply)(a)
+    {'extract': cmd_extract, 'apply': cmd_apply, 'doctor': cmd_doctor}[a.cmd](a)
 
 
 if __name__ == '__main__':
