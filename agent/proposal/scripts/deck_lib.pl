@@ -75,12 +75,16 @@ sub dl_slides_html {
       my ($a) = $crumb =~ /<b>(.*?)<\/b>/s;
       my ($b) = $crumb =~ /<span>(.*?)<\/span>/s;
       $sl{chapter} = dl_inline($a); $sl{section} = dl_inline($b);
+    } elsif ($w =~ /<span class="pill">(.*?)<\/span>/s) {        # 로고 락업형 헤더(메리츠 · FunETF 양식): 장 pill + 절 이름
+      my $a = $1; my ($b) = $w =~ /<span class="sec">(.*?)<\/span>/s;
+      $sl{chapter} = dl_inline($a); $sl{section} = dl_inline($b);
     }
     if (!defined $sl{code} || $sl{code} eq '') {
       my ($c) = $w =~ /<div class="code">([^<]*)<\/div>/;
       $sl{code} = defined $c ? dl_inline($c) : '';
     }
     my ($tag) = $w =~ /<div class="tagline">(.*?)<\/div>/s;
+    ($tag) = $w =~ /<div class="tag(?:\s[^"]*)?">(.*?)<\/div>/s unless defined $tag;   # 락업형 태그 줄(.tag · .tag.stg)
     my ($ttl) = $w =~ /<div class="bigtitle">(.*?)<\/div>/s;
     ($ttl) = $w =~ /<h1[^>]*class="[^"]*slide-title[^"]*"[^>]*>(.*?)<\/h1>/s unless defined $ttl;
     ($ttl) = $w =~ /<h[12][^>]*>(.*?)<\/h[12]>/s unless defined $ttl;
@@ -92,6 +96,10 @@ sub dl_slides_html {
     $b =~ s/<div class="ptop">.*?<\/div>\s*<\/div>\s*<\/div>//s;         # crumb + lockup
     $b =~ s/<div class="crumb">.*?<\/div>//gs;
     $b =~ s/<div class="lockup">.*?<\/div>//gs;
+    $b =~ s/<header class="top">.*?<\/header>//gs;                     # 락업형 상단 줄
+    $b =~ s/<footer class="foot">.*?<\/footer>//gs;
+    $b =~ s/<div class="tag(?:\s[^"]*)?">.*?<\/div>//s;
+    $b =~ s/<h2 class="gov">.*?<\/h2>//s;
     $b =~ s/<div class="codebox[^"]*">(?:\s*<div[^>]*>[^<]*<\/div>)*\s*<\/div>//gs;
     $b =~ s/<span class="pg[^"]*"[^>]*>.*?<\/span>//gs;
     $b =~ s/<div class="tagline">.*?<\/div>//s;

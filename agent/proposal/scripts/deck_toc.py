@@ -21,11 +21,13 @@ def extract(path, titles):
     for i, s in enumerate(parts, 1):
         cls = s[:80].split('"')[1]
         g = lambda pat: (re.search(pat, s, re.S) or [None, ''])[1]
-        strip = lambda t: re.sub(r'\s+', ' ', H.unescape(re.sub(r'<[^>]+>', ' ', t))).strip()
+        strip = lambda t: re.sub(r'\s+', ' ', H.unescape(re.sub(r'<[^>]+>', ' ', re.sub(r'</?(?:span|b|em|i|small|strong)[^>]*>', '', t)))).strip()  # 인라인 태그는 띄어 쓰지 않음(강조 구절)
         crumb = strip(g(r'class="crumb">(.*?)</div>')); ch, _, sec = [x.strip() for x in crumb.partition('—')]
+        if not crumb:  # 로고 락업형 헤더(메리츠 · FunETF 양식): 장 pill + 절 이름
+            ch, sec = strip(g(r'class="pill">(.*?)</span>')), strip(g(r'class="sec">(.*?)</span>'))
         chap = g(r'data-chap="([^"]*)"')
         kind = '간지(챕터 표지)' if 'cover' in cls else ('발표용 HTML(iframe)' if 's-emb' in cls else ('피그마 벡터(SVG)' if 's-fig' in cls else 'HTML 장표'))
-        code = g(r'class="code">([A-Z]\d+)<'); tag = strip(g(r'class="tagline">(.*?)</div>')); title = strip(g(r'class="bigtitle">(.*?)</div>')) or strip(g(r'class="ct3"[^>]*>(.*?)</div>'))
+        code = g(r'class="code">([A-Z]\d+)<') or g(r'data-code="([^"]*)"'); tag = strip(g(r'class="tagline">(.*?)</div>')) or strip(g(r'class="tag(?:\s[^"]*)?">(.*?)</div>')); title = strip(g(r'class="bigtitle">(.*?)</div>')) or strip(g(r'class="gov"[^>]*>(.*?)</h2>')) or strip(g(r'class="ct3"[^>]*>(.*?)</div>'))
         if 'cover' in cls: code = '간지'; ch = ch or crumb
         t = titles.get(str(i))
         if t:

@@ -13,9 +13,9 @@
 ### 0-1. 기본양식 확인
 **「이번 제안서에 쓸 기본양식(Figma 장표 템플릿 · PPT 마스터)이 있나요?」** 를 먼저 묻는다.
 - **있으면 열어서 읽는다** — Figma는 `get_metadata` · `get_screenshot`, PPT는 `pptx` 스킬로 마스터 · 레이아웃을 확인한다. 프레임 크기 · 콘텐츠 영역(예: 1600×900 · x64~1536 · y211~834) · 헤더 구조(크럼 / 코드박스 / 태그라인 / 거버닝 메시지 / 푸터 번호) · 서체 · 장표 코드 체계를 `04_content.md` 머리에 적는다. 그 양식이 정본이다.
-- **없으면** 하우스 스타일 골격(`template/base_template.html` 1280×720 또는 `template/deck_1600_template.html` 1600×900)을 제시하고 확인받는다.
+- **없으면** 하우스 스타일 골격(`template/base_template.html` 1280×720 · HTML 최종본이면 `template/deck_1600_lockup_template.html` 1600×900 로고 락업형이 기본)을 제시하고 확인받는다.
 - 이어서 **제출 포맷**을 확정한다: 「최종 제출본을 HTML 덱으로 제작할까요, 아니면 HTML 은 미리보기이고 PPT/Figma 가 제출본인가요?」
-  - **HTML 최종본** → ① 소스 혼합(HTML 직접 / 피그마 장표 벡터 취합 / 발표용 HTML iframe) ② 피그마 자리표시자(`B0X` · `00`) 재부여 규칙 ③ 피그마 백업 · 목차 시트 필요 여부까지 확정. 골격 `template/deck_1600_template.html`, 절차 `references/deck-production-playbook.md`.
+  - **HTML 최종본** → ① 소스 혼합(HTML 직접 / 피그마 장표 벡터 취합 / 발표용 HTML iframe) ② 피그마 자리표시자(`B0X` · `00`) 재부여 규칙 ③ 피그마 백업 · 목차 시트 필요 여부까지 확정. 골격 = 디자인파트 양식(코드박스 헤더)이면 `template/deck_1600_template.html`, 없으면 `template/deck_1600_lockup_template.html`, 절차 `references/deck-production-playbook.md`.
   - **PPT/Figma 제출본** → 아래 3-step 그대로.
   - 답이 없으면 PPT/Figma 제출본으로 가정하고 그렇게 가정했음을 알린다.
 - **작업 사이즈**를 확정한다: 양식이 있으면 그 규격, 없으면 기본값 제시 후 확인(HTML 미리보기 1280×720 / HTML 최종본 · 피그마 양식 1600×900 / 1920×1080 / pptx 16:9(33.87×19.05cm) / A4 가로). 확정 전에는 골격을 만들지 않는다. 다른 규격이면 골격의 `.stage/.deck/.slide` 치수 · `@page` 를 그 값으로 바꾼 뒤 시작한다.
@@ -71,7 +71,8 @@
 
 ## 원칙
 - 콘텐츠 확정 없이 포맷 파일 만들지 않는다.
-- **문체**: `references/writing-style.md`. 항목은 명사구 종결, 「~함 · ~임 · ~음」 금지, AI 상투어 금지, 한 장에 주장 하나.
+- **문체**: `references/writing-style.md`. 항목은 명사구 종결, 「~함 · ~임 · ~음」 금지, AI 상투어 금지, 한 장에 주장 하나. **용어의 표현**(§4-1) — 합니다체 문장의 서술어는 쉬운 동사(확대하다 → 늘리다 · 감소합니다 → 줄어듭니다), 항목 끝은 한자어 명사(없음 → 부재 · 줄어듦 → 감소), 본문 연결어미 뒤 쉼표 삭제.
+- **도식 · 배치**: `references/slide-layout-guide.md` — 거버닝을 먼저 쓰고 내용 성격으로 도식 1개를 고른다(§2), 흐름 방향 하나, 결론 바로 닫기. 화면 예시는 같은 크기 + 과제 코드 마커(§3), 강조선 금지 · 강조 면은 블랙 · 청록은 AI만(§4).
 - **장표 품질**: `references/slide-quality-bar.md` — 진단 카드마다 숫자 · 측정 기준, 전략 표에 근거(과거 수행 사업) 열, 화면 콜아웃 번호 = 목록 번호, 그룹마다 강조 1개, 표지 컨셉어를 맺음에서 회수, 정형 관리 장에도 고객 고유 항목 1개 이상. 최종본에 남은 반례(§4 버릴 형태)를 따라 쓰지 않는다.
 - **공수(SECTION 5) ↔ 일정(SECTION 6) M/M 합계 교차검증 필수.** 외부 공수 정본이 있으면 인용.
 - 근거 없는 형용사 금지. `[미검증]`·`[정책 확인 필요]`·`[추가 제안]`·`[CI 확인 필요]` 표기 규율 준수.
@@ -82,7 +83,8 @@
 - `references/slide-quality-bar.md` — **초안 작성 전 반드시 읽는다.** 덱 유형별 골격 · 장표 해부 · 장표 유형별 합격선 · 완성도 점검표
 - `references/skeleton-bid.md` — 경쟁입찰형 장표 유형별 작성 항목(§3)
 - `references/section-prompts.md` — 견적형 섹션 · 경쟁입찰형 안의 범위/공수/일정 절
+- `references/slide-layout-guide.md` — **초안의 장표별 「레이아웃」 줄을 쓰기 전 반드시 읽는다.** 내용 성격 → 도식 33종 · 장표 골격 · 화면 예시 · 면/선/색 · 피드백 교정표(2026-11-20 · FunETF 기준 덱)
 - `references/design-system.md` — **포맷 렌더링 직전 반드시 읽는다.**
-- `template/base_template.html`, `template/slide-tokens.css` (미리보기 1280×720) · `template/deck_1600_template.html` (HTML 최종본 1600×900)
+- `template/base_template.html`, `template/slide-tokens.css` (미리보기 1280×720) · `template/deck_1600_lockup_template.html` (HTML 최종본 1600×900 기본 · 로고 락업형) · `template/deck_1600_template.html` (디자인파트 코드박스 양식)
 - `references/deck-production-playbook.md` — **HTML 최종본 모드에서 반드시 읽는다.**
 - 스타일 정본 = `../../../global-house-style/house-style.css` §1·§2 (= `~/.claude/house-style/house-style.css`)

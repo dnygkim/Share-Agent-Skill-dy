@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="revision" content="YYYYMMDD">
+<!-- ═══ 수정 이력 (메타정보 · 최신이 위 · 파일 갱신 시마다 한 줄 추가) ═══
+형식: [YYYYMMDD] 담당자 · 수정 페이지: <장표 코드/번호> · 내역: <무엇을 어떻게>
+[YYYYMMDD] {담당자} · 수정 페이지: 전체 · 내역: 골격 생성
+-->
+<title>{사업명} 제안서</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ============================================================================
+   슬라이드형 골격 C — 1600×900 로고 락업형 덱 (HTML 이 최종 제출 포맷일 때 · 기본)
+   · 양식 = 메리츠화재 2027 운영 제안 발표본(2026-11-09) → 삼성자산운용 FunETF 제안서
+     취합본(2026-11-19)에서 검증. 장표 구성 · 도식 · 면/선/색 규칙의 정본은
+     ../references/slide-layout-guide.md, 이 파일은 그 규격의 CSS · 마크업 견본이다.
+   · 머리 = 상단 줄(로고 락업 · 장 pill · 절 이름) → 태그 줄(번호 · 단계 뱃지 · 주제)
+     → 거버닝 메시지 → 본문 → 결론 바(검정 전폭) → 푸터(쪽 번호).
+   · 디자인파트 양식(코드박스 헤더)이 있으면 deck_1600_template.html(골격 B)을 쓴다.
+   · 쪽 번호 = .dfoot .pg — 삭제 · 삽입 뒤 재번호는 scripts/deck_edit.py 로만.
+   · 클래스 tagline · bigtitle · pill · sec 는 scripts(deck_lib · deck_toc)가 읽는 이름이다.
+   · 면은 플랫 · 직각, 강조선 금지(카드 위 색 줄 · 상자 왼쪽 색 줄 · 2px 색 테두리) —
+     남기는 선 = 점선(지원 · 협업) · 축선 · 제목 밑줄 · 칩 · 화면 목업 테두리.
+   · 색 역할 — 블랙 = 강조 면, Primary(CI) = 강조 글자 · 작은 면, AI 표식 = --ai 한정,
+     경고 = --rd 한정, 단계 색 = --sc(단계 체계가 있는 덱만).
+   ============================================================================ */
+:root{
+  /* [하우스 기본] CI 미확인 · 「기본으로」 — 값 정본 = global-house-style/house-style.css §2 */
+  --ink:#14130F; --ink2:#56534C; --gray:#8C887F; --gray2:#B0ACA3;
+  --line:#D9D3C7; --line2:#E6E1D7;
+  --bg:#F1EDE5;            /* 모든 장 같은 바탕(표지 · 간지 포함) */
+  --sf:#E8E3D9;            /* 옅은 면: 타일 · 판 */
+  --card:#FFFFFF;          /* 카드 · 표 바탕 */
+  --dk:#14130F;            /* 강조 면 = 블랙(결론 바 · 목표 타일 · 확약 카드) */
+  --pt:#14130F; --pt-d:#14130F; --pt-l:#D9D3C7; --pt-p:#E8E3D9;   /* Primary = 고객 CI (기본은 ink) */
+  --ai:#56534C; --ai-p:#E8E3D9;   /* AI 표식 한정 (CI 적용 시 청록 계열) */
+  --rd:#7A4A2C; --rd-p:#F3E7DF;   /* 문제 · 경고 · 점선 경고 상자 한정 */
+  /* 단계 색 — 단계 체계(유입 · 전환 · 재방문 · 확산 등)가 있는 덱만. .st1 ~ .st4 로 --sc 를 바꾼다 */
+  --st1:#14130F; --st2:#2A2823; --st3:#56534C; --st4:#8C887F;
+  --sans:'Pretendard Variable',Pretendard,'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',system-ui,sans-serif;
+}
+/* [CI 오버라이드] 고객사 로고 Primary 확정 시 주석을 푼다(design-system.md §2 · house-style.css §2b 방식).
+   바탕 · 선 · 보조 글자도 CI 계열 저채도 중립색으로 함께 바꾼다. 아래 중립색 = 쿨 계열 CI 적용 예 — 덱마다 다시 정한다.
+:root{
+  --ink:#111111; --ink2:#494B55; --gray:#71747C; --gray2:#93959C;
+  --line:#CBD1DC; --line2:#DCE1E9; --bg:#E3EAF4; --sf:#F2F5FD; --card:#FFFFFF; --dk:#111111;
+  --pt:{CI_Primary}; --pt-d:{CI_짙은단계}; --pt-l:{CI_밝은단계}; --pt-p:{CI_옅은면};
+  --ai:#0F7671; --ai-p:#EDF8F9; --rd:#E11D1D; --rd-p:#FFE8E8;
+  --st1:{단계1}; --st2:{CI_Primary}; --st3:{단계3}; --st4:{단계4};
+}
+*/
+.st1{--sc:var(--st1);--sc-p:color-mix(in srgb,var(--st1) 9%,#fff)}
+.st2{--sc:var(--st2);--sc-p:color-mix(in srgb,var(--st2) 9%,#fff)}
+.st3{--sc:var(--st3);--sc-p:color-mix(in srgb,var(--st3) 9%,#fff)}
+.st4{--sc:var(--st4);--sc-p:color-mix(in srgb,var(--st4) 9%,#fff)}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--sans);background:#D5D9DF;color:var(--ink);line-height:1.5;
+  word-break:keep-all;overflow-wrap:break-word;overflow:hidden;-webkit-font-smoothing:antialiased;letter-spacing:-.015em}
+
+/* ── 스테이지 1600×900 (창 크기에 맞춰 scale) ── */
+.stage{position:fixed;left:50%;top:50%;width:1600px;height:900px;transform-origin:50% 50%;
+  background:var(--bg);overflow:hidden;box-shadow:0 24px 80px -30px rgba(16,24,40,.45)}
+.deck{position:relative;width:1600px;height:900px}
+.slide{position:absolute;inset:0;padding:40px 64px 70px;display:flex;flex-direction:column;background:var(--bg);
+  opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s}
+.slide.active{opacity:1;visibility:visible}
+
+/* ── 상단 줄: 로고 락업 · 장 pill · 절 이름 ── */
+.top{height:32px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between}
+.lock{display:flex;align-items:center;gap:11px}
+.lock .dash{width:30px;height:5px;border-radius:3px;background:var(--pt);margin-right:8px}
+.lock img{display:block;height:19px;width:auto}
+.lock .lg{font-size:17px;font-weight:800;letter-spacing:-.02em}   /* 로고 이미지가 없을 때 자리 */
+.lock .x{font-size:12px;color:var(--gray2);line-height:1}
+.nav{display:flex;align-items:center;gap:14px}
+.nav .pill{background:var(--pt-p);color:var(--pt);font-size:16px;font-weight:800;padding:5px 16px;border-radius:99px;letter-spacing:-.02em}
+.nav .sec{font-size:17px;color:var(--ink);font-weight:500;letter-spacing:-.02em}
+
+/* ── 머리: 태그 줄 · 거버닝 메시지 ── */
+.head{flex:0 0 auto;margin-top:26px}
+.tagline{display:flex;align-items:center;gap:9px;font-size:19px;color:var(--gray);font-weight:500;line-height:1.3;letter-spacing:-.015em}
+.tagline .no{flex:0 0 58px}                       /* 번호 칸 고정 — 장을 넘겨도 뱃지 · 주제 시작점 동일 */
+.tagline .stg{flex:0 0 auto;min-width:86px;height:26px;display:inline-flex;align-items:center;justify-content:center;
+  padding:0 10px;border:1.5px solid var(--sc,var(--pt));color:var(--sc,var(--pt));font-size:14px;font-weight:800;letter-spacing:-.01em}
+.bigtitle{font-size:44px;font-weight:800;line-height:1.22;letter-spacing:-.045em;margin-top:8px;color:var(--ink);text-wrap:balance}
+.bigtitle .k{color:var(--pt)}
+.body{flex:1 1 auto;min-height:0;margin-top:38px;display:flex;flex-direction:column;gap:16px}
+.grow{flex:1 1 auto;min-height:0}
+
+/* ── 결론 바: 검정 전폭 · 강조 1구절 ── */
+.bar{flex:0 0 auto;min-height:66px;background:var(--dk);color:#fff;padding:17px 34px;font-size:23px;font-weight:800;
+  letter-spacing:-.03em;line-height:1.4;text-align:center}
+.bar em{font-style:normal;color:var(--pt-l)}
+.bar.two{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 34px}
+.bar .sm{font-size:15px;font-weight:600;color:rgba(255,255,255,.6)}
+
+/* ── 푸터 ── */
+.dfoot{position:absolute;left:64px;right:64px;bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;
+  gap:24px;font-size:10px;color:var(--gray2);line-height:1.45}
+.dfoot .pg{font-size:15px;font-weight:800;color:var(--ink);white-space:nowrap}
+
+/* ── 공통 부품 ── */
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.g5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.t1{font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1.32;color:var(--ink)}
+.t2{font-size:16px;font-weight:700;letter-spacing:-.025em;line-height:1.35;color:var(--ink)}
+.d2{font-size:13.5px;color:var(--gray);line-height:1.45}
+.d3{font-size:12.5px;color:var(--gray2);line-height:1.45}
+.ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.ul li{position:relative;padding-left:12px;font-size:14px;color:var(--ink2);line-height:1.5}
+.ul li:before{content:"";position:absolute;left:1px;top:9px;width:4px;height:4px;border-radius:50%;background:var(--gray2)}
+.ul li b{color:var(--ink);font-weight:700}
+.panel{background:var(--sf);padding:20px 22px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.card{background:var(--card);border:1px solid var(--line);padding:14px 18px;display:flex;flex-direction:column;gap:4px;min-height:0}
+.nb{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:var(--pt);color:#fff;
+  font-size:14px;font-weight:800;flex:0 0 auto;line-height:1}
+.row{display:flex;align-items:center;gap:10px}
+.mtA{margin-top:auto}
+.vdown{display:flex;justify-content:center;padding:4px 0}
+.vdown:after{content:"";border-top:10px solid var(--pt);border-left:8px solid transparent;border-right:8px solid transparent}
+.chip{display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 9px;font-size:12.5px;font-weight:700;
+  border:1px solid var(--line);background:var(--card);color:var(--ink2);white-space:nowrap}
+.chip.dk{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.gy{background:var(--sf);border-color:var(--sf)}
+.chip.ai{background:var(--ai-p);border-color:var(--ai-p);color:var(--ai)}
+.chip.rd{border-color:var(--rd);color:var(--rd)}
+.chip.sm{height:20px;font-size:11.5px;padding:0 7px}
+.cd{display:inline-flex;align-items:center;justify-content:center;height:22px;min-width:34px;padding:0 6px;
+  background:var(--sc,var(--pt));color:#fff;font-size:12px;font-weight:800;line-height:1;white-space:nowrap}   /* 과제 코드 칩 */
+
+/* ── KPI 타일 줄 (마지막 = 검정 목표 타일) ── */
+.stat{background:var(--sf);padding:16px 20px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat .l{font-size:13.5px;font-weight:700;color:var(--gray)}
+.stat .v{font-size:34px;font-weight:900;letter-spacing:-.05em;line-height:1.15;color:var(--ink)}
+.stat .v small{font-size:18px;font-weight:800;margin-left:2px;letter-spacing:-.03em}
+.stat .s{font-size:12.5px;color:var(--gray);line-height:1.4}
+.stat.dark{background:var(--dk)}
+.stat.dark .l,.stat.dark .s{color:rgba(255,255,255,.6)}
+.stat.dark .v{color:#fff}
+
+/* ── 이슈 열: 번호 · 고객 목소리 · 근거 · ▼ · 필요한 것 ── */
+.iss .t1{min-height:2.64em}
+.iss .need .d3{color:var(--pt);font-weight:700}
+
+/* ── 그룹별 과제: 왼쪽 단계색 판 + 오른쪽 번호 줄 ── */
+.gt{display:grid;grid-template-columns:400px minmax(0,1fr);gap:28px;min-height:0}
+.gt-s{background:var(--sc,var(--pt));color:#fff;padding:22px 24px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.gt-s .eb{font-size:12px;font-weight:800;letter-spacing:.08em;opacity:.75}
+.gt-s .nm{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.gt-s .ob{font-size:14.5px;line-height:1.5;opacity:.92}
+.gt-s .pb,.gt-s .kp{border-top:1px solid rgba(255,255,255,.3);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.gt-s i{font-style:normal;font-size:12px;opacity:.7}
+.gt-s .pb p{font-size:13px;line-height:1.45;opacity:.9}
+.gt-s .pb p b{display:block;font-size:14px;opacity:1}
+.gt-s .kp{margin-top:auto;gap:0}
+.gt-s .kp b{font-size:17px;font-weight:800;line-height:1.4}
+.gt-r{display:flex;flex-direction:column;border-top:2px solid var(--ink)}           /* 제목 밑줄 = 남기는 선 */
+.gt-w{flex:1 1 0;display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;border-bottom:1px solid var(--line);padding:10px 0}
+.gt-w .no{font-size:30px;font-weight:900;color:var(--sc,var(--pt));letter-spacing:-.03em}
+.gt-w .g{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.gt-w .g small{font-size:13.5px;font-weight:500;color:var(--gray);margin-left:10px;letter-spacing:-.01em}
+.gt-w .tl{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:14px;font-weight:700}
+.gt-w .tl span{display:inline-flex;align-items:center;gap:6px}
+
+/* ── 과제 상세 + 화면 예시 ── */
+.td{display:grid;grid-template-columns:minmax(0,1fr) 812px;gap:30px;min-height:0}   /* 오른쪽 화면 구역 812 = 기준 덱 값 */
+.td-l{display:flex;flex-direction:column;gap:10px;min-height:0}
+.td-now{display:flex;gap:12px;font-size:13.5px;line-height:1.5;color:var(--gray)}
+.td-now b{flex:0 0 auto;font-weight:800;color:var(--ink2)}
+.td-t{flex:1 1 0;display:flex;flex-direction:column;gap:6px;border-top:2px solid var(--ink);padding-top:10px;min-height:0}
+.td-th{display:flex;align-items:center;gap:10px}
+.td-th b{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.td-th .tg{margin-left:auto;display:flex;gap:5px}
+.td-k{font-size:15px;font-weight:700;color:var(--sc,var(--pt));letter-spacing:-.02em}
+.td-dl{display:flex;flex-direction:column}
+.td-dl > div{display:grid;grid-template-columns:158px minmax(0,1fr);gap:12px;padding:4px 0;border-bottom:1px solid var(--line2);font-size:13.5px;line-height:1.4}
+.td-dl > div:last-child{border-bottom:0}
+.td-dl dt{font-weight:700;color:var(--ink)}
+.td-dl dd{color:var(--ink2)}
+.td-m{padding-top:4px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:1px;font-size:12px;color:var(--gray);line-height:1.4}  /* 지표 · 참고 = 항목 표 바로 밑 */
+.td-m i{font-style:normal;font-weight:800;color:var(--ink2);margin-right:8px}
+.wf{background:var(--sc-p,var(--pt-p));padding:16px 20px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.wf-h{font-size:15px;font-weight:800}
+.wf-h span{font-size:12px;font-weight:500;color:var(--gray);margin-left:10px}
+.wf-scr{flex:1 1 auto;display:flex;justify-content:flex-start;gap:150px;padding-left:8px;align-items:flex-start}   /* 오른쪽에 마커 설명 자리 */
+.wf-ph{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.wf-fw{position:relative;width:230px;height:436px}                 /* 화면 2장 */
+.wf-scr.n3{gap:54px}
+.wf-scr.n3 .wf-fw{width:205px;height:388px}                         /* 화면 3장 — 마커 설명은 4자 안팎 */
+.wf-fc{width:100%;height:100%;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;padding:14px 12px;
+  display:flex;flex-direction:column;gap:8px}                       /* 화면 목업 테두리 = 남기는 선 */
+.wf-fc img{width:100%;height:auto;display:block}
+.wf-fc .ln{height:12px;background:var(--line2)}
+.wf-fc .ln.s{width:60%} .wf-fc .ln.b{height:46px}
+.wf-co{position:absolute;left:calc(100% - 14px);display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}
+.wf-co b{display:inline-flex;align-items:center;justify-content:center;height:20px;min-width:30px;padding:0 5px;background:var(--sc,var(--pt));color:#fff;font-size:11.5px;font-weight:800}
+.wf-ph .cap{align-self:center;font-size:12.5px;color:var(--gray)}
+
+/* ── 표지 · 간지 · 맺음 (플랫 — 그림자 · 뉴모피즘은 쓰려면 이 세 종류에만) ── */
+.slide.cover,.slide.divd,.slide.close{padding:0}
+.cv{position:absolute;left:64px;right:64px;top:170px}
+.cv .proj{font-size:20px;font-weight:700;color:var(--pt);letter-spacing:-.02em}
+.cv h1{font-size:72px;font-weight:800;letter-spacing:-.05em;line-height:1.12;margin-top:24px}
+.cv .lead{font-size:22px;color:var(--ink2);margin-top:24px;font-weight:600}
+.cv-meta{position:absolute;left:64px;bottom:64px;font-size:14px;color:var(--gray)}
+.dv{position:absolute;left:64px;right:64px;top:0;bottom:0;display:grid;grid-template-columns:1fr 520px;align-items:center;gap:80px}
+.dv .n{font-size:120px;font-weight:900;color:var(--pt);letter-spacing:-.05em;line-height:1}
+.dv .t{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1.2;margin-top:18px}
+.dv ol{list-style:none;background:var(--card);border:1px solid var(--line);padding:18px 26px}
+.dv li{display:grid;grid-template-columns:56px 1fr;padding:11px 0;border-bottom:1px solid var(--line2);font-size:17px;font-weight:600}
+.dv li:last-child{border-bottom:0}
+.dv li span{color:var(--pt);font-weight:800}
+.cl{position:absolute;left:64px;right:64px;top:170px}
+.cl .s{font-size:58px;font-weight:800;letter-spacing:-.05em;line-height:1.3}
+.cl .s .k{color:var(--pt)}
+.cl .l{margin-top:48px;border-top:1px solid var(--line);padding-top:22px;font-size:18px;color:var(--ink2);font-weight:500}
+
+/* ── 발표 모드 커서 ── */
+body.nocursor,body.nocursor *{cursor:none!important}
+
+/* ── 인쇄(PDF): 장당 1쪽 ── */
+@media print{
+  body{overflow:visible;background:#fff}
+  .stage{position:static;transform:none!important;box-shadow:none;width:1600px;height:auto}
+  .deck{height:auto}
+  .slide{position:relative;opacity:1;visibility:visible;width:1600px;height:900px;page-break-after:always;break-after:page;transition:none}
+  @page{size:1600px 900px;margin:0}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<div class="deck" id="deck">
+
+<!-- 1 · 표지 — 대표 컨셉 한 문장(표지 · 목차 · 지향점 · 맺음에 같은 문장) -->
+<section class="slide cover" data-code="표지" data-chap="표지">
+  <div class="cv">
+    <div class="proj">2027 {고객사} {사업명} 제안</div>
+    <h1>{대표 컨셉 첫 줄}<br>{대표 컨셉 둘째 줄}</h1>
+    <div class="lead">{보조 설명 한 줄}</div>
+  </div>
+  <div class="cv-meta">(주) 이트라이브 · YYYY-MM-DD</div>
+</section>
+
+<!-- 2 · 간지 — 장 번호 · 장 이름(「영문 장 이름: 부제」) · 절 목록, 쪽 번호 없음 -->
+<section class="slide divd" data-code="D1" data-chap="1. 제안 개요">
+  <div class="dv">
+    <div><div class="n">01</div><div class="t">제안 개요</div></div>
+    <ol><li><span>1.1</span>사업 이해 · 과제 정의</li><li><span>1.2</span>전략 제시</li><li><span>1.3</span>성과 지표 · 운영 체계</li></ol>
+  </div>
+</section>
+
+<!-- 3 · KPI 타일 줄 + 이슈 열 4 + 결론 바 2줄형 (slide-layout-guide.md §2-1) -->
+<section class="slide" data-code="B02" data-chap="1.1 사업 이해 · 과제 정의">
+  <header class="top"><div class="lock"><i class="dash"></i><span class="lg">{고객사}</span><span class="x">×</span><span class="lg">ETRIBE</span></div><div class="nav"><span class="pill">1. 제안 개요</span><span class="sec">1.1 사업 이해 · 과제 정의</span></div></header>
+  <div class="head">
+    <div class="tagline"><span class="no">1.1.1</span>현행 이슈</div>
+    <div class="bigtitle">거버닝 메시지 한 줄, <span class="k">핵심어 한 구절</span>만 강조</div>
+  </div>
+  <div class="body">
+    <div class="g5">
+      <div class="stat"><span class="l">지표 라벨</span><span class="v">0,000<small>개</small></span><span class="s">기준일 · 출처</span></div>
+      <div class="stat"><span class="l">지표 라벨</span><span class="v">00,000</span><span class="s">기준일 · 출처</span></div>
+      <div class="stat"><span class="l">지표 라벨</span><span class="v">0.0</span><span class="s">기준일 · 출처</span></div>
+      <div class="stat"><span class="l">지표 라벨</span><span class="v">0<small>종</small></span><span class="s">기준일 · 출처</span></div>
+      <div class="stat dark"><span class="l">사업 목표 핵심</span><span class="v">{목표}</span></div>
+    </div>
+    <div class="g4 grow">
+      <div class="panel iss"><div class="row"><span class="nb">1</span><span class="d2">이슈 · 분류</span></div><div class="t1">고객 목소리 첫 줄<br>둘째 줄(합니다체)</div><ul class="ul"><li>근거 불릿 · <b>핵심만 굵게</b></li><li>근거 불릿 · <b>수치 · 기준</b></li></ul><div class="vdown mtA"></div><div class="card need"><span class="d3">필요한 것</span><span class="t2">명사구 한 줄</span></div></div>
+      <div class="panel iss"><div class="row"><span class="nb">2</span><span class="d2">이슈 · 분류</span></div><div class="t1">고객 목소리 첫 줄<br>둘째 줄</div><ul class="ul"><li>근거 불릿</li><li>근거 불릿</li></ul><div class="vdown mtA"></div><div class="card need"><span class="d3">필요한 것</span><span class="t2">명사구 한 줄</span></div></div>
+      <div class="panel iss"><div class="row"><span class="nb">3</span><span class="d2">이슈 · 분류</span></div><div class="t1">고객 목소리 첫 줄<br>둘째 줄</div><ul class="ul"><li>근거 불릿</li><li>근거 불릿</li></ul><div class="vdown mtA"></div><div class="card need"><span class="d3">필요한 것</span><span class="t2">명사구 한 줄</span></div></div>
+      <div class="panel iss"><div class="row"><span class="nb">4</span><span class="d2">이슈 · <span class="chip ai sm">AI</span></span></div><div class="t1">고객 목소리 첫 줄<br>둘째 줄</div><ul class="ul"><li>근거 불릿</li><li>근거 불릿</li></ul><div class="vdown mtA"></div><div class="card need"><span class="d3">필요한 것</span><span class="t2">명사구 한 줄</span></div></div>
+    </div>
+    <div class="bar two"><span class="sm">그래서 {고객사}에 필요한 것은</span><span>판단 + 함의 한 문장, <em>강조 한 구절</em></span></div>
+  </div>
+  <div class="dfoot"><span class="cr">© 2026 ETRIBE Inc. All rights reserved. This Document is copyrighted by ETRIBE Inc. and may not be reproduced without permission.</span><span class="pg">3</span></div>
+</section>
+
+<!-- 4 · 그룹별 과제: 왼쪽 단계색 판 + 오른쪽 번호 줄 (§2-4) — 과제 수 · 「그룹 N」 표기 금지 -->
+<section class="slide st2" data-code="G01" data-chap="2.2 {단계명} 방안">
+  <header class="top"><div class="lock"><i class="dash"></i><span class="lg">{고객사}</span><span class="x">×</span><span class="lg">ETRIBE</span></div><div class="nav"><span class="pill">2. {장 이름}</span><span class="sec">2.2 {단계명} 방안</span></div></header>
+  <div class="head">
+    <div class="tagline"><span class="no">2.2.1</span><span class="stg">{단계명}</span>그룹별 과제</div>
+    <div class="bigtitle">단계 목표를 <span class="k">동작 하나</span>로 쓴 거버닝 메시지</div>
+  </div>
+  <div class="body">
+    <div class="gt grow">
+      <div class="gt-s"><span class="eb">02 {STAGE}</span><span class="nm">{단계명}</span><span class="ob">단계 목표 한 문장</span>
+        <div class="pb"><i>개선 필요 사항</i><p><b>관찰 사실 1</b>근거 한 줄</p><p><b>관찰 사실 2</b>근거 한 줄</p><p><b>관찰 사실 3</b>근거 한 줄</p></div>
+        <div class="kp"><i>성과 지표</i><b>성과 지표 1</b><b>성과 지표 2</b><b>성과 지표 3</b></div></div>
+      <div class="gt-r">
+        <div class="gt-w"><span class="no">01</span><div><span class="g">그룹 이름<small>그룹 한 줄 설명</small></span><div class="tl"><span><span class="cd">C-1</span>과제 이름</span><span><span class="cd">C-2</span>과제 이름</span></div></div></div>
+        <div class="gt-w"><span class="no">02</span><div><span class="g">그룹 이름<small>그룹 한 줄 설명</small></span><div class="tl"><span><span class="cd">C-3</span>과제 이름</span><span><span class="cd">C-4</span>과제 이름</span><span><span class="cd">C-5</span>과제 이름</span></div></div></div>
+        <div class="gt-w"><span class="no">03</span><div><span class="g">그룹 이름<small>그룹 한 줄 설명</small></span><div class="tl"><span><span class="cd">C-6</span>과제 이름</span><span><span class="cd">C-7</span>과제 이름</span></div></div></div>
+      </div>
+    </div>
+    <div class="bar">결론 한 문장, <em>강조 한 구절</em>을 만듭니다</div>
+  </div>
+  <div class="dfoot"><span class="cr">© 2026 ETRIBE Inc. All rights reserved.</span><span class="pg">4</span></div>
+</section>
+
+<!-- 5 · 과제 상세 + 화면 예시 (§2-4 · §3) — 과제 2개 · 화면 2장 230×436 · 마커 = 과제 코드 · 오른쪽 구역 812 -->
+<section class="slide st2" data-code="G02" data-chap="2.2 {단계명} 방안">
+  <header class="top"><div class="lock"><i class="dash"></i><span class="lg">{고객사}</span><span class="x">×</span><span class="lg">ETRIBE</span></div><div class="nav"><span class="pill">2. {장 이름}</span><span class="sec">2.2 {단계명} 방안</span></div></header>
+  <div class="head">
+    <div class="tagline"><span class="no">2.2.2</span><span class="stg">{단계명}</span>{그룹 이름}</div>
+    <div class="bigtitle">과제가 바꾸는 화면 동작, <span class="k">핵심어 한 구절</span></div>
+  </div>
+  <div class="body">
+    <div class="td grow">
+      <div class="td-l">
+        <div class="td-now"><b>현행</b><span>화면에서 관찰한 사실 한 줄(수치 · 기준일)</span></div>
+        <div class="td-t">
+          <div class="td-th"><span class="cd">C-1</span><b>과제 이름</b><span class="tg"><span class="chip gy sm">개선&amp;고도화</span><span class="chip dk sm">1분기 착수</span></span></div>
+          <p class="td-k">과제 한 줄 요약(단계 색)</p>
+          <dl class="td-dl"><div><dt>항목</dt><dd>내용(명사구)</dd></div><div><dt>항목</dt><dd>내용(명사구)</dd></div><div><dt>항목</dt><dd>내용(명사구)</dd></div><div><dt>항목</dt><dd>내용(명사구)</dd></div></dl>
+          <div class="td-m"><span><i>지표</i>측정 지표 · 지표</span><span><i>참고</i>참고 서비스 · 출처</span></div>
+        </div>
+        <div class="td-t">
+          <div class="td-th"><span class="cd">C-2</span><b>과제 이름</b><span class="tg"><span class="chip gy sm">신규</span><span class="chip dk sm">1분기 착수</span></span></div>
+          <p class="td-k">과제 한 줄 요약(단계 색)</p>
+          <dl class="td-dl"><div><dt>항목</dt><dd>내용(명사구)</dd></div><div><dt>항목</dt><dd>내용(명사구)</dd></div><div><dt>항목</dt><dd>내용(명사구)</dd></div></dl>
+          <div class="td-m"><span><i>지표</i>측정 지표</span><span><i>참고</i>참고 서비스</span></div>
+        </div>
+      </div>
+      <div class="wf">
+        <div class="wf-h">UX/디자인 개선방안 예시<span>과제 코드 = 적용 위치 · 상세 디자인은 착수 후 확정</span></div>
+        <div class="wf-scr">
+          <div class="wf-ph"><div class="wf-fw"><div class="wf-fc"><div class="ln s"></div><div class="ln b"></div><div class="ln"></div><div class="ln"></div><div class="ln b"></div><div class="ln"></div><div class="ln s"></div><div class="ln b"></div></div>
+            <span class="wf-co" style="top:66px"><b>C-1</b>요소 이름</span><span class="wf-co" style="top:208px"><b>C-1</b>요소 이름</span></div><div class="cap">화면 이름</div></div>
+          <div class="wf-ph"><div class="wf-fw"><div class="wf-fc"><div class="ln s"></div><div class="ln b"></div><div class="ln"></div><div class="ln b"></div><div class="ln"></div><div class="ln"></div></div>
+            <span class="wf-co" style="top:150px"><b>C-1</b>요소 이름</span><span class="wf-co" style="top:300px"><b>C-2</b>요소 이름</span></div><div class="cap">화면 이름</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="bar">판단 + 함의 한 문장, <em>강조 한 구절</em></div>
+  </div>
+  <div class="dfoot"><span class="cr">© 2026 ETRIBE Inc. All rights reserved.</span><span class="pg">5</span></div>
+</section>
+
+<!-- 6 · 맺음 — 흰 바탕 점층 문장 + 표지 컨셉어 회수 -->
+<section class="slide close" data-code="맺음" data-chap="맺음">
+  <div class="cl">
+    <div class="s">{점층 문장 첫 줄 <span class="k">키워드</span>},<br>{둘째 줄 <span class="k">키워드</span>}.</div>
+    <div class="l">{대표 컨셉 문장(표지와 같은 말)}</div>
+  </div>
+</section>
+
+</div>
+</div>
+<script>
+/* 스테이지 핏 */
+(function(){var st=document.getElementById('stage');
+ function fit(){var s=Math.min(window.innerWidth/1600,window.innerHeight/900);st.style.transform='translate(-50%,-50%) scale('+s+')';}
+ window.addEventListener('resize',fit);fit();})();
+/* 네비게이션: ←/→ · PgUp/PgDn · Space · Home/End · F 전체화면 · 해시 #pN · 터치 */
+(function(){
+ var deck=document.getElementById('deck');var S=[].slice.call(deck.querySelectorAll('.slide'));var N=S.length,i=0;
+ function go(n){n=Math.max(0,Math.min(N-1,n));S.forEach(function(s,x){s.classList.toggle('active',x===n)});i=n;try{location.hash='p'+(i+1)}catch(e){}}
+ document.addEventListener('keydown',function(e){
+  if(['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key)>=0){e.preventDefault();go(i+1)}
+  else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>=0){e.preventDefault();go(i-1)}
+  else if(e.key==='Home'){go(0)}else if(e.key==='End'){go(N-1)}
+  else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}});
+ var tx=0;deck.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+ deck.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50){d<0?go(i+1):go(i-1)}},{passive:true});
+ var ct;function hide(){document.body.classList.add('nocursor')}
+ function show(){document.body.classList.remove('nocursor');clearTimeout(ct);ct=setTimeout(hide,2500)}
+ ['mousemove','mousedown','wheel'].forEach(function(e){document.addEventListener(e,show,{passive:true})});ct=setTimeout(hide,2500);
+ var m=(location.hash||'').match(/^#p(\d+)$/);go(m?Math.min(N,Math.max(1,+m[1]))-1:0);})();
+</script>
+</body>
+</html>

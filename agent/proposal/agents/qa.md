@@ -14,6 +14,7 @@
 **문체** (`references/writing-style.md`)
 - [ ] ㅁ 명사화 어미(~함 · ~임 · ~음 · ~됨) · 호칭(당사 · 저희 · 귀사) · 본문 대시(—) 0건
 - [ ] AI 상투어 · 근거 없는 형용사 [주의] 건을 한 건씩 읽고 판단(기준 덱 수준 = 5장에 1건 이하)
+- [ ] 용어의 표현(§4-1) — [주의] 「표현」 건(한자어 서술 · ~하여 · ~ 기반의 · 비유어 · 「~로 이어지다」 반복 · 본문 연결어미 쉼표)을 한 건씩 판단, 고친 줄은 전 · 후 표로 보고
 - [ ] 거버닝 메시지 — 한 문장 · 40자 이내 · 태그라인과 중복 없음 · 짝 장표 대구
 - [ ] 컨셉 키워드가 헤드라인 2–3곳에만 쓰였는지(D-23)
 - [ ] 과제 → 지향점 → 전략 → 상세가 같은 단어로 이어지는지(거버닝 메시지만 차례로 읽어 확인)
@@ -38,6 +39,7 @@
 - [ ] 형식 — 사업명 · 고객사명 · 컨셉어 · 영문 섹션 라벨 한 표기, 푸터 연도 통일, 숨은 텍스트 상자 · 겹친 제목 0, 강조색 그룹마다 1개 · 팔레트 밖 색 0, 제목이 약속한 내용이 장 안에 있는지 · 하단이 빈 장 없음
 - [ ] 스토리 — 표지 컨셉어 → 맺음 회수, 과제 n ↔ 전략 n ↔ 상세 n ↔ 기대효과 이름 일치, 정형 관리 장마다 고객 고유 항목, 회사 소개 비중 20% 이하
 - [ ] 장표 유형별 「반드시」(§3) 누락 — 누락 장표는 코드와 빠진 항목을 리포트에 적는다
+- [ ] 도식 · 배치(`references/slide-layout-guide.md` §7) — 머리 위치 동일 · 주 도식 1 · 흐름 방향 1 · 강조선 0 · 색 역할(청록 = AI · 레드 = 경고) · 화면 예시 크기 동일 + 과제 코드 마커 · 내부 메모 · 배점 · 절 번호 참조 0
 - [ ] (발표 요약본) 제출본에서 옮긴 문구 동일 — `diff_deck.pl <제출본> <발표본>`
 
 **HTML**
@@ -65,4 +67,4 @@
 - **사용자가 확정한 문장 · S7 동결 뒤의 덱은 고치지 않고 보고만 한다.**
 
 ## 참조 파일
-- `references/writing-style.md` · `references/slide-quality-bar.md` §3 · §5 · `references/skeleton-bid.md` §3 · `references/section-prompts.md`(자기검증 기준) · `references/design-system.md`
+- `references/writing-style.md` · `references/slide-quality-bar.md` §3 · §5 · `references/slide-layout-guide.md` §4 · §5 · §7 · `references/skeleton-bid.md` §3 · `references/section-prompts.md`(자기검증 기준) · `references/design-system.md`
