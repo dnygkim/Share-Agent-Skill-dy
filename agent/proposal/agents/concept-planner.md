@@ -58,3 +58,4 @@ S1의 분석 · 리서치를 받아 **제안 컨셉 한 줄과 스토리 흐름*
 ## 참조 파일
 - `references/skeleton-bid.md` — 스토리 뼈대 · 장 구성
 - `references/writing-style.md` — §3 거버닝 메시지 · §6 스토리가 이어지는 방식
+- `deck-references/expressions.md` — §1 표지 · 컨셉 카피 · §2 거버닝 · §6 맺음 · §7 버릴 표현(실제 제안서 주간 학습 사례 · 2026-11-20). 구조만 빌리고 문장은 새로 쓴다

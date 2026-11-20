@@ -48,3 +48,4 @@
 - `references/skeleton-bid.md` (경쟁입찰형 — 기본)
 - `references/section-prompts.md` (견적형 — 슬라이드 순서 가이드)
 - `references/writing-style.md` §3 (거버닝 메시지)
+- `deck-references/diagrams.md` · `infographics.md` — 페이지별 삽입내용의 「도표」 후보(실제 제안서 주간 학습 사례 · 2026-11-20). 같은 도식 세 장 연속 금지, 덱 전체 도식 종류 쏠림 점검

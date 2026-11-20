@@ -28,7 +28,7 @@
 `agents/reference-collector.md`를 돌려 `04_refs.md`(Figma 레퍼런스 · 경쟁사/레퍼런스 사이트 · 실적 자료)를 만든다. 「미수집」 항목의 대체안을 사용자와 정한 뒤 초안을 쓴다.
 
 ### 0-4. 공통지침 · 장표 품질 기준 읽기
-`references/writing-style.md`를 읽는다(S6에서는 §7 재검토 절차대로 다시 읽는다). 이어서 `references/slide-quality-bar.md`(최종 제출본 12건에서 학습한 장표 유형별 합격선)를 읽고, 덱 유형(§1 — 경쟁입찰 운영 · 구축 / 평가 목차 지정형 / 제언서 RFI 응답형 · 피치형 / 견적형 / 발표 요약본)을 정해 `04_content.md` 머리말에 적는다.
+`references/writing-style.md`를 읽는다(S6에서는 §7 재검토 절차대로 다시 읽는다). 이어서 `deck-references/`(드라이브 제안서 주간 학습 사례 — README 학습 이력 맨 위 줄 · 네 파일 「이번 주 추가」 먼저)와 `references/slide-quality-bar.md`(최종 제출본 12건에서 학습한 장표 유형별 합격선)를 읽고, 덱 유형(§1 — 경쟁입찰 운영 · 구축 / 평가 목차 지정형 / 제언서 RFI 응답형 · 피치형 / 견적형 / 발표 요약본)을 정해 `04_content.md` 머리말에 적는다.
 
 ## 3-step (건너뛰지 않는다)
 - **(a) 콘텐츠 초안** — `04_content.md`를 아래 서식으로 쓴다. 장표마다 자기검증 → `[통과/보완필요]` — 기준은 `slide-quality-bar.md` §3 그 장표 유형의 「반드시」(하나라도 빠지면 보완필요)와 §2 해부(근거 캡션 · 결론 바 · ※ 단서). → **im-not-ai 1차 윤문**(`references/antiai-pass.md` §2 ①–③, 표지 · 목차 · 간지 제외 전 장표) → 2차 `perl scripts/check_style.pl _workspace/{프로젝트}/04_content.md` [위반] 0건 → 저장 후 **사용자 확정**(윤문 `diff.md` 전 · 후 표 함께 제시).
@@ -81,6 +81,7 @@
 
 ## 참조 파일
 - `references/writing-style.md` — **초안 작성 전 · 매 차수 추출 전 반드시 읽는다.**
+- `deck-references/` — **초안 작성 전 읽는다.** 드라이브 `! 사업제안&견적` 제안서를 매주 토요일 클라우드 예약 작업이 학습한 사례 — `expressions`(자리별 문장) · `diagrams`(내용 성격별 도식) · `infographics`(수치 표현) · `design-elements`(색 역할 · 라벨 · 번호 체계). 장표마다 「레이아웃」 줄의 도식 · 인포그래픽 후보를 여기서 고르고, 규칙 문서와 어긋나면 규칙 문서 우선(2026-11-20)
 - `references/antiai-pass.md` — **초안 · 변경 문구를 쓴 직후 읽는다.** im-not-ai(humanize-korean) 1차 윤문 절차 · 보존 지침 블록 · 하우스 문체와 어긋날 때 처리(2026-11-20)
 - `references/slide-quality-bar.md` — **초안 작성 전 반드시 읽는다.** 덱 유형별 골격 · 장표 해부 · 장표 유형별 합격선 · 완성도 점검표
 - `references/skeleton-bid.md` — 경쟁입찰형 장표 유형별 작성 항목(§3)

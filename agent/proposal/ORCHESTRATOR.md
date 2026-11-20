@@ -65,6 +65,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ q
   | 같은 프로젝트에 새 RFP · 범위 변경 | 기존 `_workspace/{프로젝트}/`를 `{프로젝트}_prev/`로 옮기고 S1 |
 
 - 앞 단계 산출물 없이 뒤 단계를 요청받으면(컨셉 없이 「목차 짜줘」) 빠진 단계를 한 줄로 알리고, 그 단계를 짧게 먼저 할지 사용자가 준 내용으로 대신할지 묻는다.
+- **제안서 레퍼런스 확인(2026-11-20)** — 착수 때 `deck-references/README.md` 「학습 이력」 맨 위 줄과 네 패턴 파일(`expressions` · `diagrams` · `infographics` · `design-elements`)의 「이번 주 추가」를 읽는다. 드라이브 `! 사업제안&견적` 제안서를 매주 토요일 클라우드 예약 작업이 학습해 쌓는 사례 모음이다. 단계별 쓰임: S2 `expressions` §1 · §6 · S3 `diagrams` · `infographics` · S4 네 파일 전부 · qa 쏠림 점검. 규칙 문서(writing-style · slide-layout-guide · slide-quality-bar · design-system)가 우선이고, 예시는 구조만 빌려 그 건 내용으로 새로 쓴다.
 
 ## ★ 시각 표시 (시작 · 완료)
 - 착수 시: 현재 시각 조회(`date +"%H:%M"` 또는 `Get-Date -Format "HH:mm"`)해 `현재 HH시 MM분입니다. 작업 시작합니다.`
@@ -86,11 +87,13 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ q
 
 ### S2 — 제안 컨셉 · 스토리텔링 (`agents/concept-planner.md`) → GATE ①
 - 과제 3–5개 → 컨셉 후보 2–3안 → 추천안의 스토리 흐름(9단계) → 표지 · 2장 · 맺음의 거버닝 메시지 후보.
+- 표지 카피 · 맺음 회수 문장은 `deck-references/expressions.md` §1 · §6 사례 구조를 참고하고 §7 「버릴 표현」은 쓰지 않는다.
 - **승인 전에는 목차를 짜지 않는다.** 이후 컨셉이 바뀌면 `02_concept.md`를 먼저 고친다.
 
 ### S3 — 제안 목차 (`agents/structure-validator.md`) → GATE ②
 - 컨셉 · 스토리를 장으로 나눈다. 목차 표의 행 = 장표 1장이고, **「페이지별 주요 삽입내용」 열**(핵심 메시지 · 들어갈 도표/수치 · 근거 출처 · 필요한 레퍼런스)을 반드시 채운다.
 - RFP 요구 항목 ↔ 장표 대응을 검증하고, **확정 장수**(본문 · 별첨 · 발표 범위)를 머리에 적는다.
+- 삽입내용 열의 「도표」는 `deck-references/diagrams.md` · `infographics.md`에서 내용 성격에 맞는 도식을 골라 적는다 — 같은 도식이 연달아 세 장을 넘지 않게, 덱 전체에서 도식 종류가 한두 가지로 쏠리지 않게.
 - 승인 전에는 본문을 만들지 않는다.
 
 ### S4 — 제안서 초안 · 1차 추출 (`agents/slide-builder.md`)
@@ -101,6 +104,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ q
 4. **추출** — 콘텐츠 초안(`04_content.md`) → 사용자 확정 → HTML → (제출 포맷에 따라) PPT/Figma 변환 또는 HTML 최종본 취합 루틴(`references/deck-production-playbook.md`).
 5. **공통지침 적용** — `references/writing-style.md`를 읽고 쓴다. 초안을 쓴 직후 **im-not-ai 1차 윤문**(`references/antiai-pass.md` — `scripts/antiai_units.py extract` → `humanize-korean` → `apply`)으로 AI 티를 걷고, 2차로 `perl scripts/check_style.pl`을 초안과 덱에 각각 돌려 [위반] 0건. 사용자 확정 때 윤문 전 · 후 표(`antiai/{run_id}/diff.md`)를 같이 보인다.
 6. **장표 품질 기준** — `references/slide-quality-bar.md`로 덱 유형(§1)을 정하고, 장표마다 유형별 「반드시」(§3)로 자기검증한다. qa는 §5 완성도 점검표로 검수한다.
+7. **제안서 레퍼런스** — `deck-references/` 네 파일에서 장표별 도식 · 인포그래픽 · 문장 구조 · 디자인 요소를 골라 `04_content.md` 「레이아웃」 줄과 문구에 반영한다(규칙 문서 우선 · 예시 그대로 복사 금지).
 - 산출: 덱 **v0.1** → qa → `r1/qa.md`.
 
 ### S5 — 피드백 반영 (`agents/feedback-integrator.md`) → GATE ③

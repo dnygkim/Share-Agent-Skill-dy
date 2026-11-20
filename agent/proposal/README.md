@@ -146,6 +146,11 @@ agent/proposal/
 │   ├── feedback-integrator.md  # S5 피드백 대장 (GATE ③) · S6 변경분 HTML
 │   ├── release-packager.md     # S7 최종본 · 제출 포맷
 │   └── qa.md                   # 추출마다 검수
+├── deck-references/     # 제안서 레퍼런스 — 매주 토 09:30 클라우드 예약 작업이 드라이브 제안서를 학습해 갱신
+│   ├── README.md · ROUTINE.md                # 쓰는 법 · 공개 원칙 · 학습 이력 / 주간 학습 절차(예약 작업 정본)
+│   ├── expressions.md · diagrams.md          # 자리별 문장 표현 / 내용 성격별 도식
+│   ├── infographics.md · design-elements.md  # 수치 표현 / 색 역할 · 라벨 · 번호 체계
+│   └── sources.md · _state.json              # 학습 대장(고객명 제외) / 학습 상태(비공개 · 공유 미러 제외)
 ├── references/
 │   ├── writing-style.md            # 문체 공통지침 (2차 · 하우스 문체)
 │   ├── antiai-pass.md              # im-not-ai 1차 윤문 절차 · 제안서 보존 지침 · 하우스 문체와 어긋날 때
@@ -166,6 +171,7 @@ agent/proposal/
 │   ├── check_style.pl · diff_deck.pl · deck_lib.pl      # 문체 점검 · 변경분 비교 · 공용 함수 (perl)
 │   ├── check_slides.py                                  # 잔존 표기 · 자리표시자 · 쪽 번호 점검
 │   ├── antiai_units.py                                  # im-not-ai 1차 윤문 — 장표 문구 추출 · 줄마다 검증 반영
+│   ├── deckref_tool.py                                  # 제안서 레퍼런스 주간 학습 — 드라이브 읽기 결과 정리 · 상태 · 공개 점검 · 반영
 │   ├── deck_edit.py · codebox_overlay.py · fig2svg.py   # 덱 편집 · 코드박스 통일 · 피그마 벡터 취합
 │   ├── deck_toc.py · build_compressed_pdf.py            # 목차 시트 · 피그마 PDF 병합 압축
 │   └── render_pages.sh                                  # headless Chrome 페이지 렌더
@@ -317,6 +323,7 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ �
 | <sub>ⓓ</sub> | <sub>추출</sub> | <sub>콘텐츠 초안(마크다운) → 사용자 확정 → HTML 슬라이드 → 제출 포맷에 따라 PPT/Figma 변환 또는 HTML 최종본 취합</sub> |
 | <sub>ⓔ</sub> | <sub>공통지침 적용</sub> | <sub>문체 지침(`references/writing-style.md`)대로 작성 → 쓴 직후 **im-not-ai 1차 윤문**(`references/antiai-pass.md` — AI 티 제거, 표지 · 목차 · 간지 제외) → 2차 `check_style.pl`로 초안 · 덱 각각 [위반] 0건 확인. 사용자 확정 때 윤문 전 · 후 표 함께 제시</sub> |
 | <sub>ⓕ</sub> | <sub>장표 품질 기준</sub> | <sub>`references/slide-quality-bar.md`로 덱 유형(§1) 확정, 장표마다 유형별 「반드시」(§3) 자기검증 → [통과/보완필요]</sub> |
+| <sub>ⓖ</sub> | <sub>제안서 레퍼런스</sub> | <sub>`deck-references/`(드라이브 제안서 주간 학습 사례)에서 장표별 도식 · 인포그래픽 · 문장 구조 · 디자인 요소를 골라 「레이아웃」 줄과 문구에 반영 — 규칙 문서 우선, 예시는 구조만</sub> |
 
 - **HTML 최종본 모드**: 1600×900 골격(`template/deck_1600_template.html`) + `references/deck-production-playbook.md`. HTML 직접 작성 · 피그마 장표 벡터 취합 · 발표용 HTML iframe을 한 덱에 혼합 가능, 편집은 스크립트로만(「HTML 최종본 편집 스크립트」), 대표 페이지 렌더 확인, 요청 시 피그마 백업 · 목차 시트
 - **사용자 할 일**: 양식 파일 · 레퍼런스 전달, 콘텐츠 초안 확정
@@ -438,6 +445,22 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ �
 - 언제: S4 초안(전 장표) · S6 반영 장표만. S7 동결본 · 사용자 확정 문장 · 고객 원문 자료는 제외
 - 어긋날 때: 불릿 · 개조식 유지, 거버닝 대비 틀 유지, 거버닝 · 결론 바 안 쉼표 유지 — 하우스 문체 우선(§4 표)
 - 근거: FunETF 취합본 시험 2회(2026-11-20 · 1,124줄 중 45줄 · 67줄 교정, 문자 변경률 0.6%) — 이 결과가 「용어의 표현」(§4-1)의 출처
+
+### 제안서 레퍼런스 주간 학습 (`deck-references/`)
+
+드라이브 `120. Output/! 사업제안&견적`(제외 `00. 공수 및 영업대응, 기타`)의 제안서를 매주 읽어 문장 표현 · 도식 · 인포그래픽 · 디자인 요소를 쌓는 사례 모음. 제안서를 쓸 때마다 다양한 도식과 실제로 쓰인 문장 구조를 고르는 출발점
+
+| <div align="center"><sub>항목</sub></div> | <sub>내용</sub> |
+|:---|:---:|
+| <sub>실행</sub> | <sub>클라우드 예약 작업 「proposal 제안서 레퍼런스 주간 학습」 — 매주 토 09:30 KST · Opus 5.5 · Google Drive 커넥터(읽기 전용). 노트북 · Orca 연결 상태와 무관</sub> |
+| <sub>대상</sub> | <sub>지난 실행 뒤 바뀐 제안 덱(PDF · PPTX · HTML · Google Slides) + 대기분, 실행당 최대 12건(최종 · 제출 · 발표본 우선, 같은 건은 1개). RFP · 회의록 · 견적 · 공수 · 이력서 제외</sub> |
+| <sub>결과</sub> | <sub>`expressions` 자리별 문장 · `diagrams` 내용 성격별 도식 · `infographics` 수치 표현 · `design-elements` 색 역할 · 라벨 · 번호 체계, `sources` 학습 대장, README 학습 이력</sub> |
+| <sub>쓰는 곳</sub> | <sub>작업 시작(Phase 0) 때 학습 이력 · 「이번 주 추가」 먼저 → S2 컨셉 카피 · S3 장표별 도식 후보 · S4 레이아웃 줄과 문구 · qa 쏠림 · 버릴 표현 점검</sub> |
+| <sub>공개 원칙</sub> | <sub>공유 리포가 public → 고객사 · 서비스 · 상품명 · 수치 · 금액은 자리 표시, HEX · 이미지 금지, 파일 ID · 제목은 비공개 `_state.json`(공유 미러 제외). 커밋 전 `deckref_tool.py check`가 금지 패턴 차단</sub> |
+| <sub>도구 · 절차</sub> | <sub>`scripts/deckref_tool.py`(extract · state · check · publish) · 절차 정본 `deck-references/ROUTINE.md` — 수동 실행은 claude.ai/code/routines 「지금 실행」</sub> |
+
+- 규칙 문서(writing-style · slide-layout-guide · slide-quality-bar · design-system)가 우선이고, 같은 패턴의 출처가 3건 이상 쌓이면 「규칙 승격 후보」로 보고 → 사용자 확정 후 규칙 문서에 반영
+- 큰 HTML 덱(이미지 내장 수 MB)은 커넥터가 앞부분만 돌려줘 디자인 토큰만 학습, 본문 문장은 같은 건 PDF 판으로
 
 ### 문체 점검 `check_style.pl`
 
@@ -583,6 +606,7 @@ Claude: [S7] 제출 조건을 확인하겠습니다. RFP 기준 PDF 1부 · 40�
 - **순서 고정**: 추출 전 확인(양식 · 볼륨 · 레퍼런스) → 콘텐츠 초안(마크다운) → HTML → PPT/Figma. 콘텐츠 확정 전 포맷 파일 제작 금지
 - **문체**: `references/writing-style.md` 기준. `check_style.pl` [위반] 0건에서 추출
 - **윤문 순서**: 1차 im-not-ai(AI 티 제거 · `references/antiai-pass.md`) → 2차 하우스 문체. 어긋나면 하우스 우선, 윤문안은 줄마다 자동 검증 후 반영
+- **제안서 레퍼런스**: 작업 시작 때 `deck-references/`(매주 토 드라이브 제안서 학습)부터 확인 — 도식 · 인포그래픽 종류를 섞어 쓰고, 예시는 구조만 빌림
 - **장표 품질**: `references/slide-quality-bar.md` 유형별 「반드시」가 빠진 장표는 보완필요. 최종본에 남은 반례 답습 금지
 - **도식 · 배치**: `references/slide-layout-guide.md` — 장마다 주 도식 1 · 흐름 방향 1 · 결론 바, 강조선 금지 · 강조 면은 블랙
 - **차수**: 피드백은 대장으로 승인. 대장에 없는 장표는 수정 금지. 2차 추출부터 변경분 HTML 동반
@@ -600,6 +624,7 @@ Claude: [S7] 제출 조건을 확인하겠습니다. RFP 기준 PDF 1부 · 40�
 |:---|:---:|:---:|
 | <sub>`check_style.pl` · `diff_deck.pl` (`deck_lib.pl`)</sub> | <sub>perl 5 (기본 모듈만)</sub> | <sub>Git Bash(Windows) · macOS 기본 perl에서 그대로 실행</sub> |
 | <sub>`check_slides.py` · `deck_edit.py` · `codebox_overlay.py` · `deck_toc.py`(md 출력)</sub> | <sub>Python 3 (표준 라이브러리)</sub> | <sub>Python이 없는 PC에서는 실행 불가. 착수 때 `python --version`으로 확인</sub> |
+| <sub>`deckref_tool.py` + 제안서 레퍼런스 주간 학습</sub> | <sub>Python 3 (표준 라이브러리) · 클라우드 예약 작업 · Google Drive 커넥터</sub> | <sub>학습은 클라우드에서 돌고, PC에서는 `deck-references/` 읽기만. 수동 학습 · 점검은 `python scripts/deckref_tool.py state show · check`</sub> |
 | <sub>`antiai_units.py` + im-not-ai 1차 윤문</sub> | <sub>Python 3 (표준 라이브러리) · 플러그인 `humanize-korean@im-not-ai`</sub> | <sub>플러그인 미설치면 리포 백업 `skills/im-not-ai/` 폴백. 덱 전체 heavy 경로 5–8분 · LLM 3콜</sub> |
 | <sub>`fig2svg.py`</sub> | <sub>Python + PyMuPDF</sub> | <sub>피그마 장표 벡터 취합</sub> |
 | <sub>`build_compressed_pdf.py`</sub> | <sub>Python + pypdf · Pillow</sub> | <sub>피그마 PDF 병합 · 압축</sub> |
@@ -644,6 +669,7 @@ python3 -m pip install --user pymupdf pypdf pillow openpyxl
 |:---|:---:|
 | <sub>**컨셉이 서 있는 제안서**</sub> | <sub>컨셉 한 줄이 표지 → 지향점 → 맺음에서 다시 등장하도록 스토리 9단계로 설계</sub> |
 | <sub>**만들기 전에 합의하는 목차**</sub> | <sub>목차 표의 한 행 = 장표 1장. 장마다 들어갈 내용 · 근거 · 필요한 레퍼런스까지 미리 확정</sub> |
+| <sub>**다양한 도식 · 인포그래픽**</sub> | <sub>드라이브 제안서를 매주 학습한 `deck-references/`에서 내용 성격에 맞는 도식 · 수치 표현을 골라 장표마다 섞어 씀</sub> |
 | <sub>**사람이 쓴 것 같은 문장**</sub> | <sub>im-not-ai 1차 윤문으로 AI 티 제거 → 기준 덱의 문체 규칙 + `check_style.pl` 자동 점검(2차)</sub> |
 | <sub>**빠짐없는 피드백 반영**</sub> | <sub>회의록을 발언 단위로 쪼갠 피드백 대장. 반영 · 보류 · 미반영을 항목마다 기록</sub> |
 | <sub>**바뀐 곳만 보는 재검토**</sub> | <sub>`diff_deck.pl`이 직전본과 비교한 결과로 목차 기준 변경분 HTML 간략본 작성</sub> |
@@ -653,6 +679,7 @@ python3 -m pip install --user pymupdf pypdf pillow openpyxl
 
 | <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
 |:---|:---:|:---:|
+| <sub>제안서 레퍼런스 주간 학습 신설 — 드라이브 `! 사업제안&견적`(제외 `00. 공수 및 영업대응, 기타`)의 제안서를 매주 토 09:30 클라우드 예약 작업(Opus 5.5 · Google Drive 커넥터, 노트북 · Orca 무관)이 읽어 문장 표현 · 도식 · 인포그래픽 · 디자인 요소를 `deck-references/`(expressions · diagrams · infographics · design-elements · sources)에 쌓음. 절차 정본 `deck-references/ROUTINE.md`, 도구 `scripts/deckref_tool.py`(드라이브 읽기 결과 정리 · 학습 상태 · 공개 금지 패턴 점검 · 커밋 · 공유 반영), 학습 상태 `_state.json`은 공유 미러 제외. 작업 시작(Phase 0) · S2 컨셉 · S3 도식 후보 · S4 레이아웃 · qa 쏠림 점검에 연결, 형식 예시 4건 수동 학습</sub> | <sub>2026.11.20</sub> | <sub>김단영</sub> |
 | <sub>im-not-ai 1차 윤문 단계 신설 — 분석을 거쳐 쓴 제안서 문구(S4 초안 · S6 반영 장표)에 외부 스킬 im-not-ai(`humanize-korean`)를 먼저 걸어 AI 티를 걷고, 그 위에 하우스 문체(`writing-style.md` · `check_style.pl`)를 2차로 거는 순서로 변경. 절차 · 제안서 보존 지침 블록 · 어긋날 때 처리 · 폴백(`references/antiai-pass.md`), 장표 문구 추출 · 줄마다 검증 반영 스크립트(`scripts/antiai_units.py` — 04_content.md · 덱 HTML 둘 다, 표식 · 수치 · 영문 · ㅁ 어미 · 확정 문장 자동 원문 유지, 전 · 후 표 생성) 추가, slide-builder · qa · ORCHESTRATOR · CLAUDE.md · writing-style 연결</sub> | <sub>2026.11.20</sub> | <sub>김단영</sub> |
 | <sub>용어의 표현 · 장표 도식 지침 신설 — 삼성자산운용 FunETF 제안서 im-not-ai 윤문 시험 47줄로 문체 지침에 「용어의 표현」 절 추가(문장 서술어는 쉬운 동사 · 항목 끝은 한자어 명사 · 본문 연결어미 뒤 쉼표 삭제, 전 · 후 표 10줄 · 어미 변환 20줄), `check_style.pl`에 ㅁ 어미(만듦 · 다시 씀 · 찾기 어려움)와 「표현」 [주의] 추가. FunETF 취합본 91장 · 사용자 수정 이력 121건에서 장표 도식 · 레이아웃 지침(`references/slide-layout-guide.md` — 내용 성격별 도식 33종 · 장표 골격 · 화면 예시 · 면/선/색 · 피드백 교정표) 신설, 강조선 금지 · 강조 면 블랙 · 청록 AI 한정을 디자인 시스템 · 품질 기준에 반영, 로고 락업형 1600×900 골격(`template/deck_1600_lockup_template.html`) 추가, 덱 도구가 락업형 헤더를 읽도록 보강</sub> | <sub>2026.11.20</sub> | <sub>김단영</sub> |
 | <sub>제안서 학습 시각 확인 — 최종 PDF 13건(2025.06–2026.11)을 쪽 이미지로 그려 시각 합격선 보강: 스톡 사진 표지 · 간지 · 맺음, 인물 일러스트 · 아바타 잔존, 영문 슬로건 사진 장 · 인증서 월, 사례 1건 1쪽 목업 나열, 팔레트 사례 · 디자인 시안 장 색 예외(`slide-quality-bar.md` §2 · §3). 견적 PDF 숨은 비율 셀 · Figma PDF 뷰어 점검 추가(§5), 계룡 쪽수 136쪽 정정(§0), 쪽 이미지 렌더링 방법(§6)</sub> | <sub>2026.11.17</sub> | <sub>김단영</sub> |
