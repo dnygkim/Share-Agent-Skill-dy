@@ -1,0 +1,15 @@
+{
+  "name": "test-runner-scripts",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "test-runner 하네스 스크립트 — qa-master 엑셀 로드 · 회차 기록 · 결과 엑셀 · HTML 리포트 · Playwright 수행",
+  "scripts": {
+    "check": "node pw_run.mjs --check",
+    "install-browsers": "playwright install chromium webkit"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "playwright": "^1.49.0"
+  }
+}

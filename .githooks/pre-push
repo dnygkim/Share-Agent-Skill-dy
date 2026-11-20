@@ -1,0 +1,6 @@
+#!/bin/sh
+# pre-push — 푸시할 커밋 전부를 다시 검사 (2026-11-25)
+# 훅 없이 만든 커밋(--no-verify · 훅을 켜지 않은 클론 · cherry-pick)도 여기서 걸린다. 원격이 이 두 리포일 때 거부 목록을 못 찾으면 푸시하지 않는다.
+. "$(dirname "$0")/_guard.sh"
+guard_run push "$1" "$2" || exit 1
+exit 0

@@ -1,0 +1,178 @@
+#!/usr/bin/env perl
+# check_style.pl — 제안서 문체 점검 (기준 = references/writing-style.md)
+#
+# 사용법:
+#   perl scripts/check_style.pl <덱.html | 04_content.md> [--quiet]
+#
+# [위반] 종료코드 1 — 추출 전에 0건으로 만든다
+#   · ㅁ 명사화 어미(~함 · ~임 · ~음 · ~됨 · ~않음 · ~어짐 · ~따름)로 끝나는 줄 · 절
+#   · 호칭(당사 · 저희 · 귀사 · 폐사) · 본문 대시(—) · 이모지
+# [주의] 종료코드에 영향 없음 — 한 건씩 읽고 고칠지 판단
+#   · AI 상투어 · 근거 없는 형용사 · 번역투 연결어
+#   · 거버닝 메시지 40자 초과 · 2문장 · 누락, 한 장에 합니다체 문장 과다
+#   · (2026-11-13 최종본 학습 · references/slide-quality-bar.md §4) 거버닝의 「통한/통해」 · 「~으로」 미완결 ·
+#     장끼리 같은 거버닝 · 최상급/절대어 · 우리는/여러분 · 띄어쓰기(제한 된 · 강화 합니다) · 「A가 아닌 B」 덱 4회 이상
+#   · (2026-11-16 2차 학습) 거버닝 미완결을 조사 · 부사 끝(~을/를 · ~에/에서 · 다시 · 바로 · 먼저 · 그대로 · ~게)까지 ·
+#     「자사」 · RFP 감점 표현 후보(~할 수 있 · 가능합니다) 개수 · 근거 확인이 필요한 개선율(n% 향상 · 절감)
+# [위반] 추가(2026-11-16) — 작업 흔적: XXXX · #REF! · 삽입예정 · 작성중 · [업무]/[문제] 자리 · 「2/13 추가」 같은 날짜 표식
+# (2026-11-20 용어의 표현 · writing-style.md §4-1) [위반] ㅁ 어미에 ~듦(만듦 · 줄어듦) · ~씀(다시 씀) · 「~기 어려움」 추가,
+#   [주의] 「표현」 — 한자어 서술(확대하다 · 지속적으로 · 감소합니다 · 개선되면) · ~하여 · ~ 기반의 · 비유어(들어오는 길) ·
+#   「~로 이어지게 하다」 · 「~로 이어지다」 덱 4회 이상 · 본문 연결어미 뒤 쉼표(~하고, · ~하며,)
+# 의존성: perl 5 코어 모듈만. Git Bash(Windows) · macOS 기본 perl 에서 그대로 실행.
+use strict; use warnings; use utf8;
+use FindBin qw($Bin);
+require "$Bin/deck_lib.pl";
+binmode(STDOUT, ':utf8'); binmode(STDERR, ':utf8');
+
+my ($file, $quiet);
+for (@ARGV) { if ($_ eq '--quiet') { $quiet = 1 } else { $file = $_ } }
+if (!$file) { print "사용법: perl scripts/check_style.pl <덱.html | 04_content.md> [--quiet]\n"; exit 2; }
+my @slides = dl_slides($file);
+die "장표를 찾지 못함 (HTML 은 <section class=\"slide\">, md 는 「### [코드] 태그라인」 블록)\n" unless @slides;
+
+# ── 규칙 ──────────────────────────────────────────────────
+# 명사로 굳은 말(위반 아님)
+my $NOUN_HAM = qr/(?:포함|보관함|수신함|발신함|우편함|사서함|편지함|명함|건의함|투표함|보석함|알림함|문서함|자료함|메일함)$/;
+my $ADJ_UM   = qr/(?:어려|쉬|가까|번거로|까다로|무거|아쉬)움$/;   # ㅂ 불규칙 — 「찾기 어려움」 · 「확인이 어려움」
+my $NOUN_IM  = qr/(?:책임|위임|게임|모임|타임|프레임|선임|담임|연임|해임|부임|취임|퇴임|신임|전임|겸임|일임|방임|재임|역임|중임|초임|라임|패러다임|클레임|^임)$/;
+my $NOUN_JIM = qr/(?:다짐|봇짐|등짐|이삿짐|^짐)$/;
+my $VERB_EUM = qr/(?:있|없|않|같|많|적|높|낮|좋|싫|받|맞|맡|남|놓|쌓|잃|얻|닿|늦|짧|멀|깊|넓|좁|작|았|었|였|했|됐|겠|섰)음$/;
+my $VERB_ETC = qr/(?:어남|타남|러남|끝남|나뉨|바뀜|생김|막힘|밀림|걸림|모자람|다름|따름|드묾|둠)$/;
+
+sub bad_ending {
+  my ($seg) = @_;
+  my $s = $seg;
+  $s =~ s/[\s\)\]」』”’"'\*※]+$//;          # 닫는 괄호 · 따옴표
+  $s =~ s/\([^()]*\)$//;                     # 끝의 괄호 보충
+  $s =~ s/\s+$//;
+  my @w = split /\s+/, $s; return 0 unless @w;
+  my $t = $w[-1]; $t =~ s/^[^가-힣A-Za-z0-9]+//;
+  return 0 unless $t =~ /[가-힣]$/;
+  my $multi = @w >= 2;
+  return '함'  if $t eq '함' ? $multi : ($t =~ /함$/ && $t !~ $NOUN_HAM);
+  return '됨'  if $t =~ /됨$/;
+  return '음'  if $t =~ $VERB_EUM && ($multi || $t =~ /(?:있|없|않|았|었|였|했|됐|겠)음$/);
+  return '짐'  if $multi && $t =~ /([가-힣])짐$/ && $t !~ $NOUN_JIM && (ord($1) - 0xAC00) % 28 == 0;
+  return '임'  if $multi && $t =~ /임$/ && $t !~ $NOUN_IM;
+  return 'ㅁ'  if $multi && $t =~ $VERB_ETC;
+  return '듦'  if $multi && $t =~ /듦$/;                                   # 만듦 · 줄어듦
+  return '씀'  if $multi && $t =~ /씀$/ && $t !~ /말씀$/;                  # 다시 씀
+  return '움'  if $multi && $t =~ $ADJ_UM && $w[-2] =~ /(?:이|가|기|게)$/;  # 찾기 어려움 (「운영상 어려움」 같은 명사는 제외)
+  return 0;
+}
+
+# 2026-11-20 용어의 표현 (writing-style.md §4-1 ①③) — [주의]로 센다
+my @EXPR = (
+  [qr/확대(?:하|해|합)/,                         '확대하다 → 늘리다'],
+  [qr/지속적으로/,                               '지속적으로 → 꾸준히 · 계속'],
+  [qr/(?:감소|증가)(?:하[고며면여는]|합니|해|됩니|되면)/, '감소 · 증가합니다 → 줄어듭니다 · 늘어납니다 (항목 끝 명사 「감소」는 그대로)'],
+  [qr/개선(?:되면|돼야|되어야|해야)/,             '개선되면 · 개선해야 → 오르면 · 다듬어야 · 고쳐야'],
+  [qr/[가-힣]하여(?=[\s,]|$)/,                   '~하여 → ~해 · 「반영하여」는 조사 ~로'],
+  [qr/기반의\s/,                                 '~ 기반의 → ~ 기반'],
+  [qr/(?:들어오는|돌아오는|오는|올)\s?길(?=[을이은도로의에]?(?:[\s,.]|$))/, '비유어 「~ 길」 → 유입 경로 · 재방문 경로'],
+  [qr/이어지게\s?(?:하|합|해|만)/,               '~로 이어지게 하다 → 끌어내다 · 만들다'],
+);
+my $LINK_RE  = qr/(?:으로|[가-힣]로)\s?이어지/;                         # 「~로 이어지다」 덱 전체 횟수
+my $LINK_MAX = 3;
+my $COMMA_RE = qr/(?:하고|되고|있고|없고|않고|하며|되며|이며|으며|하면|되면|오르면|해서|하지만|이지만),\s/;   # 본문 연결어미 뒤 쉼표
+
+my @HONOR = ('당사', '저희', '귀사', '폐사');
+my @CLICHE = (
+  # 근거 없는 형용사
+  '혁신적', '획기적', '최적의', '최적화된', '차별화된', '선도적', '다양한', '원활한', '효과적인', '체계적인', '지속적인', '종합적인', '전문적인', '탁월한', '완벽',
+  # 최상급 · 절대어 (2026-11-13 최종본 학습)
+  '업계 최고', '최초', '유일한', '무결점', '원천 차단', '원천 봉쇄', 'Zero',
+  # AI · 보도자료 상투어
+  '극대화', '시너지', '유기적', '패러다임', '원스톱', '토탈 솔루션', '고도화된', '한층', '궁극적으로', '나아가', '핵심은', '의 여정', '새로운 가치', '가치를 창출', '경쟁력을 강화', '니즈',
+  # 번역투 연결어
+  '를 통해', '을 통해', '을 통한', '를 통한', '통하여', '뿐만 아니라', '에 있어', '함으로써', '로 인해', '에 대한', '가능하게', '할 수 있도록', '을 제공합니다', '를 제공합니다',
+);
+my $TITLE_MAX = 40;     # 거버닝 메시지 길이(공백 포함)
+my $NIDA_MAX  = 8;      # 한 장의 합니다체 문장 수
+
+# ── 점검 ──────────────────────────────────────────────────
+my (@fail, @warn, %cl); my ($nlines, $nnida) = (0, 0);
+my (%titles, @anin);    # 장끼리 같은 거버닝 · 「A가 아닌 B」 횟수
+my @canbe;              # RFP 감점 표현 후보(~할 수 있 · 가능합니다)가 나온 장
+my (@link, @comma);     # 2026-11-20 「~로 이어지다」 · 본문 연결어미 쉼표가 나온 장
+for my $sl (@slides) {
+  my $where = "$sl->{label} (p$sl->{idx})";
+  my @all = grep { length } ($sl->{title}, @{$sl->{lines}});
+  my $nida = 0;
+  my %seenx;    # 같은 장에서 같은 줄 · 같은 규칙은 한 번만(거버닝이 본문 줄로도 잡히는 덱)
+  for my $line (@all) {
+    $nlines++;
+    $nida++ if $line =~ /니다[.!]?$/ || $line =~ /니다[.,]\s/;
+    for my $seg (split /(?<=[가-힣])[,.;]\s+|\s·\s|\s\/\s/, $line) {
+      my $e = bad_ending($seg) or next;
+      push @fail, "[어미 ~$e] $where: $seg";
+    }
+    for my $h (@HONOR) { push @fail, "[호칭 $h] $where: $line" if index($line, $h) >= 0; }
+    push @fail, "[대시 —] $where: $line" if $line =~ /—/;
+    push @fail, "[이모지] $where: $line" if $line =~ /[\x{1F300}-\x{1FAFF}]/;
+    push @warn, "[인칭] $where: $line" if $line =~ /(?:^|[\s「‘“'"(])우리(?:는|가)\s/ || $line =~ /여러분/;
+    push @warn, "[띄어쓰기] $where: $line" if $line =~ /[가-힣](?![야이가게록지고서을를은는도만에로와과])[가-힣]\s(?:된|합니다|됩니다)(?=[\s.,]|$)/;   # 명사 뒤 띄움만 (해야 합니다 · 시간이 됩니다 제외)
+    push @anin, $sl->{label} if $line =~ /(?:가|이)\s?아닌|아니라/;
+    # 2026-11-16 2차 학습 — 작업 흔적 · 「자사」 · RFP 감점 표현 · 근거 확인이 필요한 개선율
+    push @fail, "[작업 흔적] $where: $line"
+      if $line =~ /X{4,}|#REF!|삽입\s?예정|작성중|\[(?:업무|문제)\]|(?:^|[^\d])\d{1,2}\/\d{1,2}\s?(?:추가|수정|삽입|반영)/;
+    push @warn, "[호칭 자사] $where: $line" if index($line, '자사') >= 0;
+    push @canbe, $sl->{label} if $line =~ /할\s?수\s?있|수\s?있습니다|가능합니다|가능하다/;
+    push @warn, "[수치 주장 — 근거 · 기준 확인] $where: $line"
+      if $line =~ /\d+(?:\.\d+)?\s?%\s?(?:이상\s?)?(?:향상|개선|절감|감소|증가|단축|상승)/;
+    for my $c (@CLICHE) { if (index($line, $c) >= 0) { $cl{$c}{n}++; push @{$cl{$c}{w}}, $sl->{label}; } }
+    # 2026-11-20 용어의 표현
+    for my $e (@EXPR) { push @warn, "[표현 — $e->[1]] $where: $line" if $line =~ $e->[0] && !$seenx{"$e->[1]	$line"}++; }
+    push @link, $sl->{label} if $line =~ $LINK_RE;
+    push @comma, $sl->{label} if $line ne $sl->{title} && $line =~ $COMMA_RE;
+  }
+  $nnida += $nida;
+  if ($sl->{kind} eq '일반' || $sl->{kind} eq '초안') {
+    my $t = $sl->{title};
+    if ($t eq '') { push @warn, "[거버닝 누락] $where" if $sl->{tagline} ne ''; }
+    else {
+      push @warn, "[거버닝 " . length($t) . "자] $where: $t" if length($t) > $TITLE_MAX;
+      push @warn, "[거버닝 2문장] $where: $t" if $t =~ /(?:니다|[가-힣])\.\s+\S/;
+      push @warn, "[거버닝 「통한」] $where: $t" if $t =~ /통한|통해/;
+      push @warn, "[거버닝 미완결 ~으로] $where: $t" if $t =~ /(?:으로|[가-힣]로)$/ && $t !~ /(?:그대로|바로|새로|서로|따로|주로|별로|날로|홀로)$/;
+      push @warn, "[거버닝 미완결 조사 · 부사 끝] $where: $t"
+        if ($t =~ /(?:을|를|에|에서|에게|까지|부터|처럼|보다)$/ && $t !~ /(?:마을|가을|고을)$/)
+        || $t =~ /(?:다시|바로|먼저|함께|이제|미리|모두|그대로)$/
+        || ($t =~ /[가-힣]게$/ && $t !~ /(?:무게|가게|지게|집게)$/);
+      push @{$titles{$t}}, $sl->{label};
+    }
+    push @warn, "[합니다체 ${nida}문장] $where: 리드 · 결론 · 다짐에만 쓰고 항목은 명사구로" if $nida > $NIDA_MAX;
+  }
+}
+for my $t (sort keys %titles) {
+  my @w = @{$titles{$t}};
+  push @warn, "[거버닝 중복 " . scalar(@w) . "장] " . join(', ', @w) . ": $t" if @w > 1;
+}
+push @warn, "[「A가 아닌 B」 × " . scalar(@anin) . "] 덱 전체 3회 이하로: " . join(', ', @anin[0 .. ($#anin > 9 ? 9 : $#anin)]) if @anin > 3;
+if (@canbe) {
+  my %seen; my @w = grep { !$seen{$_}++ } @canbe;
+  push @warn, "[RFP 감점 표현 후보 × " . scalar(@canbe) . "] 「~할 수 있다 · ~가능하다」 — 01_rfp.md에 감점 조항이 있으면 [위반]으로 보고 고친다: "
+    . join(', ', @w[0 .. ($#w > 9 ? 9 : $#w)]) . (@w > 10 ? ' …' : '');
+}
+if (@link > $LINK_MAX) {
+  my %seen; my @w = grep { !$seen{$_}++ } @link;
+  push @warn, "[표현 — 「~로 이어지다」 × " . scalar(@link) . "] 덱 전체 ${LINK_MAX}회 이하로, 나머지는 만들다 · 끌어내다 · 연결 등 실제 동작으로: "
+    . join(', ', @w[0 .. ($#w > 9 ? 9 : $#w)]) . (@w > 10 ? ' …' : '');
+}
+if (@comma) {
+  my %seen; my @w = grep { !$seen{$_}++ } @comma;
+  push @warn, "[표현 — 연결어미 뒤 쉼표 × " . scalar(@comma) . "] 본문 문장의 「~하고, · ~하며,」 쉼표는 뺀다(결론 바 쉼표는 덱 기준 미정 — 고치기 전 확인): "
+    . join(', ', @w[0 .. ($#w > 9 ? 9 : $#w)]) . (@w > 10 ? ' …' : '');
+}
+for my $c (sort { $cl{$b}{n} <=> $cl{$a}{n} } keys %cl) {
+  my %seen; my @w = grep { !$seen{$_}++ } @{$cl{$c}{w}};
+  push @warn, "[상투어 「$c」 × $cl{$c}{n}] " . join(', ', @w[0 .. ($#w > 9 ? 9 : $#w)]) . (@w > 10 ? ' …' : '');
+}
+
+my $name = $file; $name =~ s{.*[/\\]}{}; utf8::decode($name);
+print "== 문체 점검: $name ==\n";
+print "장표 " . scalar(@slides) . " · 문장(줄) $nlines · 합니다체 $nnida (" . ($nlines ? sprintf('%.0f', 100 * $nnida / $nlines) : 0) . "%)\n";
+print "\n[위반] " . scalar(@fail) . "건\n"; print "  $_\n" for @fail;
+unless ($quiet) { print "\n[주의] " . scalar(@warn) . "건\n"; print "  $_\n" for @warn; }
+print "\n" . (@fail ? "결과: 위반 " . scalar(@fail) . "건 → 고친 뒤 다시 점검\n" : "결과: 위반 없음\n");
+exit(@fail ? 1 : 0);

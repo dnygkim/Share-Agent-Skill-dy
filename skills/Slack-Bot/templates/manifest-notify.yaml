@@ -1,0 +1,16 @@
+display_information:
+  name: my-bot
+  description: 채널 자동 알림
+features:
+  bot_user:
+    display_name: my-bot
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - incoming-webhook
+      - chat:write
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false

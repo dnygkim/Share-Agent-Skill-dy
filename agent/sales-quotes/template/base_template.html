@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PROJECT_TITLE}} — IA · 공수 {{VERSION}}</title>
+<style>
+/*
+  ★ 빌더 지침: CSS를 직접 타이핑하지 마라(요약·누락으로 디자인이 깨진다).
+  아래 마커만 두고, 본문 작성 후 scripts/inline_css.py 를 실행하면 CSS가 그대로 주입된다.
+  - 하우스 스타일은 항상 포함.
+  - 도식(개념도/IA비주얼/AWS인프라) 섹션이 하나라도 있으면 DIAGRAMS 마커도 함께 둔다.
+  하우스 스타일 기본 톤 = warm paper(#F1EDE5) x near-black(#14130F) 무채색 에디토리얼.
+  고객 브랜드색이 필요하면 주입 후 마커 '뒤'에 :root --brand 계열(별칭)만 덮어쓴다
+  — 별칭은 도식(eco/aws)에만 닿고 본문 레이아웃 색은 건드리지 않는다.
+*/
+/*__HOUSE_STYLE_CSS__*/
+/*__DIAGRAMS_CSS__*/
+</style>
+</head>
+<body>
+
+<!-- ============ 상단 헤더 + 히어로 지표 카드 (full-width) ============ -->
+<!-- ★ 인라인 style 톤 override 금지. 색은 <style> :root --brand 계열(별칭)만 조정(도식 eco는 자체 팔레트). -->
+<header class="top-header">
+  <span class="badge">{{BADGE}}</span>
+  <h1>{{PROJECT_TITLE}}</h1>
+  <p class="subtitle">{{ONE_LINE_SUMMARY}}</p>
+  <div class="hero-grid">
+    <!-- 핵심 지표를 카드로. 총 공수 카드의 sub는 영역별 합이 총계와 일치해야 함(qa 검증) -->
+    <div class="hero-card"><div class="label">총 공수</div><div class="value">{{TOTAL_MM}}<span class="unit">M/M</span></div><div class="sub">{{EFFORT_BREAKDOWN}}</div></div>
+    <div class="hero-card"><div class="label">기간</div><div class="value">{{MONTHS}}<span class="unit">개월</span></div><div class="sub">{{START_OPEN}}</div></div>
+    <div class="hero-card"><div class="label">투입 인원</div><div class="value">{{HEADCOUNT}}<span class="unit">명</span></div><div class="sub">{{ROLE_SUMMARY}}</div></div>
+    <!-- 프로젝트별 핵심 지표 카드 추가 -->
+  </div>
+</header>
+
+<!-- ★ 폭/사이드바는 .layout 그리드가 잡는다(top-header만 full-width). 이 래퍼를 빼면 폭이 틀어짐. -->
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-title">CONTENTS</div>
+    <ol>
+      <!-- 섹션마다 <li><a href="#sec-id"><span class="num">N</span> 섹션명</a></li> -->
+    </ol>
+  </nav>
+
+<main class="main">
+
+  <!-- ============ 섹션: 배경 / 고객 Q&A 반영 ============ -->
+  <section>
+    <div class="section-header"><div class="num-box">1</div><div class="text"><h2>{{BACKGROUND_TITLE}}</h2><span class="area">{{BACKGROUND_SUB}}</span></div></div>
+    <!-- 카드/문단으로 현황·문제·변화 방향 기술 -->
+  </section>
+
+  <!-- ============ 섹션: IA 정보구조도 (기존 사이트 추출 IA + 신규 IA) ============ -->
+  <section>
+    <div class="section-header"><div class="num-box">2</div><div class="text"><h2>IA 정보구조도</h2><span class="area">{{IA_SUB}}</span></div></div>
+    <!-- analyst가 기존 사이트에서 추출한 IA 트리(depth별) + 신규 제안 IA. 사용자/관리자 분리 -->
+  </section>
+
+  <!-- ============ 섹션: 핵심 플로우 / 단계 (effort-badge로 영역 공수 표기) ============ -->
+  <section>
+    <div class="section-header"><div class="num-box">3</div><div class="text"><h2>{{FLOW_TITLE}}</h2><span class="area">{{FLOW_SUB}}</span></div><span class="effort-badge new">{{FLOW_MM}} M/M</span></div>
+  </section>
+
+  <!-- ============ 섹션: 외부 연동 / 기술 구조 ============ -->
+  <section>
+    <div class="section-header"><div class="num-box">4</div><div class="text"><h2>{{INTEGRATION_TITLE}}</h2><span class="area">{{INTEGRATION_SUB}}</span></div><span class="effort-badge">{{INTEGRATION_MM}} M/M</span></div>
+  </section>
+
+  <!-- ============ 섹션: 공수 산정 (핵심) ============ -->
+  <section>
+    <div class="section-header"><div class="num-box">5</div><div class="text"><h2>공수 산정</h2></div></div>
+    <p class="lead">IA 영역 × 모듈 × 월별 인력 × 단계별 업무 × WBS × 간트 ({{MONTHS}}개월 · {{HEADCOUNT}}명 · {{TOTAL_MM}} M/M)</p>
+
+    <!-- 1) IA 영역별 공수 요약표: 영역별 합 = 총계 -->
+    <h3 class="subhead">1) IA 영역별 공수</h3>
+    <table>
+      <!-- 행: 영역/역할 · 작업요약 · 공수, 마지막에 '총 공수' 합계행 -->
+      <tr class="total"><td colspan="3" style="text-align:right;">총 공수</td><td class="num">{{TOTAL_MM}} M/M</td></tr>
+    </table>
+
+    <!-- 2) 월별 투입 인력표: 각 행 합 = 합계열, 각 월 소계 = 월합계, 전체 = 총계 -->
+    <h3 class="subhead">2) 월별 투입 인력 (M ~ M+{{LAST_MONTH}}, {{MONTHS}}개월)</h3>
+    <table class="monthly-effort">
+      <thead>
+        <tr><th rowspan="2">구분</th><th rowspan="2">역할</th><th rowspan="2">등급</th><th colspan="{{MONTHS}}">M/M (월별)</th><th rowspan="2">합계</th></tr>
+        <tr>{{MONTH_HEADERS}}</tr>
+      </thead>
+      <tbody>
+        <!-- 역할군별 rowspan 묶음 + 소계행, 마지막 월 합계행 -->
+        <tr class="total"><td colspan="3" style="text-align:right;">월 합계 (M/M)</td>{{MONTHLY_TOTALS}}<td class="num">{{TOTAL_MM}}</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 3) 역할·단계별 업무 매트릭스 -->
+    <h3 class="subhead">3) 역할 · 단계별 업무 매트릭스 ({{MONTHS}}개월 · {{HEADCOUNT}}명)</h3>
+
+    <!-- 4) WBS 월별 작업 분해 -->
+    <h3 class="subhead">4) WBS — 월별 작업 분해 ({{MONTHS}}개월)</h3>
+
+    <!-- 5) 간트 차트 (주 단위) -->
+    <h3 class="subhead">5) 간트 차트 (주 단위 / {{WEEKS}}주)</h3>
+
+    <!-- 6) 핵심 요약 (effort-grid 카드: 투입인력/제외범위/전제·확인/리스크) -->
+    <h3 class="subhead">6) 핵심 요약</h3>
+    <div class="effort-grid">
+      <div class="card"><div class="ttl">투입 인력 (총 {{HEADCOUNT}}명, {{TOTAL_MM}} M/M)</div><div class="body">{{TEAM_DETAIL}}</div></div>
+      <div class="card"><div class="ttl">제외 / 별도 범위</div><div class="body">{{OUT_OF_SCOPE}}</div></div>
+      <div class="card"><div class="ttl">전제 · 확인 필요</div><div class="body">{{ASSUMPTIONS}}</div></div>
+      <div class="card"><div class="ttl">★ 일정·용량 리스크</div><div class="body">{{RISKS}}</div></div>
+    </div>
+
+    <!-- 일정 타임라인 -->
+    <div class="timeline" style="grid-template-columns: repeat({{MONTHS}}, 1fr);">{{TIMELINE_PHASES}}</div>
+
+    <!-- 공수 산정 노트 -->
+    <div class="insight">
+      <div class="title">공수 산정 노트 ({{VERSION}})</div>
+      <ul>{{ESTIMATION_NOTES}}</ul>
+    </div>
+  </section>
+
+</main>
+</div><!-- /.layout -->
+
+<!-- ============ 푸터 (총계·기간·인원 재기재 → qa 검증 대상) ============ -->
+<footer class="footer">
+  © {{YEAR}} {{PROJECT_TITLE}} 사전 분석 자료 · 작성: (주)이트라이브 ({{DATE}}) · 총 <strong>{{TOTAL_MM}} M/M</strong> · {{MONTHS}}개월 · {{HEADCOUNT}}명 ({{VERSION}})
+</footer>
+
+</body>
+</html>

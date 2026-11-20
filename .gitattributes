@@ -1,0 +1,6 @@
+# 셸 스크립트는 Windows 에서 받아도 LF 로 유지한다 (CRLF 면 Git Bash 에서 실행되지 않는다)
+*.sh text eol=lf
+
+# 깃 훅 · 민감정보 가드는 어느 PC 에서 받아도 LF 로 유지한다 (2026-11-25)
+.githooks/* text eol=lf
+guard-private/* text eol=lf

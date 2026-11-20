@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="revision" content="20261125">
+<!-- ═══ 수정 이력 ═══
+[20261125] 김단영 · 수정 페이지: 본문 예시 문구 · 내역: 예시에 쓴 고객 · 사업 이름을 별칭으로 일반화(민감정보 정리), 구성 · 수치 변경 없음
+[20261119] 김단영 · 수정 페이지: 전체(레이아웃 · 글자) · 내역: 본문 최대 폭 930 → 1130px(레이아웃 1200 → 1400px), 글자 크기 전체 한 단계 확대(본문 16 → 17px · 표 15 → 16px · 제목 +2px), 표지 소개 문단 폭 680 → 760px
+[20261119] 김단영 · 수정 페이지: 전체(§1~§6 · 부록) · 내역: 최초 작성 — 시작 방법 2가지 · 설치 · 한 번에 입력할 정보 · 단계별 진행 · 요청 예시 · 막힐 때 · 디자인 스킬 6종, Primary 보라 톤
+-->
+<title>UI UX Pro Max 사용 가이드</title>
+<style>
+/* ▼▼▼ house-style.css 전문 삽입 (정본 = dykim-claude-agents-skills/global-house-style/house-style.css 2026-11-16) ▼▼▼ */
+/* ============================================================================
+   하우스 스타일 (정본) — 하네스·스킬 밖 범용 HTML 산출물용
+   ----------------------------------------------------------------------------
+   기준본 : A세무법인-업무 AI 플래너_권한정책매트릭스_초안(260810).html
+   갱신일 : 2026-11-16 (컬러 3종 토큰 Primary · Secondary · Default — 추출 전 컬러 질문 답을 §2 토큰으로 받는 구조,
+                        반전 블록 · 강조선 = --accent 연결, 반전 글자 rgba = --on-primary-rgb 토큰화 · 기본 렌더 동일)
+   이전   : 2026-11-11 (막대 · 마일스톤 그래프 §23 추가 — 수치 비교 · 시점 추이 · 발주 일정 D-day, 오너 지시 「그래프로 표현」)
+           2026-11-10 (외부링크 아이콘 = 블랙 라인 · 투명도 제거, 본문 고유명사도 같은 a.ext 로 연결 — §22, 오너 지시)
+           2026-10-22 (상세 텍스트 조금 크게 — 본문·표·노트·목록 글자 1px 확대, 오너 지시)
+           2026-09-17 (어절 단위 줄바꿈 keep-all · 제목 text-wrap:balance)
+           2026-08-27 (LNB 상단 정렬 · 앵커 목적지 보정)
+
+   ★ 이 파일은 특정 프로젝트 저장소가 아니라 ~/.claude/house-style/ 에 둔
+   전역 정본이다. 하네스·스킬을 거치지 않고 "분석/리포트/리서치를 HTML로
+   뽑아줘" 류로 바로 요청받았을 때, 골격 = base_template_doc.html(같은 폴더),
+   스타일 = 이 파일을 쓴다. 사용법·적용 조건은 ~/.claude/CLAUDE.md 참조.
+
+   (참고: agent/proposal·agent/prd 특정 하네스를 쓰는 세션은 각 하네스 자체
+   CLAUDE.md/design-system.md 규칙을 따른다 — 이 전역 파일과 무관하게 매
+   프로젝트 스타일을 먼저 확인한다. 이 파일을 그쪽 하네스에 재적용하지 않는다.)
+
+   §1-19 = 공통 컴포넌트(토프바·LNB·표지·목차·표·도식 등).
+   §20-21 = 확장 컴포넌트(요약 스탯 그리드·간트) — 수치 리포트에서 선택 사용.
+   ※ 서체·mermaid 는 CDN 을 탄다. 폐쇄망에서는 서체가 시스템 폰트로,
+     mermaid 도식이 정의 텍스트로 폴백된다(설계된 동작 · §17 참조).
+   ============================================================================ */
+
+
+/* ===== 1. 서체 =============================================================
+   본문 = Pretendard Variable / 타이틀 = Paperlogy (로컬 설치본 우선 → CDN)
+   ========================================================================= */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css');
+
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:300;font-display:swap;
+  src:local('Paperlogy 3Light'),local('Paperlogy-3Light'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:400;font-display:swap;
+  src:local('Paperlogy 4Regular'),local('Paperlogy-4Regular'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:500;font-display:swap;
+  src:local('Paperlogy 5Medium'),local('Paperlogy-5Medium'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:600;font-display:swap;
+  src:local('Paperlogy 6SemiBold'),local('Paperlogy-6SemiBold'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:700;font-display:swap;
+  src:local('Paperlogy 7Bold'),local('Paperlogy-7Bold'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:800;font-display:swap;
+  src:local('Paperlogy 8ExtraBold'),local('Paperlogy-8ExtraBold'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');}
+@font-face{font-family:'Paperlogy';font-style:normal;font-weight:900;font-display:swap;
+  src:local('Paperlogy 9Black'),local('Paperlogy-9Black'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');}
+
+
+/* ===== 2. 토큰 =============================================================
+   warm paper(cream) + near-black ink + white surface.
+   컬러 역할 3종 (2026-11-16) — 추출 전 컬러 질문 단계의 답이 들어가는 자리
+     Primary   = --primary   : 토프바 · 반전 블록 · 강조선 · LNB 활성 · 강조 막대 (기본 = ink)
+     Secondary = --secondary : 주의 · 미확정 · 검토대기 표시 (기본 = 웜 브라운)
+     Default   = --paper · --paper-2 · --line · --line-2 · --ink-2 · --ink-3 : 바탕 · 선 · 보조 글자 (기본 = 웜 페이퍼)
+   기본 렌더는 2톤 그대로 — Primary 기본값이 ink 라서 반전 블록 · 강조선 모두 기존과 같은 검정.
+   클라이언트 CI · 지정 색은 기본값이 아니다 — §2b 오버라이드로만 얹는다.
+   --accent · --warn 은 기존 이름 유지(컴포넌트가 읽는 이름) — 값은 Primary · Secondary 를 따라간다.
+   ========================================================================= */
+:root{
+  --paper:#F1EDE5;      /* 페이지 바탕 */
+  --paper-rgb:241,237,229; /* --paper 의 RGB — 모바일 LNB 반투명 바탕 */
+  --paper-2:#E8E3D9;    /* 표 헤더 · 그룹행 · hover */
+  --surface:#FFFFFF;    /* 카드 · 표 · 박스 바탕 */
+  --ink:#14130F;        /* 본문 · 다크 블록 */
+  --ink-2:#56534C;      /* 보조 텍스트 */
+  --ink-3:#8C887F;      /* 캡션 · 번호 · 비활성 */
+  --line:#D9D3C7;       /* 기본 테두리 */
+  --line-2:#E6E1D7;     /* 표 내부 구분선 */
+  --primary:var(--ink); /* Primary — 반전 블록 · 강조선 (기본 = ink) */
+  --secondary:#7A4A2C;  /* Secondary — 주의 · 미확정 · 검토대기 */
+  --on-primary-rgb:241,237,229; /* Primary 바탕 위 반투명 글자 · 선의 RGB (기본 = paper) */
+  --accent:var(--primary);   /* 강조 = Primary */
+  --warn:var(--secondary);   /* 주의 = Secondary */
+  --navh:52px;          /* 상단 토프바 높이 */
+
+  --font-title:'Paperlogy','Pretendard Variable','Pretendard','Malgun Gothic',sans-serif;
+  --font-body:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,system-ui,
+              'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
+}
+
+/* ----- 2b. 컬러 오버라이드 (선택) — Primary · Secondary · Default -----------
+   추출 전 컬러 질문 단계(2026-11-16)에서 기본이 아닌 답(HEX · CI)을 받은 경우에만
+   이 블록을 골격 <style> 끝(문서형 골격의 「컬러 3종」 자리)에 추가한다.
+   기본 문서는 오버라이드를 쓰지 않는다 — 지시 없이 켜지 않는다.
+     :root{
+       --primary:{Primary};              토프바 · 반전 블록 · 강조선 · LNB 활성 · 강조 막대
+       --secondary:{Secondary};          답이 「기본」이면 Primary 와 같은 값
+       --on-primary-rgb:255,255,255;     Primary 가 유채색이면 흰색
+       --paper:{Default 바탕}; --paper-rgb:{바탕 RGB}; --paper-2:{…}; --line:{…}; --line-2:{…};
+       --ink-2:{…}; --ink-3:{…};          Default — 답이 「기본」이면 Primary 색상 계열(쿨/웜) 저채도 중립
+     }
+   - ink(본문)는 거의 검정 범위를 벗어나지 않는다. 가독성 기준선이다. --surface 는 흰색 유지.
+   - Primary 위에는 paper 글자가 올라간다 — Primary 는 흰 글자 대비 4.5:1 이상의 짙은 색.
+     밝은 브랜드색(옐로 · 라임 등)은 Secondary 로 돌리고 Primary 는 같은 계열의 짙은 단계.
+   - Secondary 는 꼭 필요한 곳(주의 · 미확정 · 검토대기 태그 · 박스)에만 — 한 그룹 안 강조색은 하나.
+
+   콘텐츠 영역도 CI 톤으로 맞춘다(2026-10-22 지시) — 포인트 색만 바꾸고 웜 베이지 바탕을
+   그대로 두면 톤이 따로 논다. Default 6개를 CI 색상 계열(쿨/웜)의 저채도 중립색으로 함께 바꾼다.
+   토큰만 바꾸면 따라오는 곳 (2026-11-16 연결 — 선택자별 덮기 불필요):
+     --accent(= Primary) : .topbar · .lnb a.active · header.cover 선 · h2 선 · .tag.pick · .concept 선 ·
+                           thead 선 · tr.grp 선 · .findings 점 · .node.key · .fnode.key · .thead ·
+                           .module .badge · .note.key 선 · .closing · .totop · a.ext hover · 그래프 .key
+     --on-primary-rgb    : .logo .divider · .logo .sub · .topbar-meta · .topbar-meta .divider ·
+                           .lnb a.active b · .thead .no · .rb.inv · .closing .sub · 어두운 블록 안 a.ext 밑줄
+     --paper-rgb         : 모바일 .lnb 반투명 바탕
+     예) 네이비 계열 CI(B자산운용 #003477) — Primary 만 받고 Secondary · Default 는 「기본」
+     :root{ --primary:#003477; --secondary:#003477; --on-primary-rgb:255,255,255;
+            --paper:#F2F5F9; --paper-rgb:242,245,249; --paper-2:#E6ECF3; --surface:#FFFFFF; --ink:#141A24;
+            --ink-2:#4A5466; --ink-3:#8790A0; --line:#D3DBE6; --line-2:#E5EAF1; }
+   -------------------------------------------------------------------------- */
+
+
+/* ===== 3. 리셋 · 본문 ==================================================== */
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{
+  margin:0; padding:0;
+  font-family:var(--font-body);
+  font-size:16px; line-height:1.75; letter-spacing:-.003em;
+  color:var(--ink); background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  /* 줄바꿈은 어절 단위 — 한글이 글자 단위로 끊기지 않게 (2026-09-17 오너 지시) */
+  word-break:keep-all; overflow-wrap:break-word;
+}
+/* 두 줄로 떨어지는 제목·결론 문장은 양쪽 줄 길이를 맞춘다 (미지원 브라우저는 무시) */
+h1,h2,h3,.concept p,.closing p,.cover .lead{text-wrap:balance;}
+
+
+/* ===== 4. 상단 토프바 (다크) ============================================= */
+.topbar{position:sticky;top:0;z-index:50;background:var(--accent);}
+.topbar-inner{
+  max-width:1200px;margin:0 auto;padding:0 24px;height:var(--navh);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.logo{
+  font-family:var(--font-title);font-weight:700;font-size:13.5px;letter-spacing:.02em;
+  color:var(--paper);cursor:default;user-select:none;white-space:nowrap;
+}
+.logo .divider{font-weight:400;color:rgba(var(--on-primary-rgb),.5);margin:0 8px;}
+.logo .sub{font-weight:500;color:rgba(var(--on-primary-rgb),.82);}
+.topbar-meta{
+  font-family:var(--font-title);font-weight:500;font-size:12px;letter-spacing:.03em;
+  color:rgba(var(--on-primary-rgb),.72);white-space:nowrap;cursor:default;user-select:none;
+}
+.topbar-meta b{font-weight:600;color:var(--paper);}
+.topbar-meta .divider{color:rgba(var(--on-primary-rgb),.4);margin:0 7px;}
+
+
+/* ===== 5. 레이아웃 — 좌측 LNB + 콘텐츠 =================================== */
+.layout{max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;gap:36px;padding:0 24px;}
+/* LNB 상단 정렬 — margin-top 은 0 이다(2026-08-27 보정).
+   52px 을 주면 표지를 .doc 안에 두는 골격에서는 표지 텍스트에 맞지만,
+   표지를 .layout 위에 풀블리드로 빼는 골격에서는 콘텐츠 상단보다 52px 내려앉는다.
+   0 이면 sticky top(= navh + 24) 이 두 골격 모두에서 위치를 결정한다. */
+.lnb{
+  position:sticky;top:calc(var(--navh) + 24px);
+  flex:0 0 186px;max-height:calc(100vh - var(--navh) - 48px);overflow-y:auto;
+  border:1px solid var(--line);background:var(--surface);
+  padding:12px 8px;margin-top:0;scrollbar-width:thin;
+}
+.lnb::-webkit-scrollbar{width:3px;}
+.lnb::-webkit-scrollbar-thumb{background:var(--line);}
+.lnb ul{list-style:none;margin:0;padding:0;}
+.lnb li{margin:0 0 1px;}
+.lnb a{
+  display:block;font-family:var(--font-title);font-weight:500;font-size:12.5px;line-height:1.45;
+  color:var(--ink-2);text-decoration:none;padding:7px 10px;border-radius:2px;
+}
+.lnb a b{font-weight:700;color:var(--ink-3);margin-right:7px;}
+.lnb a:hover{background:var(--paper-2);color:var(--ink);}
+.lnb a.active{background:var(--accent);color:var(--paper);}
+.lnb a.active b{color:rgba(var(--on-primary-rgb),.7);}
+.doc{flex:1;min-width:0;max-width:940px;padding:0 0 90px;}
+
+
+/* ===== 6. 표지 =========================================================== */
+header.cover{padding:52px 0 32px;border-bottom:2px solid var(--accent);margin-bottom:40px;}
+.eyebrow{
+  font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:.08em;
+  color:var(--ink-2);margin:0 0 18px;
+}
+h1{font-family:var(--font-title);font-weight:900;font-size:32px;line-height:1.38;margin:0 0 20px;letter-spacing:-.025em;}
+h1 .lead{display:block;font-weight:400;font-size:17px;color:var(--ink-2);margin-bottom:9px;letter-spacing:-.01em;}
+.meta{display:flex;flex-wrap:wrap;gap:0 28px;font-size:13px;color:var(--ink-3);margin-top:24px;}
+.meta span b{font-family:var(--font-title);font-weight:600;color:var(--ink-2);}
+
+
+/* ===== 7. 목차 =========================================================== */
+.toc{border:1px solid var(--line);background:var(--surface);padding:22px 26px 18px;margin:0 0 44px;}
+.toc h2{
+  font-family:var(--font-title);font-weight:600;font-size:14px;margin:0 0 14px;
+  padding:0;border:0;letter-spacing:.06em;color:var(--ink-2);
+}
+.toc ol{list-style:none;margin:0;padding:0;columns:2;column-gap:40px;}
+.toc > ol > li{margin:0 0 11px;break-inside:avoid;page-break-inside:avoid;}
+.toc > ol > li > a{
+  font-family:var(--font-title);font-weight:700;font-size:14px;letter-spacing:-.015em;
+  color:var(--ink);text-decoration:none;
+}
+.toc > ol > li > a:hover{text-decoration:underline;}
+.toc > ol > li > a .n{font-weight:500;color:var(--ink-3);margin-right:7px;}
+.toc ul{list-style:none;margin:3px 0 0;padding:0 0 0 21px;}
+.toc ul li{margin:0 0 1px;}
+.toc ul li a{font-size:12.5px;color:var(--ink-2);text-decoration:none;line-height:1.6;}
+.toc ul li a:hover{color:var(--ink);text-decoration:underline;}
+.toc ul li a:before{content:"– ";color:var(--ink-3);}
+
+
+/* ===== 8. 섹션 · 인라인 ================================================== */
+section{margin:0 0 42px;}
+h2{
+  font-family:var(--font-title);font-weight:800;font-size:20px;margin:0 0 16px;
+  padding-bottom:9px;border-bottom:1px solid var(--accent);letter-spacing:-.025em;
+}
+h2 .num{font-weight:500;color:var(--ink-3);margin-right:9px;}
+h3{
+  font-family:var(--font-title);font-weight:700;font-size:16px;margin:26px 0 9px;
+  letter-spacing:-.02em;color:var(--ink);
+}
+h3:first-of-type{margin-top:16px;}
+/* 앵커 이동 목적지 보정 (2026-08-27) — LNB·목차·본문 링크가 어디로 점프하든
+   sticky 토프바(52px)가 제목을 덮지 않게 한다. h2/h3 에만 걸면 <section id="sN">
+   처럼 래퍼가 id 를 갖는 문서에서 제목이 통째로 가려진다. id 를 가진 모든
+   이동 대상에 준다. */
+[id]{scroll-margin-top:calc(var(--navh) + 20px);}
+
+p{margin:0 0 12px;}
+ul,ol{margin:0 0 12px;padding-left:20px;}
+li{margin-bottom:6px;}
+li::marker{color:var(--ink-3);}
+strong{font-weight:700;}
+a{color:var(--ink);}
+.muted{color:var(--ink-2);}
+.dim{color:var(--ink-3);}
+.small{font-size:14.5px;}
+.sm{font-size:13.5px;}
+.no{color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.star{color:var(--warn);font-weight:700;}
+
+/* 태그 — .chk = 검토대기/미확정, .pick = 확정/선택안 */
+.tag{
+  display:inline-block;font-family:var(--font-title);font-weight:500;font-size:11.5px;line-height:1.5;
+  padding:1px 7px;border:1px solid var(--line);border-radius:2px;color:var(--ink-3);
+  white-space:nowrap;vertical-align:2px;
+}
+.tag.chk{border-color:var(--warn);color:var(--warn);}
+.tag.pick{border-color:var(--accent);color:var(--accent);font-weight:700;}
+
+.jump{font-size:12.5px;color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line);}
+.jump:hover{color:var(--ink);border-bottom-color:var(--ink);}
+
+
+/* ===== 9. 콘셉트 (섹션 두괄식 한 문장) =================================== */
+.concept{border-left:3px solid var(--accent);background:var(--surface);padding:22px 26px;margin:0 0 20px;}
+.concept p{
+  margin:0;font-family:var(--font-title);font-weight:800;font-size:20px;
+  line-height:1.55;letter-spacing:-.025em;
+}
+.concept .sub{
+  margin-top:11px;font-family:var(--font-body);font-size:15px;font-weight:400;
+  line-height:1.7;letter-spacing:-.003em;color:var(--ink-2);
+}
+
+
+/* ===== 10. 표 =========================================================== */
+table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:15px;background:var(--surface);}
+caption{caption-side:top;text-align:left;font-size:13px;color:var(--ink-3);padding-bottom:7px;}
+th,td{border-bottom:1px solid var(--line-2);padding:10px 12px;text-align:left;vertical-align:top;}
+thead th{
+  font-family:var(--font-title);font-weight:600;font-size:13.5px;letter-spacing:-.01em;
+  border-top:1px solid var(--accent);border-bottom:1px solid var(--line);
+  background:var(--paper-2);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:1px solid var(--line);}
+td.c,th.c{text-align:center;white-space:nowrap;}
+.col-n{width:44px;text-align:center;font-family:var(--font-title);font-weight:600;color:var(--ink-3);}
+tr.grp td{background:var(--paper-2);font-family:var(--font-title);font-weight:600;border-top:1px solid var(--accent);}
+tr.subgrp td{
+  background:var(--paper);color:var(--ink-3);font-family:var(--font-title);
+  font-weight:600;font-size:12px;padding:5px 12px;
+}
+/* 넓은 표는 반드시 이 래퍼 안에 둔다 — 페이지 가로 스크롤 금지 */
+.table-scroll,.scroll{overflow-x:auto;}
+table.src td{font-size:14.5px;}
+table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
+.path{font-size:12px;color:var(--ink-3);word-break:break-all;}
+
+
+/* ===== 11. 진단 박스 ==================================================== */
+.findings{border:1px solid var(--line);background:var(--surface);padding:20px 24px 8px;}
+.findings.alert{border-color:var(--warn);}
+.findings ul{list-style:none;padding-left:0;}
+.findings li{position:relative;padding-left:18px;margin-bottom:10px;}
+.findings li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;background:var(--accent);}
+.findings.alert li:before{background:var(--warn);}
+
+.legend{
+  border:1px solid var(--line);background:var(--surface);padding:12px 16px;margin:10px 0 0;
+  font-size:13.5px;color:var(--ink-2);
+}
+.legend b{font-family:var(--font-title);font-weight:700;color:var(--ink);}
+
+
+/* ===== 12. 도식 — 세로 루프 / 가로 플로우 =============================== */
+.loop{border:1px solid var(--line);background:var(--surface);padding:26px 20px;margin:6px 0 14px;}
+.loop-row{display:flex;justify-content:center;}
+.node{
+  border:1px solid var(--line);background:var(--paper);padding:11px 16px;
+  font-family:var(--font-title);font-weight:600;font-size:13.5px;letter-spacing:-.015em;
+  text-align:center;min-width:210px;max-width:440px;
+}
+.node.key{border-color:var(--accent);background:var(--accent);color:var(--paper);}
+.node small{display:block;font-family:var(--font-body);font-weight:400;font-size:12px;opacity:.85;margin-top:3px;}
+.node.key small a{color:var(--paper);text-decoration:underline;}
+.arrow{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.4;padding:7px 0;}
+.arrow b{display:block;font-size:16px;color:var(--line);font-weight:400;}
+.loop-back{
+  margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);
+  text-align:center;font-size:13px;color:var(--ink-2);
+}
+.flow{
+  border:1px solid var(--line);background:var(--surface);padding:20px 16px;margin:6px 0 14px;
+  display:flex;align-items:stretch;justify-content:center;flex-wrap:wrap;gap:0;
+}
+.flow .fnode{
+  border:1px solid var(--line);background:var(--paper);padding:10px 14px;
+  font-family:var(--font-title);font-weight:600;font-size:12.5px;letter-spacing:-.015em;
+  text-align:center;display:flex;flex-direction:column;justify-content:center;min-width:120px;
+}
+.flow .fnode.key{border-color:var(--accent);background:var(--accent);color:var(--paper);}
+.flow .fnode small{font-family:var(--font-body);font-weight:400;font-size:11px;opacity:.8;margin-top:2px;}
+.flow .farrow{display:flex;align-items:center;padding:0 8px;color:var(--ink-3);font-size:14px;}
+
+
+/* ===== 13. 계층 트리 (IA · 메뉴 구조) =================================== */
+.tree{margin:14px 0 6px;}
+.ttop{display:flex;justify-content:center;}
+.ttop .tnode{
+  background:var(--surface);border:1px solid var(--line);padding:8px 22px;text-align:center;
+  font-family:var(--font-title);font-weight:700;font-size:13.5px;
+}
+.ttop .tnode .s{display:block;font-family:var(--font-body);font-weight:400;font-size:11.5px;color:var(--ink-3);}
+.tstub{width:1px;height:16px;background:var(--ink-3);margin:0 auto;}
+.tcols{display:flex;gap:8px;border-top:1px solid var(--ink-3);padding-top:14px;align-items:flex-start;}
+.tcol{flex:1;min-width:96px;position:relative;}
+.tcol::before{content:'';display:block;width:1px;height:12px;background:var(--ink-3);margin:-14px auto 2px;}
+.thead{
+  background:var(--accent);color:var(--paper);padding:7px 5px 6px;text-align:center;
+  font-family:var(--font-title);font-weight:600;font-size:12.5px;line-height:1.3;
+}
+.thead .no{display:block;font-weight:400;font-size:10px;color:rgba(var(--on-primary-rgb),.6);}
+.titem{
+  background:var(--surface);border:1px solid var(--line);padding:5px 4px 4px;margin-top:6px;
+  text-align:center;font-size:11.5px;line-height:1.35;word-break:keep-all;
+}
+.rbs{display:block;margin-top:2px;line-height:1.5;}
+.rb{
+  display:inline-block;border:1px solid var(--line);background:var(--paper-2);font-size:9.5px;
+  line-height:1.5;padding:0 3px;margin:0 1px;color:var(--ink-2);font-weight:600;
+}
+.rb.inv{background:rgba(var(--on-primary-rgb),.16);border-color:rgba(var(--on-primary-rgb),.3);color:rgba(var(--on-primary-rgb),.9);font-weight:400;}
+.rb.none{color:var(--ink-3);background:transparent;}
+.tcap{font-size:10.5px;color:var(--ink-3);text-align:center;margin-top:9px;letter-spacing:1.5px;}
+
+
+/* ===== 14. 모듈 · 노트 ================================================== */
+.module{border-top:1px solid var(--line-2);padding-top:18px;margin-top:18px;}
+.module:first-of-type{border-top:0;padding-top:0;margin-top:0;}
+.module h3{margin-top:0;}
+.module h3 .badge{
+  display:inline-block;min-width:22px;height:22px;line-height:22px;text-align:center;
+  background:var(--accent);color:var(--paper);font-family:var(--font-title);font-weight:700;font-size:12px;
+  border-radius:50%;margin-right:8px;vertical-align:1px;padding:0 6px;letter-spacing:0;
+}
+.module h3 .badge.sq{border-radius:2px;font-weight:800;}
+
+.note{border-left:2px solid var(--line);padding:2px 0 2px 14px;margin:12px 0;font-size:14.5px;color:var(--ink-2);}
+.note b{font-family:var(--font-title);font-weight:700;color:var(--ink);}
+.note.key{border-left-color:var(--accent);}
+.note.warn,.warn{border-left:2px solid var(--warn);padding:2px 0 2px 14px;margin:14px 0;font-size:14.5px;color:var(--ink-2);}
+.warn b{color:var(--warn);}
+
+
+/* ===== 15. 등급 목록 (dl) =============================================== */
+.tiers{margin:10px 0 14px;}
+.tier{display:flex;gap:16px;border-bottom:1px solid var(--line-2);padding:12px 0;font-size:15px;}
+.tier:first-child{border-top:1px solid var(--line);}
+.tier dt{flex:0 0 200px;font-family:var(--font-title);font-weight:700;letter-spacing:-.015em;}
+.tier dt small{display:block;font-family:var(--font-body);font-weight:400;font-size:12.5px;color:var(--ink-3);}
+.tier dd{margin:0;color:var(--ink-2);}
+
+
+/* ===== 16. 마무리 · 푸터 · 맨위로 ======================================= */
+.closing{background:var(--accent);color:var(--paper);border:1px solid var(--accent);padding:38px 26px;text-align:center;}
+.closing p{
+  margin:0;font-family:var(--font-title);font-weight:900;font-size:22px;
+  line-height:1.5;letter-spacing:-.03em;
+}
+.closing .sub{
+  margin-top:12px;font-family:var(--font-body);font-size:14px;font-weight:400;
+  letter-spacing:-.003em;color:rgba(var(--on-primary-rgb),.78);
+}
+.closing .sub strong{color:var(--paper);}
+
+footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);line-height:1.7;}
+footer a{color:var(--ink-2);}
+
+.totop{
+  position:fixed;right:24px;bottom:24px;z-index:40;width:42px;height:42px;line-height:40px;
+  text-align:center;border:1px solid var(--accent);background:var(--accent);color:var(--paper);
+  text-decoration:none;font-size:15px;border-radius:50%;
+}
+.totop:hover{background:var(--surface);color:var(--accent);}
+
+
+/* ===== 17. mermaid 도식 (오프라인 폴백 포함) ============================ */
+.mmwrap{border:1px solid var(--line);background:var(--surface);padding:18px 12px;margin:8px 0 6px;overflow-x:auto;}
+.mmwrap svg{display:block;margin:0 auto;height:auto;}
+pre.mermaid{
+  margin:0;font-family:var(--font-body);font-size:11.5px;line-height:1.5;color:var(--ink-3);
+  white-space:pre-wrap;text-align:left;
+}
+pre.mermaid.mm-fail::before{
+  content:"오프라인 상태 — 도식 대신 머메이드 정의 텍스트 표시";
+  display:block;font-weight:600;color:var(--warn);margin-bottom:8px;
+}
+
+
+/* ===== 18. 반응형 ======================================================= */
+@media (max-width:960px){
+  .layout{display:block;padding:0 16px;}
+  .lnb{
+    position:sticky;top:var(--navh);z-index:45;flex:none;max-height:none;
+    overflow-y:visible;overflow-x:auto;border:0;border-bottom:1px solid var(--line);
+    background:rgba(var(--paper-rgb),.96);backdrop-filter:saturate(180%) blur(6px);
+    padding:6px 4px;margin:0 -16px;
+  }
+  .lnb ul{display:flex;gap:2px;white-space:nowrap;padding:0 12px;}
+  .lnb li{margin:0;}
+  .lnb a{padding:6px 9px;}
+  .doc{max-width:none;padding-bottom:70px;}
+}
+@media (max-width:640px){
+  body{font-size:15.5px;}
+  .topbar-inner{padding:0 16px;}
+  .logo{font-size:12px;white-space:normal;line-height:1.4;}
+  .topbar-meta{font-size:11px;}
+  h1{font-size:25px;}
+  h2{font-size:18px;}
+  .concept p{font-size:17.5px;}
+  .closing p{font-size:19px;}
+  .toc{padding:18px 18px 14px;}
+  .toc ol{columns:1;}
+  .tier{display:block;}
+  .tier dt{margin-bottom:4px;}
+  .node{min-width:0;width:100%;}
+  .flow{flex-direction:column;}
+  .flow .fnode{min-width:0;}
+  .flow .farrow{justify-content:center;padding:6px 0;transform:rotate(90deg);}
+  .totop{right:14px;bottom:14px;}
+}
+
+
+/* ===== 19. 인쇄 (A4) ==================================================== */
+@page{size:A4;margin:16mm 14mm;}
+@media print{
+  html{scroll-behavior:auto;}
+  body{font-size:11pt;line-height:1.6;background:#fff;}
+  .topbar,.lnb,.totop{display:none !important;}
+  .layout{display:block;max-width:none;padding:0;}
+  .doc{max-width:none;padding:0;}
+  header.cover{padding-top:0;}
+  h1{font-size:21pt;}
+  h2{font-size:13.5pt;}
+  h3{font-size:11pt;}
+  .concept p{font-size:13.5pt;}
+  .closing p{font-size:15pt;}
+  section{margin-bottom:26px;}
+  thead th{background:#f2f2f2;}
+  table,.loop,.flow,.findings,.closing,.concept,.toc,.tree,.mmwrap{break-inside:avoid;page-break-inside:avoid;}
+  tr,li,.module,.tier{break-inside:avoid;page-break-inside:avoid;}
+  h2,h3{break-after:avoid;page-break-after:avoid;}
+  thead{display:table-header-group;}
+  a{text-decoration:none;color:var(--ink);}
+  table.src a:after{content:" (" attr(href) ")";font-size:8.5pt;color:#666;}
+  .node.key,.flow .fnode.key,.closing,.module h3 .badge,.thead,.rb.inv{
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .mmwrap svg{max-width:100% !important;height:auto !important;}
+  .tcols{min-width:0 !important;}
+  .stats{break-inside:avoid;page-break-inside:avoid;}
+  .gantt{break-inside:avoid;page-break-inside:avoid;}
+  .gbar{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+
+
+/* ===== 20. 요약 스탯 그리드 (Executive Header · prd 하네스) ============
+   섹션 0 "퀵 스탯" 등 핵심 수치를 카드 한 줄로 보여줄 때 쓴다.
+   색으로 구분하지 않는다 — 헤어라인(--line)으로 카드를 나눈 흰 격자.
+   ========================================================================= */
+.stats{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);margin:10px 0 16px;}
+.stat{flex:1 1 150px;background:var(--surface);padding:14px 18px;}
+.stat .v{font-family:var(--font-title);font-weight:800;font-size:21px;letter-spacing:-.02em;color:var(--ink);white-space:nowrap;}
+.stat .v .u{font-family:var(--font-body);font-weight:400;font-size:11.5px;color:var(--ink-3);margin-left:2px;}
+.stat .l{font-size:12.5px;color:var(--ink-2);margin-top:4px;}
+
+
+/* ===== 21. 간트 · 타임라인 (WBS 시각화 · prd 하네스) ===================
+   직군·단계는 색상이 아니라 --ink 명도 단계(.t2~.t4)로 구분한다.
+   게이트·마일스톤만 .key 로 반전해 강조 — 다른 컴포넌트와 동일 규칙.
+   ========================================================================= */
+.gantt{border:1px solid var(--line);background:var(--surface);padding:16px;margin:8px 0 14px;overflow-x:auto;}
+.gantt-grid{display:grid;grid-template-columns:160px 1fr;font-size:11.5px;min-width:640px;}
+.gantt-head{grid-column:2;display:flex;border-bottom:1px solid var(--ink);padding-bottom:6px;margin-bottom:6px;}
+.gantt-head span{flex:1;text-align:center;font-family:var(--font-title);font-weight:600;color:var(--ink-2);}
+.gantt-row{display:contents;}
+.gantt-label{padding:6px 10px 6px 0;color:var(--ink-2);white-space:nowrap;border-top:1px solid var(--line-2);display:flex;align-items:center;}
+.gantt-row:first-child .gantt-label{border-top:0;}
+.gantt-track{position:relative;height:28px;border-top:1px solid var(--line-2);}
+.gantt-row:first-child .gantt-track{border-top:0;}
+.gbar{position:absolute;top:5px;height:18px;background:var(--ink);opacity:.85;}
+.gbar.t2{opacity:.62;}
+.gbar.t3{opacity:.42;}
+.gbar.t4{opacity:.24;}
+.gbar.key{opacity:1;border:1px solid var(--ink);}
+.gantt-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:11px;color:var(--ink-2);}
+.gantt-legend i{display:inline-block;width:10px;height:10px;background:var(--ink);margin-right:5px;vertical-align:-1px;}
+.gantt-legend .t2 i{opacity:.62;} .gantt-legend .t3 i{opacity:.42;} .gantt-legend .t4 i{opacity:.24;}
+
+
+/* ===== 22. 출처 · 고유명사 외부링크 (리서치 · 분석 문서) — 2026-10-19 지시 · 2026-11-10 보강 =====
+   출처 URL이 있는 항목은 [S번호] 태그만 두지 않고 본문에 직접 링크를 건다.
+   - 출처 1건 = 항목 타이틀(굵은 라벨 · 표 첫 열 서비스명)에 / 2건 이상 = 각 출처가 받치는 구절에 각각
+   - 스탯 라벨 · 표 캡션 · 출처 표 「자료」 열 제목까지 포함, [S번호] 태그는 그대로 둔다
+   - 마크업: <a class="ext" href="URL" target="_blank" rel="noopener">텍스트</a>
+     굵은 타이틀은 <b><a class="ext" …>타이틀</a></b>
+   - 본문 고유명사(2026-11-10 지시): 출처 인용이 아니어도 사이트 · 서비스 · 기관 · 제품 · 도구 이름은 공식 URL이 있으면
+     같은 a.ext 로 연결한다. 섹션(h2)당 같은 URL 첫 등장 1회, 제목 · 표지 · 목차 · 거버닝 문장 · 출처 표 · 존재하지 않는 도메인 제외,
+     브랜드+ETF 처럼 이어진 이름은 전체에 걸어 아이콘이 단어 중간에 끼지 않게 한다 (규칙 정본 = agent/proposal/CLAUDE.md 5a)
+   기본 = 옅은 밑줄 + 텍스트 우측 끝 블랙 라인 외부링크 아이콘(Lucide external-link · currentColor · 투명도 없음 — 2026-11-10 지시)
+   hover · focus = 반전(ink 바탕 · paper 글자) + 아이콘 우상향 1px — 강조는 색이 아니라 반전
+   좌우 padding 1px만 둔다 — 음수 margin을 쓰면 뒤 문장부호가 반전 바탕에 가려진다
+   ========================================================================= */
+a.ext{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-decoration-thickness:1px;text-underline-offset:3px;
+  padding:0 1px;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  transition:background-color .15s ease,color .15s ease,text-decoration-color .15s ease;}
+a.ext::after{content:"";display:inline-block;width:.8em;height:.8em;margin-left:3px;vertical-align:-.04em;background:currentColor;opacity:1;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6'/%3E%3Cpath d='M10 14 21 3'/%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition:opacity .15s ease,transform .15s ease;}
+a.ext:hover,a.ext:focus-visible{background:var(--accent);color:var(--paper);text-decoration-color:transparent;outline:none;}
+a.ext:hover::after,a.ext:focus-visible::after{opacity:1;transform:translate(1px,-1px);}
+/* [S번호] 출처 태그 — 링크 뒤에 그대로 둔다 */
+.src-tag{display:inline-block;font-size:11px;color:var(--ink-3);white-space:nowrap;}
+/* 출처 표(§10 table.src)의 자료명 링크 — 정본 table.src a 의 작은 글씨 · 회색 · break-all을 되돌린다 */
+table.src a.ext{font-size:inherit;word-break:keep-all;color:var(--ink);}
+table.src a.ext:hover,table.src a.ext:focus-visible{color:var(--paper);}
+/* 어두운 블록 안 링크 */
+.node.key a.ext,.flow .fnode.key a.ext,.closing a.ext{text-decoration-color:rgba(var(--on-primary-rgb),.4);}
+.node.key a.ext:hover,.flow .fnode.key a.ext:hover,.closing a.ext:hover{background:var(--paper);color:var(--ink);}
+@media print{
+  a.ext{text-decoration:none;padding:0;}
+  a.ext::after,table.src a.ext::after{content:none;display:none;}
+}
+
+
+/* ===== 23. 막대 · 마일스톤 그래프 (리서치 · 분석 문서) — 2026-11-11 =========
+   수치 비교(배점 · 점유율 · 구성)는 가로 막대 .hbars, 시점 추이는 세로 막대 .cols,
+   발주 일정 D-day는 마일스톤 .ms 를 쓴다. 작업 일정 · 로드맵은 §21 간트를 그대로 쓰고,
+   마감 · 외부 일정 표시만 .gbar.mk(짧은 막대 · --accent)로 구분한다.
+   - 계열은 하나: 막대 = --ink, 강조 막대만 .key(= --accent, CI 미적용 문서는 ink와 같음),
+     참고 · 비교 대상은 .sub(옅은 회색). 값 글자는 막대 색이 아니라 항상 ink
+   - 막대 길이 = style="--v:N"(최댓값 대비 0 – 100, 세로 막대는 값 글자 자리 때문에 최대 86).
+     데이터 끝 4px 라운드, 막대 사이 간격 유지, 숫자는 시작 · 최대 · 최신처럼 골라서만 표시
+   - 그래프마다 같은 수치를 표로도 남긴다(표 caption = 출처 · 기준일). 표가 정본, 그래프는 읽기 보조
+   - .chart-cap = 무엇 · 출처 · 기준일 / .chart-note = 수치에서 읽을 함의 한 줄 / 막대 hover = title 속성
+   ========================================================================= */
+.chart{border:1px solid var(--line);background:var(--surface);padding:16px 18px 14px;margin:8px 0 14px;}
+.chart-cap{font-size:13px;color:var(--ink-3);margin:0 0 12px;}
+.chart-note{font-size:13px;color:var(--ink-2);margin:12px 0 14px;padding-top:9px;border-top:1px solid var(--line-2);}
+.chart .chart-note{margin-bottom:0;}
+.chart-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin:8px 0 14px;}
+.chart-pair .chart{margin:0;}
+.hbars{display:grid;gap:7px;}
+.hbar{display:grid;grid-template-columns:minmax(104px,34%) 1fr 58px;align-items:center;column-gap:10px;font-size:13px;}
+.hbar .lb{color:var(--ink-2);line-height:1.35;}
+.hbar .lb small{display:block;font-size:11.5px;color:var(--ink-3);}
+.hbar .tr{height:14px;border-left:1px solid var(--line);}
+.hbar .tr i{display:block;height:100%;width:calc(var(--v,0) * 1%);background:var(--ink);border-radius:0 4px 4px 0;}
+.hbar.key .lb{color:var(--ink);font-weight:600;}
+.hbar.key .tr i{background:var(--accent);}
+.hbar.sub .tr i{background:var(--ink-3);opacity:.5;}
+.hbar .vl{font-family:var(--font-title);font-weight:700;color:var(--ink);text-align:right;white-space:nowrap;}
+.hbar .vl small{font-family:var(--font-body);font-weight:400;font-size:11px;color:var(--ink-3);margin-left:2px;}
+.cols{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);column-gap:10px;align-items:end;height:190px;border-bottom:1px solid var(--line);}
+.col{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;}
+.col i{display:block;width:min(44px,72%);height:calc(var(--v,0) * 1%);background:var(--ink);border-radius:4px 4px 0 0;}
+.col.key i{background:var(--accent);}
+.col.sub i{background:var(--ink-3);opacity:.5;}
+.col .vl{font-family:var(--font-title);font-weight:700;font-size:12.5px;color:var(--ink);margin-bottom:4px;white-space:nowrap;}
+.cols-x{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);column-gap:10px;margin-top:6px;font-size:11.5px;color:var(--ink-3);text-align:center;line-height:1.3;}
+.ms{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));row-gap:18px;margin:10px 0 2px;}
+.ms > div{position:relative;border-top:2px solid var(--line);padding:14px 10px 0 0;}
+.ms > div::before{content:"";position:absolute;top:-7px;left:0;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--ink-3);}
+.ms > div.done{border-top-color:var(--ink);}
+.ms > div.done::before{background:var(--ink);border-color:var(--ink);}
+.ms > div.key::before{background:var(--accent);border-color:var(--accent);}
+.ms .d{font-family:var(--font-title);font-weight:700;font-size:14px;color:var(--ink);white-space:nowrap;}
+.ms .w{font-size:11.5px;color:var(--ink-3);}
+.ms .e{font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.4;}
+.ms > div.key .e{color:var(--ink);font-weight:600;}
+.gbar.mk{background:var(--accent);opacity:1;border-radius:2px;}
+.gantt-legend .mk i{background:var(--accent);}
+@media print{
+  .chart,.chart-pair{break-inside:avoid;page-break-inside:avoid;}
+  .hbar .tr i,.col i,.ms > div::before,.gbar.mk{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+/* ▲▲▲ 삽입 끝 ▲▲▲ */
+
+/* ===== 컬러 3종 — Primary 보라(사용자 지정) · Secondary = Primary · Default = 보라 계열 저채도 중립 (§2b) ===== */
+:root{
+  --primary:#4B2A8C;
+  --secondary:#4B2A8C;
+  --on-primary-rgb:255,255,255;
+  --paper:#F5F3F9; --paper-rgb:245,243,249; --paper-2:#EBE7F3;
+  --line:#D9D3E6; --line-2:#E8E4F0; --ink:#17141F; --ink-2:#4E4860; --ink-3:#8B8599;
+}
+
+/* ===== 이 문서 전용 — 명령어 · 요청 문장 블록, 인라인 코드, 색 견본 ===== */
+code{font-family:'Cascadia Code','Consolas','D2Coding',ui-monospace,monospace;font-size:.86em;
+  background:var(--paper-2);padding:1px 5px;border-radius:2px;overflow-wrap:anywhere;word-break:keep-all;}
+.cmd{position:relative;border:1px solid var(--line);background:var(--surface);margin:8px 0 14px;}
+.cmd .cap{display:block;font-family:var(--font-title);font-weight:600;font-size:12px;letter-spacing:.03em;
+  color:var(--ink-2);background:var(--paper-2);border-bottom:1px solid var(--line);padding:6px 16px;}
+.cmd pre{margin:0;padding:13px 16px 14px;font-family:'Cascadia Code','Consolas','D2Coding',ui-monospace,monospace;
+  font-size:13.5px;line-height:1.7;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;color:var(--ink);}
+.cmd pre .ph{color:var(--accent);font-weight:700;}
+.cmd pre .cm{color:var(--ink-3);}
+.cmd button{position:absolute;top:4px;right:6px;font-family:var(--font-title);font-weight:600;font-size:11.5px;
+  padding:2px 10px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:2px;cursor:pointer;
+  transition:background-color .15s ease,color .15s ease;}
+.cmd button:hover,.cmd button:focus-visible{background:var(--accent);border-color:var(--accent);color:#fff;outline:none;}
+.sw{display:inline-block;width:.85em;height:.85em;border:1px solid var(--line);vertical-align:-.08em;margin-right:5px;}
+td code{font-size:.84em;}
+@media print{ .cmd button{display:none;} }
+
+/* ===== 이 문서 전용 — 본문 폭 확장 · 글자 한 단계 확대 (2026-11-19 사용자 지시, 정본 미변경) =====
+   폭: 레이아웃 1200 → 1400px · 본문 최대 930 → 1130px
+   글자: 16px 이하 +1px, 제목 · 결론 · 수치 +2px (인쇄 크기는 정본 유지) */
+.topbar-inner,.layout{max-width:1400px;}
+.doc{max-width:1130px;}
+body{font-size:17px;}
+.logo{font-size:14.5px;}
+.topbar-meta{font-size:13px;}
+.lnb a{font-size:13.5px;}
+.eyebrow{font-size:14px;}
+h1{font-size:34px;}
+h1 .lead{font-size:18px;}
+.meta{font-size:14px;}
+.toc h2{font-size:15px;}
+.toc > ol > li > a{font-size:15px;}
+.toc ul li a{font-size:13.5px;}
+h2{font-size:22px;}
+h3{font-size:17px;}
+.small{font-size:15.5px;}
+.sm{font-size:14.5px;}
+.tag{font-size:12.5px;}
+.jump{font-size:13.5px;}
+.concept p{font-size:22px;}
+.concept .sub{font-size:16px;}
+table{font-size:16px;}
+caption{font-size:14px;}
+thead th{font-size:14.5px;}
+table.src td{font-size:15.5px;}
+table.src a{font-size:13.5px;}
+.path{font-size:13px;}
+.flow .fnode{font-size:13.5px;}
+.flow .fnode small{font-size:12px;}
+.flow .farrow{font-size:15px;}
+.note,.note.warn,.warn{font-size:15.5px;}
+.tier{font-size:16px;}
+.tier dt small{font-size:13.5px;}
+.closing p{font-size:24px;}
+.closing .sub{font-size:15px;}
+footer{font-size:13px;}
+.stat .v{font-size:23px;}
+.stat .v .u{font-size:12.5px;}
+.stat .l{font-size:13.5px;}
+.module h3 .badge{font-size:13px;min-width:24px;height:24px;line-height:24px;}
+.cmd .cap{font-size:13px;}
+.cmd pre{font-size:14.5px;}
+.cmd button{font-size:12.5px;}
+@media (max-width:640px){
+  body{font-size:16.5px;}
+  h1{font-size:27px;}
+  h2{font-size:20px;}
+  .concept p{font-size:19px;}
+  .closing p{font-size:21px;}
+}
+@media print{
+  body{font-size:11pt;}
+  h1{font-size:21pt;} h2{font-size:13.5pt;} h3{font-size:11pt;}
+  .concept p{font-size:13.5pt;} .closing p{font-size:15pt;}
+}
+</style>
+</head>
+<body id="top">
+
+<!-- ===== 상단 토프바 ===================================================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="logo">UI UX Pro Max<span class="divider">-</span><span class="sub">사용 가이드</span></span>
+    <span class="topbar-meta">20261119<span class="divider">/</span><b>김단영</b></span>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- ===== 좌측 LNB ======================================================= -->
+<aside class="lnb" aria-label="섹션 이동">
+  <ul>
+    <li><a href="#s0"><b>·</b>문서 구성</a></li>
+    <li><a href="#s1"><b>1</b>한눈에 보기</a></li>
+    <li><a href="#s2"><b>2</b>설치</a></li>
+    <li><a href="#s3"><b>3</b>한 번에 입력</a></li>
+    <li><a href="#s4"><b>4</b>단계별 진행</a></li>
+    <li><a href="#s5"><b>5</b>요청 예시</a></li>
+    <li><a href="#s6"><b>6</b>막힐 때</a></li>
+    <li><a href="#sa"><b>·</b>디자인 스킬 6종</a></li>
+    <li><a href="#ssrc"><b>·</b>출처</a></li>
+  </ul>
+</aside>
+
+<div class="doc">
+
+<!-- ===== 표지 =========================================================== -->
+<header class="cover">
+  <p class="eyebrow">Share-Agent-Skill-dy · skills/ui-ux-pro-max-skill</p>
+  <h1>
+    <span class="lead">처음 쓰는 사람을 위한 요청 한 줄 공식</span>
+    UI UX Pro Max 사용 가이드
+  </h1>
+  <p class="muted" style="margin:0;max-width:760px;">
+    제품 유형 · 업종 · 분위기 키워드로 디자인 시스템(패턴 · 스타일 · 컬러 · 서체 · 피할 것)을 추천받고, 그 기준으로 화면 코드와 납품 전 점검까지 잇는 Claude Code 스킬.
+    <strong>처음이면 §3 요청 템플릿 하나로 시작</strong>
+  </p>
+  <div class="meta">
+    <span><b>대상</b> 처음 쓰는 기획자 · 디자이너 · 개발자</span>
+    <span><b>스킬 버전</b> v2.11.0 (MIT)</span>
+    <span><b>작성일</b> 2026-11-19</span>
+    <span><b>문서 버전</b> v0.1</span>
+    <span><b>작성</b> 김단영</span>
+  </div>
+</header>
+
+<!-- ===== 목차 =========================================================== -->
+<nav class="toc" id="s0" aria-label="목차">
+  <h2>구성내용 (목차)</h2>
+  <ol>
+    <li>
+      <a href="#s1"><span class="n">1</span>한눈에 보기</a>
+      <ul>
+        <li><a href="#s1-1">하는 일 · 넣는 것 · 받는 것</a></li>
+        <li><a href="#s1-2">시작 방법 2가지</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#s2"><span class="n">2</span>설치 (처음 한 번)</a>
+      <ul>
+        <li><a href="#s2-1">Python 확인</a></li>
+        <li><a href="#s2-2">설치 방법 고르기</a></li>
+        <li><a href="#s2-3">설치 확인</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#s3"><span class="n">3</span>한 번에 입력할 정보</a>
+      <ul>
+        <li><a href="#s3-1">요청 템플릿</a></li>
+        <li><a href="#s3-2">채운 예시</a></li>
+        <li><a href="#s3-3">키워드 영어 병기</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#s4"><span class="n">4</span>단계별 진행</a>
+      <ul>
+        <li><a href="#s4-1">① 요청 ~ ⑤ 납품 전 점검</a></li>
+      </ul>
+    </li>
+    <li><a href="#s5"><span class="n">5</span>상황별 요청 예시</a></li>
+    <li><a href="#s6"><span class="n">6</span>막힐 때</a></li>
+  </ol>
+  <p class="small muted" style="margin:12px 0 0">
+    부속 — <a class="jump" href="#sa">함께 설치되는 디자인 스킬 6종</a> · <a class="jump" href="#ssrc">출처</a>
+  </p>
+</nav>
+
+<!-- ===== 1. 한눈에 보기 ================================================= -->
+<section>
+  <h2 id="s1"><span class="num">1</span>한눈에 보기</h2>
+
+  <div class="concept">
+    <p>감으로 고르는 디자인이 아니라, 제품 유형으로 고르는 디자인 시스템</p>
+    <p class="sub">검색 DB의 추론 규칙 161개로 제품 유형에 맞는 패턴 · 스타일 · 컬러 · 서체를 한 세트로 추천, 그 세트가 화면 코드의 기준</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="v">84<span class="u">종</span></div><div class="l">UI 스타일</div></div>
+    <div class="stat"><div class="v">192<span class="u">종</span></div><div class="l">컬러 팔레트</div></div>
+    <div class="stat"><div class="v">74<span class="u">종</span></div><div class="l">서체 조합</div></div>
+    <div class="stat"><div class="v">192<span class="u">종</span></div><div class="l">제품 유형</div></div>
+    <div class="stat"><div class="v">99<span class="u">개</span></div><div class="l">UX 지침</div></div>
+    <div class="stat"><div class="v">22<span class="u">종</span></div><div class="l">기술 스택 가이드</div></div>
+  </div>
+  <p class="sm dim" style="margin-top:-8px">스킬 안 검색 DB(data/*.csv) 행 수 · v2.11.0 · 2026-11-19 집계</p>
+
+  <h3 id="s1-1">하는 일 · 넣는 것 · 받는 것</h3>
+  <div class="flow">
+    <div class="fnode">요청 한 줄<small>제품 · 업종 · 분위기</small></div>
+    <div class="farrow">→</div>
+    <div class="fnode key">디자인 시스템 추천<small>패턴 · 스타일 · 컬러 · 서체</small></div>
+    <div class="farrow">→</div>
+    <div class="fnode">저장<small>MASTER.md</small></div>
+    <div class="farrow">→</div>
+    <div class="fnode">화면 구현<small>스택별 코드</small></div>
+    <div class="farrow">→</div>
+    <div class="fnode">납품 전 점검<small>체크리스트</small></div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th style="width:132px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><b>하는 일</b></td><td>UI 디자인 시스템 추천 · 화면 코드 구현 · UX 점검</td></tr>
+        <tr><td><b>넣는 것</b></td><td>제품 유형 · 업종 · 분위기 키워드 · 만들 화면 · 기술 스택 (<a class="jump" href="#s3">§3</a>)</td></tr>
+        <tr><td><b>받는 것</b></td><td>패턴 · 스타일 · 컬러 토큰 10종 · 서체(Google Fonts 링크) · 핵심 효과 · 피할 것 · 납품 전 체크리스트, 이어서 화면 코드</td></tr>
+        <tr><td><b>부르는 법</b></td><td>화면 · UI · 디자인 요청 문장만으로 자동 실행 — 슬래시 명령 불필요</td></tr>
+        <tr><td><b>필요 조건</b></td><td>Claude Code + Python 3 (검색 스크립트용, 추가 패키지 · 인터넷 연결 불필요)</td></tr>
+        <tr><td><b>제외 대상</b></td><td>백엔드 로직 · API · DB 설계처럼 화면과 무관한 작업</td></tr>
+        <tr><td><b>출처</b></td><td><a class="ext" href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener">nextlevelbuilder/ui-ux-pro-max-skill</a>(MIT) 원본 · <a class="ext" href="https://github.com/dnygkim/Share-Agent-Skill-dy/tree/main/skills/ui-ux-pro-max-skill" target="_blank" rel="noopener">공유 리포 백업 폴더</a>(v2.11.0) · 소개 사이트 <a class="ext" href="https://uupm.cc" target="_blank" rel="noopener">uupm.cc</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="s1-2">시작 방법 2가지</h3>
+  <dl class="tiers">
+    <div class="tier"><dt>한 번에<small>빠르게 · 작은 화면 한두 개</small></dt><dd>요청 한 줄에 핵심 5가지 → 추천 · 저장 · 구현까지 연속 진행 — <a class="jump" href="#s3">§3 한 번에 입력할 정보</a></dd></div>
+    <div class="tier"><dt>단계별<small>처음 · 여러 화면 · 팀 공유</small></dt><dd>추천 확인 → 조정 → 저장 → 화면별 구현 → 점검, 단계마다 확인 — <a class="jump" href="#s4">§4 단계별 진행</a></dd></div>
+  </dl>
+</section>
+
+<!-- ===== 2. 설치 ======================================================== -->
+<section>
+  <h2 id="s2"><span class="num">2</span>설치 (처음 한 번)</h2>
+
+  <div class="concept">
+    <p>설치는 처음 한 번, 명령어 두 줄로 끝나는 준비</p>
+    <p class="sub">Python 확인 → 플러그인 설치 → 새 세션에서 확인, 5분 안팎</p>
+  </div>
+
+  <h3 id="s2-1">Python 확인</h3>
+  <div class="cmd"><span class="cap">터미널 · Windows = python / Mac = python3</span><button type="button">복사</button><pre>python --version</pre></div>
+  <ul>
+    <li><code>Python 3.x</code> 표시 → 통과</li>
+    <li>명령어 오류 → <a class="ext" href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>에서 Python 3 설치 후 터미널 재시작 (Windows는 설치 첫 화면 「Add python.exe to PATH」 체크)</li>
+    <li>설치는 사람이 직접 — 스킬은 대신 설치하지 않고 안내만</li>
+  </ul>
+
+  <h3 id="s2-2">설치 방법 고르기</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th class="col-n">#</th><th>방법</th><th>이럴 때</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td class="col-n">A</td><td><b>플러그인 설치</b> <span class="tag pick">권장</span></td><td>내 프로젝트 어디서나 쓸 때</td><td>아래 두 줄 · 디자인 스킬 6종(<a class="jump" href="#sa">부록</a>)도 함께 설치</td></tr>
+        <tr><td class="col-n">B</td><td><b>폴더에서 바로 실행</b></td><td>설치 없이 먼저 체험할 때</td><td>공유 리포 <code>skills/ui-ux-pro-max-skill</code> 폴더에서 <code>claude</code> 실행 · 결과 파일도 그 폴더에 생성 → 실제 작업은 A</td></tr>
+        <tr><td class="col-n">C</td><td><b>CLI 전역 설치</b></td><td>Cursor · Windsurf 등 다른 AI 도구도 함께 쓸 때</td><td><code>npm install -g ui-ux-pro-max-cli</code> → <code>uipro init --ai claude --global</code> · Node.js 필요</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cmd"><span class="cap">A · Claude Code 입력창에 한 줄씩</span><button type="button">복사</button><pre>/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
+/plugin install ui-ux-pro-max@ui-ux-pro-max-skill</pre></div>
+  <p class="note warn"><b>공유 리포 자동 설치 제외</b> 리포 통째 백업 폴더라 <code>share/update.sh</code>가 설치하지 않는 스킬 — 위 A~C 중 하나로 직접 설치</p>
+
+  <h3 id="s2-3">설치 확인</h3>
+  <ol>
+    <li>Claude Code 종료 후 새 세션 시작</li>
+    <li>질문 「ui-ux-pro-max 스킬 있어?」 → 스킬 이름 · 설명 답변이면 설치 완료</li>
+  </ol>
+</section>
+
+<!-- ===== 3. 한 번에 입력할 정보 ========================================= -->
+<section>
+  <h2 id="s3"><span class="num">3</span>한 번에 입력할 정보</h2>
+
+  <div class="concept">
+    <p>다섯 가지만 담으면 되는 요청 한 줄</p>
+    <p class="sub">제품 유형 · 업종 · 분위기 · 만들 화면 · 기술 스택이 핵심, 나머지 4개는 선택</p>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th class="col-n">#</th><th>항목</th><th>쓰이는 곳</th><th>예시</th><th class="c">구분</th></tr></thead>
+      <tbody>
+        <tr><td class="col-n">1</td><td><b>제품 유형</b></td><td>화면 패턴 · 스타일</td><td>SaaS · 쇼핑몰 · 포트폴리오 · 대시보드 · 랜딩 페이지 · 모바일 앱</td><td class="c"><span class="tag pick">핵심</span></td></tr>
+        <tr><td class="col-n">2</td><td><b>업종 · 서비스</b></td><td>컬러 · 신뢰 톤</td><td>병원 예약 · 핀테크 뱅킹 · 뷰티 스파 · 물류 관제</td><td class="c"><span class="tag pick">핵심</span></td></tr>
+        <tr><td class="col-n">3</td><td><b>분위기 키워드</b> 2~3개</td><td>스타일 매칭 정확도</td><td>calm · trustworthy · minimal · playful · vibrant · dark mode (영어 병기, <a class="jump" href="#s3-3">§3-3</a>)</td><td class="c"><span class="tag pick">핵심</span></td></tr>
+        <tr><td class="col-n">4</td><td><b>만들 화면</b></td><td>작업 범위</td><td>랜딩 첫 화면 · 대시보드 메인 · 로그인 · 상품 상세</td><td class="c"><span class="tag pick">핵심</span></td></tr>
+        <tr><td class="col-n">5</td><td><b>기술 스택</b></td><td>코드 형식 · 스택별 가이드</td><td>HTML + Tailwind(기본값) · React · Next.js · Vue · Flutter · SwiftUI — 미기재 시 프로젝트 파일로 자동 감지</td><td class="c"><span class="tag pick">핵심</span></td></tr>
+        <tr><td class="col-n">6</td><td><b>대상 · 사용 상황</b></td><td>글자 크기 · 정보 밀도 · 터치 영역</td><td>40대 간호사 · 근무 중 태블릿</td><td class="c"><span class="tag">선택</span></td></tr>
+        <tr><td class="col-n">7</td><td><b>프로젝트 이름</b></td><td>저장 폴더 이름</td><td>Clinic Booking → <code>design-system/clinic-booking/</code></td><td class="c"><span class="tag">선택</span></td></tr>
+        <tr><td class="col-n">8</td><td><b>조절 다이얼</b> 1~10</td><td>추천 미세 조정</td><td>과감도 variance (1 단정 · 10 과감) · 모션 motion (1 은은 · 10 화려) · 밀도 density (1 여유 · 10 촘촘)</td><td class="c"><span class="tag">선택</span></td></tr>
+        <tr><td class="col-n">9</td><td><b>저장 여부</b></td><td>다음 세션에서도 같은 기준 유지</td><td>「디자인 시스템 저장」 한 마디</td><td class="c"><span class="tag">선택</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="s3-1">요청 템플릿 (복사용)</h3>
+  <div class="cmd"><span class="cap">[ ] 부분만 바꿔 Claude Code에 붙여 넣기</span><button type="button">복사</button><pre><span class="ph">[업종 · 서비스]</span> <span class="ph">[제품 유형]</span>의 <span class="ph">[만들 화면]</span> 만들어줘.
+분위기: <span class="ph">[키워드 2~3개, 영어 병기]</span>
+스택: <span class="ph">[기술 스택]</span>
+<span class="cm">대상: [사용자 · 사용 상황]
+프로젝트 이름 [이름]으로 디자인 시스템 저장, 과감도 [1~10] · 모션 [1~10] · 밀도 [1~10]</span></pre></div>
+  <p class="sm dim" style="margin-top:-6px">보라 글자 = 핵심 5가지 · 회색 줄 = 선택, 불필요하면 삭제</p>
+
+  <h3 id="s3-2">채운 예시</h3>
+  <div class="cmd"><span class="cap">병원 예약 관리자 대시보드</span><button type="button">복사</button><pre>병원 예약 서비스(헬스케어) 관리자 대시보드의 메인 화면 만들어줘.
+분위기: 차분하고 믿음직한 (calm, trustworthy, clean)
+스택: Next.js + Tailwind
+대상: 40대 간호사, 근무 중 태블릿 사용
+프로젝트 이름 Clinic Booking으로 디자인 시스템 저장, 모션 2 · 밀도 8</pre></div>
+
+  <h3 id="s3-3">키워드는 영어 병기</h3>
+  <p class="note key"><b>검색 DB = 영문</b> 한글 단어만 쓰면 매칭 실패로 누구에게나 같은 일반 추천에 수렴 — 분위기 · 업종 키워드에 영어 단어 2~3개 병기</p>
+  <div class="table-scroll">
+    <table>
+      <caption>같은 서비스 · 키워드 언어만 바꾼 디자인 시스템 추천 결과 (search.py --design-system, 2026-11-19 실행)</caption>
+      <thead><tr><th>입력 키워드</th><th>추천 스타일</th><th>Primary 컬러</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td>「헬스케어 예약 서비스」 (한글만)</td><td>Glassmorphism</td><td><span class="sw" style="background:#2563EB"></span><code>#2563EB</code> 일반 블루</td><td>업종과 무관한 기본 추천</td></tr>
+        <tr><td>「healthcare clinic booking calm trustworthy」</td><td>Accessible &amp; Ethical</td><td><span class="sw" style="background:#0891B2"></span><code>#0891B2</code> 시안 + 헬스 그린</td><td><b>업종 · 분위기 반영</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 4. 단계별 진행 ================================================= -->
+<section>
+  <h2 id="s4"><span class="num">4</span>단계별 진행</h2>
+
+  <div class="concept">
+    <p>한 번에 다 만들지 않고, 디자인 시스템부터 정하는 순서</p>
+    <p class="sub">추천 세트를 먼저 확정 · 저장해 두면 화면이 늘어나도 컬러 · 서체 · 간격이 흔들리지 않는 구조</p>
+  </div>
+
+  <h3 id="s4-1">① 요청 ~ ⑤ 납품 전 점검</h3>
+
+  <div class="module">
+    <h3><span class="badge">1</span>요청 한 줄 보내기</h3>
+    <ul>
+      <li><a class="jump" href="#s3-1">§3 템플릿</a>대로 입력 → 스킬 자동 실행 → 제품 유형 · 업종 · 분위기 · 스택 추출</li>
+      <li>스택 미기재 시 <code>package.json</code> 등 프로젝트 파일로 자동 감지, 빈 폴더면 질문 또는 HTML + Tailwind</li>
+      <li>추천만 먼저 보고 싶을 때 → 문장 끝 「디자인 시스템만 먼저 추천해줘」</li>
+    </ul>
+  </div>
+
+  <div class="module">
+    <h3><span class="badge">2</span>추천 결과 확인 · 조정</h3>
+    <div class="table-scroll">
+      <table>
+        <caption>받는 것 7가지 — 실제 예: 「B2B SaaS 업무 대시보드 minimal professional」 (2026-11-19 실행)</caption>
+        <thead><tr><th style="width:150px">받는 것</th><th>실제 예</th></tr></thead>
+        <tbody>
+          <tr><td><b>패턴</b></td><td>Minimal Single Column — 큰 제목 · 여백 · 핵심 버튼 하나</td></tr>
+          <tr><td><b>스타일</b></td><td>Trust &amp; Authority — 라이트 · 다크 모두 지원 · WCAG AAA</td></tr>
+          <tr><td><b>컬러 토큰 10종</b></td><td><span class="sw" style="background:#0F172A"></span>Primary <code>#0F172A</code> · <span class="sw" style="background:#0369A1"></span>Accent <code>#0369A1</code> · <span class="sw" style="background:#F8FAFC"></span>Background <code>#F8FAFC</code> 외 7종, CSS 변수 이름 포함</td></tr>
+          <tr><td><b>서체</b></td><td>Plus Jakarta Sans — Google Fonts 링크 · CSS import 문 포함</td></tr>
+          <tr><td><b>핵심 효과</b></td><td>배지 hover · 지표 숫자 펄스 · 수치 순차 등장</td></tr>
+          <tr><td><b>피할 것</b></td><td>장난스러운 디자인 · 자격 정보 비공개 · AI 보라 · 핑크 그라데이션</td></tr>
+          <tr><td><b>납품 전 체크리스트</b></td><td>이모지 아이콘 금지 · 클릭 요소 손가락 커서 · 대비 4.5:1 · 키보드 포커스 · 모션 줄이기 설정 존중 · 반응형 375 ~ 1440px 외</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>조정 요청 예 — 「과감도 8로 다시 추천해줘」 · 「컬러만 따뜻한 톤으로 다시」 · 「서체 후보 3개 더」</p>
+  </div>
+
+  <div class="module">
+    <h3><span class="badge">3</span>저장</h3>
+    <ul>
+      <li>요청 「프로젝트 이름 <span class="no">OOO</span>로 디자인 시스템 저장해줘」 → 프로젝트 폴더에 아래 두 파일 생성</li>
+      <li><code>design-system/&lt;프로젝트&gt;/MASTER.md</code> — 전체 기준(컬러 · 서체 · 간격 · 컴포넌트)</li>
+      <li><code>design-system/&lt;프로젝트&gt;/pages/&lt;화면&gt;.md</code> — 화면별 예외, 「대시보드 화면 규칙도 따로 저장」 요청 시</li>
+    </ul>
+    <p class="note warn"><b>덮어쓰기 방지</b> 같은 프로젝트의 MASTER.md가 이미 있으면 저장 생략 — 바꾸려면 「덮어써서 다시 저장해줘」 명시</p>
+  </div>
+
+  <div class="module">
+    <h3><span class="badge">4</span>화면 구현</h3>
+    <ul>
+      <li>요청 「MASTER.md 기준으로 <span class="no">[화면]</span> 만들어줘」</li>
+      <li>화면별 파일(pages/)이 있으면 그 규칙 우선, 없으면 MASTER.md 그대로</li>
+      <li>스택별 가이드 22종 반영 — 예) Next.js = 서버 컴포넌트 · next/image 최적화, Flutter = 위젯 분리 · 상태 관리</li>
+    </ul>
+  </div>
+
+  <div class="module">
+    <h3><span class="badge">5</span>납품 전 점검</h3>
+    <ul>
+      <li>요청 「납품 전 체크리스트로 점검해줘」 → 우선순위 순 점검</li>
+      <li>1순위 접근성(대비 4.5:1 · alt 텍스트 · 키보드 이동) · 2순위 터치(터치 영역 44×44px · 로딩 피드백) · 3순위 성능(이미지 지연 로딩 · 레이아웃 이동(CLS))</li>
+      <li>모바일 앱이면 앱 전용 점검(안전 영역 · 다크 모드 대비 · 터치 피드백) 추가</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 5. 상황별 요청 예시 ============================================ -->
+<section>
+  <h2 id="s5"><span class="num">5</span>상황별 요청 예시</h2>
+
+  <div class="concept">
+    <p>상황별로 바로 복사해 쓰는 요청 문장</p>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th style="width:120px">상황</th><th>요청 문장</th><th>받는 것</th></tr></thead>
+      <tbody>
+        <tr><td><b>새 서비스 랜딩</b></td><td><code>B2B 협업툴 SaaS 랜딩 페이지 만들어줘. minimal professional, Next.js</code></td><td>디자인 시스템 + 랜딩 섹션 구성 + 코드</td></tr>
+        <tr><td><b>업무 대시보드</b></td><td><code>물류 관제 대시보드 디자인 시스템 추천해줘. dense data-heavy, 밀도 8</code></td><td>촘촘한 간격 토큰 · 차트 추천</td></tr>
+        <tr><td><b>모바일 앱</b></td><td><code>이커머스 모바일 앱 상품 상세 화면 만들어줘. playful vibrant, Flutter</code></td><td>앱 화면 코드 + 앱 전용 점검</td></tr>
+        <tr><td><b>컬러만</b></td><td><code>핀테크 뱅킹 앱 다크 테마 컬러 팔레트만 추천해줘 (fintech dark)</code></td><td>컬러 토큰 표 · 대비 확인</td></tr>
+        <tr><td><b>서체만</b></td><td><code>고급 뷰티 브랜드 서체 조합 3개 추천해줘 (elegant serif)</code></td><td>서체 조합 + Google Fonts 링크</td></tr>
+        <tr><td><b>차트</b></td><td><code>실시간 모니터링 대시보드에 맞는 차트 유형 추천해줘</code></td><td>차트 유형 · 라이브러리 · 접근성 주의</td></tr>
+        <tr><td><b>기존 화면 점검</b></td><td><code>이 화면 UX 점검해줘. 접근성 · 터치 영역 우선</code></td><td>우선순위별 문제 목록 · 수정안</td></tr>
+        <tr><td><b>모션</b></td><td><code>스크롤하면 카드가 순서대로 나타나게 해줘. 모션 5</code></td><td>GSAP 애니메이션 코드 조각</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 6. 막힐 때 ===================================================== -->
+<section>
+  <h2 id="s6"><span class="num">6</span>막힐 때</h2>
+
+  <div class="concept">
+    <p>결과가 뻔하면 스킬이 아니라 키워드 문제</p>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th style="width:150px">증상</th><th>원인</th><th>대처</th></tr></thead>
+      <tbody>
+        <tr><td><b>누구에게나 같은 추천</b></td><td>한글 단어만 · 단어 하나뿐</td><td>제품 + 업종 + 분위기 + 밀도 조합, 영어 병기 (<a class="jump" href="#s3-3">§3-3</a>)</td></tr>
+        <tr><td><b>스타일 · 컬러 결정 불가</b></td><td>후보 한 세트만 확인</td><td>키워드 바꿔 다시 추천 — playful neon → vibrant dark → content-first minimal</td></tr>
+        <tr><td><b>「결과 0건」 표시</b></td><td>키워드 과다 · 조합 과다</td><td>넓은 키워드로 재시도 · 기본값 추천이면 스킬이 그 사실 표시</td></tr>
+        <tr><td><b>python 오류</b></td><td>Python 3 미설치 · PATH 누락</td><td><a class="jump" href="#s2-1">§2-1</a> 설치 후 새 세션</td></tr>
+        <tr><td><b>엉뚱한 스택 코드</b></td><td>빈 폴더 · 자동 감지 실패</td><td>요청에 스택 명시</td></tr>
+        <tr><td><b>저장해도 그대로</b></td><td>기존 MASTER.md 보호</td><td>「덮어써서 다시 저장해줘」</td></tr>
+        <tr><td><b>다크 모드 글자 대비 부족</b></td><td>다크 대비 미검증</td><td>「다크 모드 대비 점검해줘」</td></tr>
+        <tr><td><b>작은 화면 레이아웃 오류</b></td><td>고정 폭 · 가로 스크롤</td><td>「모바일 우선 반응형으로 고쳐줘」</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 부록. 디자인 스킬 6종 ========================================== -->
+<section>
+  <h2 id="sa"><span class="num">·</span>함께 설치되는 디자인 스킬 6종</h2>
+  <p class="muted">플러그인 설치(<a class="jump" href="#s2-2">§2-2 A</a>) 시 함께 설치 · 요청 문장으로 자동 실행</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th style="width:150px">스킬</th><th>용도</th><th>요청 예</th></tr></thead>
+      <tbody>
+        <tr><td><b>banner-design</b></td><td>SNS · 광고 · 웹 히어로 · 인쇄 배너</td><td><code>인스타그램 광고 배너 3안 만들어줘</code></td></tr>
+        <tr><td><b>brand</b></td><td>브랜드 보이스 · 메시지 · 스타일 가이드</td><td><code>브랜드 보이스 가이드 정리해줘</code></td></tr>
+        <tr><td><b>design</b></td><td>로고 · CI · 아이콘 · 목업 종합 — 이미지 생성은 Gemini API 키 필요</td><td><code>카페 로고 시안 만들어줘</code></td></tr>
+        <tr><td><b>design-system</b></td><td>디자인 토큰 3단 구조(기본 → 의미 → 컴포넌트) · 컴포넌트 명세</td><td><code>디자인 토큰 체계 정리해줘</code></td></tr>
+        <tr><td><b>slides</b></td><td>차트 포함 HTML 발표 자료</td><td><code>분기 실적 발표 HTML 슬라이드 만들어줘</code></td></tr>
+        <tr><td><b>ui-styling</b></td><td>shadcn/ui · Tailwind 컴포넌트 화면</td><td><code>shadcn으로 설정 화면 만들어줘</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 마무리 ========================================================= -->
+<section>
+  <div class="closing">
+    <p>제품 · 업종 · 분위기 · 화면 · 스택, 다섯 단어로 시작하는 디자인</p>
+    <p class="sub">처음엔 §3 템플릿 그대로 → 추천 확인 → 저장 → 구현 → 점검. <strong>막히면 키워드부터 교체</strong></p>
+  </div>
+</section>
+
+<!-- ===== 출처 =========================================================== -->
+<section>
+  <h2 id="ssrc"><span class="num">·</span>출처</h2>
+  <div class="table-scroll">
+    <table class="src">
+      <thead><tr><th class="col-n">#</th><th>자료</th><th>경로 · URL</th></tr></thead>
+      <tbody>
+        <tr><td class="col-n">1</td><td><a class="ext" href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener">UI UX Pro Max 원본 리포 (MIT)</a></td><td><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener">https://github.com/nextlevelbuilder/ui-ux-pro-max-skill</a></td></tr>
+        <tr><td class="col-n">2</td><td><a class="ext" href="https://github.com/dnygkim/Share-Agent-Skill-dy/tree/main/skills/ui-ux-pro-max-skill" target="_blank" rel="noopener">공유 리포 백업 폴더 (v2.11.0)</a></td><td><a href="https://github.com/dnygkim/Share-Agent-Skill-dy/tree/main/skills/ui-ux-pro-max-skill" target="_blank" rel="noopener">https://github.com/dnygkim/Share-Agent-Skill-dy/tree/main/skills/ui-ux-pro-max-skill</a></td></tr>
+        <tr><td class="col-n">3</td><td><a class="ext" href="https://uupm.cc" target="_blank" rel="noopener">UI UX Pro Max 소개 사이트</a></td><td><a href="https://uupm.cc" target="_blank" rel="noopener">https://uupm.cc</a></td></tr>
+        <tr><td class="col-n">4</td><td><a class="ext" href="https://www.python.org/downloads/" target="_blank" rel="noopener">Python 다운로드</a></td><td><a href="https://www.python.org/downloads/" target="_blank" rel="noopener">https://www.python.org/downloads/</a></td></tr>
+        <tr><td class="col-n">5</td><td>스킬 정의 · 작업 순서 (SKILL.md)</td><td class="path">skills/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/SKILL.md</td></tr>
+        <tr><td class="col-n">6</td><td>검색 DB 행 수 · 추천 결과 실행 기록 (search.py --design-system 3회 · --persist 1회)</td><td class="path">skills/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/data/*.csv · 2026-11-19 이 PC 실행</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  UI UX Pro Max · 사용 가이드 — 김단영, 2026-11-19<br>
+  원본 nextlevelbuilder/ui-ux-pro-max-skill (MIT) · 공유 리포 백업 v2.11.0 기준 · 내부 공유용, 외부 배포 시 별도 승인 필요
+</footer>
+
+</div><!-- /doc -->
+</div><!-- /layout -->
+
+<a class="totop" href="#top" aria-label="맨 위로">↑</a>
+
+<script>
+/* LNB 현재 위치 하이라이트 (스크롤스파이) */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.lnb a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var heads = Object.keys(map)
+    .map(function(id){ return document.getElementById(id); })
+    .filter(Boolean);
+  function onScroll(){
+    var cur = null;
+    for (var i = 0; i < heads.length; i++){
+      if (heads[i].getBoundingClientRect().top <= 96) cur = heads[i];
+    }
+    if (!cur) cur = heads[0];
+    links.forEach(function(a){ a.classList.remove('active'); });
+    if (cur && map[cur.id]) map[cur.id].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+})();
+/* 명령어 · 요청 문장 복사 버튼 */
+(function(){
+  Array.prototype.forEach.call(document.querySelectorAll('.cmd button'), function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.parentNode.querySelector('pre').innerText;
+      function done(){ btn.textContent = '복사 완료'; setTimeout(function(){ btn.textContent = '복사'; }, 1500); }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

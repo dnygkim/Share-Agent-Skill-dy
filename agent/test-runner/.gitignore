@@ -1,0 +1,22 @@
+# 런타임 산출물은 추적하지 않되 폴더 구조는 유지
+input/*
+!input/.gitkeep
+_workspace/*
+!_workspace/.gitkeep
+output/*
+!output/.gitkeep
+
+# 스킬 사본(sync-skills 생성물)
+.claude/skills/
+
+# Node
+scripts/node_modules/
+scripts/package-lock.json
+
+# Playwright 영속 프로필·런타임 산출
+**/profile/
+.playwright-mcp/
+
+# 루트에 떨어지는 캡처 이미지 차단
+/*.png
+/*.jpg
