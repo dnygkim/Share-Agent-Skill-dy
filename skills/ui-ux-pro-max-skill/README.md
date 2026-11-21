@@ -4,6 +4,7 @@
 
 | 요약내용 | 업데이트 일자 | 소유자 |
 |---|---|---|
+| 원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 1건(f76d165까지): 폼 오류 처리 UX 가이드라인 11개 추가 · 해결된 오류 지우기 · 입력값 유지 규칙 추가 · 저장하지 않은 변경 경고 · 실행 취소 규칙 추가 · 한국어 README 번역 갱신 | 2026-11-21 | 김단영 |
 | 원본 깃허브 업데이트 반영 — v2.11.0 → v2.15.0 · 커밋 102건(2de1134까지): ZCode·Kimi Code·Amazon Q·OpenClaw·AutoClaw 설치 대상과 에이전트 공용 플러그인 마켓플레이스 추가 · 디자인 시스템의 정적 미리보기 페이지와 디자인 토큰(DTCG·CSS) 내보내기 지원 · RTL 호환성 수준과 `--rtl` 필터, 웹 지도·IME 안전 Enter UX 가이드라인 추가 · 한국어 README 번역 갱신 | 2026-11-19 | 김단영 |
 | 사용 가이드 가독성 조정 — 본문 최대 폭 930 → 1130px(레이아웃 1400px), 글자 크기 전체 한 단계 확대(본문 17px · 표 16px · 제목 +2px) | 2026-11-19 | 김단영 |
 | 사용 가이드 `사용가이드.html` 추가 — 처음 쓰는 사람용 설치 · 한 번에 입력할 정보(핵심 5 · 선택 4) · 요청 템플릿 · 단계별 진행 · 상황별 요청 예시 · 막힐 때, 하우스 스타일 · Primary 보라 | 2026-11-19 | 김단영 |
@@ -25,10 +26,10 @@
   <a href="README.zh.md">🇨🇳 简体中文</a>
 </p>
 
-> **참고:** [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) 원본 리포(MIT 라이선스) 백업 · 기준 **v2.15.0 이후 최신** · 커밋 [`2de1134`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/commit/2de1134dc4d1cfe112934611ae5803ae17a1bd7e)(2026-11-19) · 매일 23:30 원본 깃허브 확인 후 바뀐 파일 1:1 반영 · 이 README = 원본 영문 README([README.en.md](README.en.md))의 한국어 번역, 원본 반영 때 함께 갱신 · 원본이 제공하는 다른 언어판(README.ko.md 등)은 그대로 보관
+> **참고:** [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) 원본 리포(MIT 라이선스) 백업 · 기준 **v2.15.0 이후 최신** · 커밋 [`f76d165`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/commit/f76d1653d7467fc11fb9d9d79295a421c92ab958)(2026-11-21) · 매일 23:30 원본 깃허브 확인 후 바뀐 파일 1:1 반영 · 이 README = 원본 영문 README([README.en.md](README.en.md))의 한국어 번역, 원본 반영 때 함께 갱신 · 원본이 제공하는 다른 언어판(README.ko.md 등)은 그대로 보관
 
-<!-- upstream-sha: 2de1134dc4d1cfe112934611ae5803ae17a1bd7e -->
-<!-- ko-body:start — 이 줄 아래 = 영문 README 번역 본문 (~/.claude/tools/uiux-upstream-sync.sh 가 갱신) -->
+<!-- upstream-sha: f76d1653d7467fc11fb9d9d79295a421c92ab958 -->
+<!-- ko-body:start — 이 줄 아래 = 영문 README 번역 본문 (공유 리포 share/uiux-upstream-sync.sh 가 갱신) -->
 <p align="center">
   <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/releases"><img src="https://img.shields.io/github/v/release/nextlevelbuilder/ui-ux-pro-max-skill?style=for-the-badge&color=blue" alt="GitHub 릴리스"></a>
   <img src="https://img.shields.io/badge/reasoning_rules-194-green?style=for-the-badge" alt="추론 규칙 194개">
@@ -214,7 +215,7 @@ v2.0의 핵심 기능은 **디자인 시스템 생성기**입니다. AI 기반 �
 - **글꼴 조합 74개** - Google Fonts 가져오기 코드가 포함된 엄선된 타이포그래피 조합
 - **차트 유형 25개** - 대시보드 및 분석 화면을 위한 권장 사항
 - **기술 스택 22개** - React, Next.js, Astro, Vue, Nuxt.js, Nuxt UI, Svelte, SwiftUI, React Native, Flutter, HTML+Tailwind, shadcn/ui, Jetpack Compose, Angular, Laravel, Three.js, JavaFX, WPF, WinUI 3, UWP, Avalonia, Uno Platform
-- **UX 가이드라인 130개** - 모범 사례, 안티패턴, 접근성 규칙, 유연한 텍스트 레이아웃, 간결한 레이블, 취소 가능한 상호작용, 웹 지도(저작자 표시, 지도 접근성, 단계구분도, 팝업, 클러스터링). [IME 안전 Enter 단축키](docs/ime-composition.md)를 참고하세요.
+- **UX 가이드라인 141개** - 모범 사례, 안티패턴, 접근성 규칙, 유연한 텍스트 레이아웃, 간결한 레이블, 취소 가능한 상호작용, 웹 지도(저작자 표시, 지도 접근성, 단계구분도, 팝업, 클러스터링), 폼 오류 처리(해결된 오류 지우기, 입력값 유지, 저장하지 않은 변경 경고, 실행 취소, 대화상자 포커스). [IME 안전 Enter 단축키](docs/ime-composition.md)를 참고하세요.
 - **추론 규칙 194개** - 산업별 디자인 시스템 생성(v2.0의 새로운 기능)
 
 ### 유연한 텍스트와 컴팩트 UI

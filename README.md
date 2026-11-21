@@ -8,7 +8,7 @@
 | <sub>슬랙 알림</sub> | <sub>매일 09:10</sub> | <sub>전일 업데이트 내역을 채널에 한 건으로 묶어 게시 — 업데이트 없는 날은 생략</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `6f9d2f0`(2026.11.20 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 171건(최신 2026.11.20)
+**현재 반영본** — 원본 `6f9d2f0`(2026.11.20 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 172건(최신 2026.11.21)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -148,7 +148,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 171건 · 최신 2026.11.20). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 172건 · 최신 2026.11.21). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -166,6 +166,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
+| <sub>2026.11.21</sub> |  |  | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.20</sub> |  | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[im-not-ai](skills/im-not-ai/README.md)</sub> |
 | <sub>2026.11.19</sub> |  | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.17</sub> |  | <sub>[proposal](agent/proposal/README.md) · [sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>[Slack-Bot](skills/Slack-Bot/README.md)</sub> |
@@ -200,10 +201,11 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 53건</summary>
+<summary><b>2026.11</b> · 54건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
+| <sub>2026.11.21</sub> | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 1건(f76d165까지): 폼 오류 처리 UX 가이드라인 11개 추가 · 해결된 오류 지우기 · 입력값 유지 규칙 추가 · 저장하지 않은 변경 경고 · 실행 취소 규칙 추가 · 한국어 README 번역 갱신</sub> | <sub>김단영</sub> |
 | <sub>2026.11.20</sub> | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>제안서 레퍼런스 주간 학습 신설 — 드라이브 `! 사업제안&견적`(제외 `00. 공수 및 영업대응, 기타`)의 제안서를 매주 토 09:30 클라우드 예약 작업(Opus 5.5 · Google Drive 커넥터, 노트북 · Orca 무관)이 읽어 문장 표현 · 도식 · 인포그래픽 · 디자인 요소를 `deck-references/`(expressions · diagrams · infographics · design-elements · sources)에 쌓음. 절차 정본 `deck-references/ROUTINE.md`, 도구 `scripts/deckref_tool.py`(드라이브 읽기 결과 정리 · 학습 상태 · 공개 금지 패턴 점검 · 커밋 · 공유 반영), 학습 상태 `_state.json`은 공유 미러 제외. 작업 시작(Phase 0) · S2 컨셉 · S3 도식 후보 · S4 레이아웃 · qa 쏠림 점검에 연결, 형식 예시 4건 수동 학습</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>im-not-ai 1차 윤문 단계 신설 — 분석을 거쳐 쓴 제안서 문구(S4 초안 · S6 반영 장표)에 외부 스킬 im-not-ai(`humanize-korean`)를 먼저 걸어 AI 티를 걷고, 그 위에 하우스 문체(`writing-style.md` · `check_style.pl`)를 2차로 거는 순서로 변경. 절차 · 제안서 보존 지침 블록 · 어긋날 때 처리 · 폴백(`references/antiai-pass.md`), 장표 문구 추출 · 줄마다 검증 반영 스크립트(`scripts/antiai_units.py` — 04_content.md · 덱 HTML 둘 다, 표식 · 수치 · 영문 · ㅁ 어미 · 확정 문장 자동 원문 유지, 전 · 후 표 생성) 추가, slide-builder · qa · ORCHESTRATOR · CLAUDE.md · writing-style 연결</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>용어의 표현 · 장표 도식 지침 신설 — 삼성자산운용 FunETF 제안서 im-not-ai 윤문 시험 47줄로 문체 지침에 「용어의 표현」 절 추가(문장 서술어는 쉬운 동사 · 항목 끝은 한자어 명사 · 본문 연결어미 뒤 쉼표 삭제, 전 · 후 표 10줄 · 어미 변환 20줄), `check_style.pl`에 ㅁ 어미(만듦 · 다시 씀 · 찾기 어려움)와 「표현」 [주의] 추가. FunETF 취합본 91장 · 사용자 수정 이력 121건에서 장표 도식 · 레이아웃 지침(`references/slide-layout-guide.md` — 내용 성격별 도식 33종 · 장표 골격 · 화면 예시 · 면/선/색 · 피드백 교정표) 신설, 강조선 금지 · 강조 면 블랙 · 청록 AI 한정을 디자인 시스템 · 품질 기준에 반영, 로고 락업형 1600×900 골격(`template/deck_1600_lockup_template.html`) 추가, 덱 도구가 락업형 헤더를 읽도록 보강</sub> | <sub>김단영</sub> |
