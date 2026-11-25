@@ -8,7 +8,7 @@
 | <sub>슬랙 알림</sub> | <sub>매일 09:10</sub> | <sub>전일 업데이트 내역을 채널에 한 건으로 묶어 게시 — 업데이트 없는 날은 생략</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `2aff19e`(2026.11.25 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 176건(최신 2026.11.25)
+**현재 반영본** — 원본 `2aff19e`(2026.11.25 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 177건(최신 2026.11.25)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -148,7 +148,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 176건 · 최신 2026.11.25). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 177건 · 최신 2026.11.25). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -167,7 +167,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
-| <sub>2026.11.25</sub> |  | <sub>[proposal](agent/proposal/README.md)</sub> |  |
+| <sub>2026.11.25</sub> |  | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.24</sub> |  |  | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.23</sub> |  |  | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.22</sub> |  |  | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
@@ -206,11 +206,12 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 58건</summary>
+<summary><b>2026.11</b> · 59건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
 | <sub>2026.11.25</sub> | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>S1 분석 시각 확장 — 내부 제안 준비 브리핑 2건(손해보험사 마케팅 플랫폼 운영 · 앱 · 웹 UX전담반 도급)의 사고 틀을 인사이트 렌즈 12로 정리(`references/rfp-insight-lenses.md`): 사업의 본질 · 관문 판정(참가 자격 해석 시나리오 · 계약 상대방 기준 실적) · RFP 문장 ↔ 속뜻 · 점수가 갈리는 곳(가격 순위 ↔ 비가격 배점 환산 · 고정 조건 밖 차별화) · 경쟁 구도 · 이해상충 · 문서 간 불일치 · 일정 역산 · 통보일 시나리오 · 약속의 계약화 · 운영 실무 리스크 · 가격의 숨은 비용 · 현황 관찰 → 할 일 · 결정 · 질의 · 예상 질문. 보고서 양식 · 구성은 그대로, 결과는 기존 섹션 안에 · `01_rfp.md` 머리 블록 추가(사업의 본질 · 관문 판정 · 고객의 속뜻 · 차별화가 생기는 곳 · 오늘 정할 것 · 렌즈 점검). `rfp-analyst` · `ORCHESTRATOR` · `rfp-report-format` §3 · §4 · `concept-planner` 반영</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 2건(8db3633까지): Antigravity 워크스페이스 안내(AGENTS.md)와 전역 설치 문서 추가 · 검색에서 정확한 헥스 색상 팔레트 조회 지원 · 한국어 README 번역 갱신</sub> | <sub>김단영</sub> |
 | <sub>2026.11.24</sub> | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 4건(a4fc248까지): GitHub Copilot 워크스페이스 지침 및 전역 설치 문서 추가 · 로고 생성 스크립트의 비UTF-8 출력 충돌 수정 · 동의어 치환 불필요 시 건너뛰도록 검색 성능 개선 · 한국어 README 번역 갱신</sub> | <sub>김단영</sub> |
 | <sub>2026.11.23</sub> | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 2건(7e935ad까지): GitHub CLI(gh skill install)로 스킬을 설치하는 방법 추가 · 아랍어 등 RTL 문자가 섞인 쿼리의 미리보기 방향 추론 수정 · 미리보기 언어 · 방향 지정 옵션(--lang, --direction) 안내 추가 · 한국어 README 번역 갱신</sub> | <sub>김단영</sub> |
 | <sub>2026.11.22</sub> | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 1건(6ec2bb5까지): 아랍어 검색어 동의어 정규화 추가 · HTML 미리보기의 오른쪽→왼쪽(RTL) 문자 안전 렌더링 지원</sub> | <sub>김단영</sub> |
