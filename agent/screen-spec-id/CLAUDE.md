@@ -68,8 +68,7 @@ IA 엑셀(채널별 시트 + Depth 트리)을 입력받아 **6단계**로 진행
 - `input/` — 사용자 IA 파일 (배포 시 비움)
 - `_workspace/{slug}/` — `parsed.json` · `config.json` (배포 시 비움)
 - `output/` — 최종 xlsx. in-place 갱신 기본, 구조 변경 시에만 버전업.
-- `samples/` — 기본양식 2종 (샘플타입1·2, STEP 1 선택지 정본. 수정 금지). 실제 프로젝트 산출물 기반이라 리포에 두지 않는다(2026-11-25 · 로컬 전용).
-  파일이 없으면 STEP 1 은 아래 비교표 설명만으로 진행하고, 타입2 는 스크립트가 양식을 직접 만든다
+- `samples/` — 기본양식 2종 (샘플타입1·2, STEP 1 선택지 정본. 수정 금지)
 - `references/` — `config-schema.md` (config 스키마 정본)
 
 ## 표기 규칙

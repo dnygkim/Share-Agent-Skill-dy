@@ -103,7 +103,7 @@
 |:---|:---:|
 | <sub>Code(첫 열) · Depth1~5 · 비고</sub> | <sub>페이지 정의/요구사항 · 개발구분(디자인/퍼블/개발 ●) · Page 수 + 총계 · 세부 사항 · Tab/서브 플로우 · 권한(역할별 CRUD)</sub> |
 
-**플랫폼형** (프리셋 B · 비즈니스 플랫폼 · SaaS — 실전 예시 파일은 고객 산출물 기반이라 리포 미포함)
+**플랫폼형** (프리셋 B · 비즈니스 플랫폼 · SaaS — 실전 예시: references의 IA 실전 예시 파일)
 
 | <div align="center"><sub>컬럼</sub></div> | <sub>내용</sub> |
 |:---|:---:|
@@ -126,7 +126,7 @@
 - **내용 품질** — 「게시판」 같은 한 단어가 아니라 「리스트 게시판 — 공지 목록 · 상세, 상단 고정」처럼 기획자가 바로 쓸 수준
 - **스타일** — 컬럼 헤더 검정 + 흰 글씨 · Depth1 진회색 · Depth2 연노랑 · 맑은 고딕(wbs-generator 샘플과 같은 디자인 언어)
 
-결과 미리보기: [samples/결과_예시.xlsx](samples/결과_예시.xlsx) (기본형) · 플랫폼형 예시는 리포 미포함(양식 정의 = `references/header-presets.md`)
+결과 미리보기: [samples/결과_예시.xlsx](samples/결과_예시.xlsx) (기본형) · [references의 IA 실전 예시 파일](references) (플랫폼형)
 
 ### 다른 기획 산출물과의 순서
 
@@ -164,7 +164,7 @@ skills/ia-builder/
 ├── references/
 │   ├── page-types.md           페이지 유형 · 개발구분(●) 추천 기준 · 권한 · 공통 영역 · 2차 표시 규칙
 │   ├── header-presets.md       헤더 양식 프리셋(기본형 · 플랫폼형 · 관리자 권한형) · 컬럼 정의표 양식 · 채움 단계
-│   └── (로컬 전용) 플랫폼형 실전 예시 xlsx                  고객 산출물 기반 — 리포 미포함
+│   └── 신승-비즈니스AI플래너_IA(메뉴구조도)_v0.01_260721.xlsx   플랫폼형 양식 실전 예시 (사람 · Claude 참조)
 ├── samples/
 │   ├── 결과_예시.xlsx           기본형 결과 미리보기
 │   └── sample_input.json       입력 JSON 예시
