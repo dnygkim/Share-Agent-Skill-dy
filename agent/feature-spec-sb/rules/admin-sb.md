@@ -37,7 +37,7 @@ Step 1   fetch_guide.py --mode sb-pc|sb-mobile --author "{author}" --feature-id 
            # (admin-krds Mobile 선택 시 --mode sb-mobile, 나머지는 --mode sb-pc)
 Step 1.5 (새 화면만) 본문 작성:
            - templates/admin-<템플릿>.html 의 클래스(.adm-*)로 .wf-canvas 본문 + .desc-panel 작성
-           - samples/admin/DEMO-AD-MN01-0000.src.html 을 패턴으로 참고 (영역마다 .adm-num 배지 1:1)
+           - samples/admin/KTAX-AD-MN01-0000.src.html 을 패턴으로 참고 (영역마다 .adm-num 배지 1:1)
            - samples/admin/<ID>.src.html 로 저장하고 build_admin_sb.py SCREENS에 등록
 Step 2   python3 .claude/skills/feature-spec/scripts/build_admin_sb.py {화면키}
            # 또는: --src samples/admin/<ID>.src.html --id <ID> --title "..." --path "..." --template admin-krds --variant mobile

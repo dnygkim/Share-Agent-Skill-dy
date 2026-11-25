@@ -130,4 +130,4 @@ feature-spec-sb/
 - `templates/` — SB 출력에 **실제로 삽입되는** 골격·에셋.
 - `rules/` — 에이전트가 읽고 따르는 **규칙 문서**.
 
-`samples/admin/`에는 **KT AX 화면만** 들어 있다(원본에 있던 타 고객 샘플 미포함). 어드민 새 화면은 `DEMO-AD-MN01-0000.src.html`을, 범용 B2C 화면은 `samples/b2c/`의 완성 예시를 패턴으로 본다.
+`samples/admin/`에는 **KT AX 화면만** 들어 있다(원본에 있던 타 고객 샘플 미포함). 어드민 새 화면은 `KTAX-AD-MN01-0000.src.html`을, 범용 B2C 화면은 `samples/b2c/`의 완성 예시를 패턴으로 본다.

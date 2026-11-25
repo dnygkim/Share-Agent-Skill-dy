@@ -298,7 +298,7 @@ feature-spec-sb/
 | <sub>`rules/`</sub> | <sub>특수 분기 **규칙 문서** (`*.md`)</sub> | <sub>어드민 · 프로젝트 착수 요청일 때만 읽는 지시문</sub> |
 | <sub>`guides/`</sub> | <sub>**작성 규칙 정본** (`*.md`)</sub> | <sub>모든 요청의 기본 규칙 · 토큰이 없을 때 `fetch_guide.py`의 읽기 대상</sub> |
 
-- 새 어드민 화면 패턴 = `samples/admin/DEMO-AD-MN01-0000.src.html` · 범용 B2C 화면 패턴 = `samples/b2c/` 완성 예시
+- 새 어드민 화면 패턴 = `samples/admin/KTAX-AD-MN01-0000.src.html` · 범용 B2C 화면 패턴 = `samples/b2c/` 완성 예시
 
 ## 용어
 

@@ -13,11 +13,13 @@
   guard.py history [범위]      이력의 추가된 줄 전체 검사(점검용 · 기본 --all)
   guard.py files <경로…>       임의 파일 검사(--level 로 수준 지정)
   guard.py allow <지문…>       허용 목록에 지문 추가 — 관리자 확인 뒤에만
+  guard.py exempt <파일…>      샘플로 확인받은 파일을 가드에서 제외(경로 지문 등록) · 인자 없이 부르면 목록
   guard.py doctor              훅 연결 · 거부 목록 · 미러 제외 목록 일치 점검
   guard.py selftest            규칙 자체 시험
 
 검사 수준(경로마다 자동 판정)
   vendor   외부 스킬 원본 백업              토큰 · 개인키 · 비밀 파일 형식
+  sample   샘플로 확인받은 파일(허용 목록)   토큰 · 개인키 · 비밀 파일 형식 — 고객명 · 연락처 · 바이너리 · 예시 경로 차단은 적용하지 않음
   private  원본 리포 전용 경로(메모리 등)   + 비밀값 대입 · 주민번호 · 카드번호
   public   공유 리포 전체 · 원본의 미러 대상 + 연락처 · 거부 목록(고객 · 사업 · 사람 이름) · 내부 링크 · 로컬 경로
                                             · 내용을 검사할 수 없는 새 바이너리
@@ -65,7 +67,10 @@ BINARY_EXT = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.ico', '.tif', 
 
 CLASS_KO = {'S': '토큰 · 개인키', 'G': '비밀값 대입', 'P': '주민번호 · 카드번호', 'C': '연락처', 'I': '내부 링크 · 경로',
             'D': '거부 목록', 'B': '차단 파일', 'U': '검사 불가 파일', 'T': '가드 파일 변경'}
-LEVEL_CLASSES = {'vendor': 'SB', 'private': 'SGPBT', 'public': 'SGPCIDBUT'}
+LEVEL_CLASSES = {'vendor': 'SB', 'sample': 'SB', 'private': 'SGPBT', 'public': 'SGPCIDBUT'}
+# sample = 사용자가 「샘플로 올려도 된다」고 확인한 파일(허용 목록의 p:경로지문). 고객명 · 연락처 · 바이너리 · 예시 경로 차단을 적용하지 않고
+#          토큰 · 개인키 · 비밀 파일 형식만 본다(2026-11-26 「샘플로 업로드한 파일들 다 원복 · 가드 제외하고 진행」).
+SAMPLE_KEEP_RULES = ('B-ENV', 'B-KEYFILE', 'B-CREDFILE', 'B-LOCALCONF', 'B-LOCALMEM', 'B-DATABASE')
 
 
 class GuardError(Exception):
@@ -221,6 +226,7 @@ class Ctx:
     deny = None            # (정규식 목록, 개수, 출처) 또는 None
     deny_src = ''
     allow = frozenset()
+    exempt = frozenset()   # 샘플로 확인받은 파일의 경로 지문
     redact = False
     admin = False
 
@@ -265,8 +271,15 @@ def setup(args):
     load_deny(getattr(args, 'denylist', None), getattr(args, 'source', None))
 
 
+def path_fp(path):
+    """샘플 예외용 경로 지문 — 허용 목록에는 경로 대신 이 값만 적는다(파일 이름에 고객명이 있어도 드러나지 않게)"""
+    return hashlib.sha256(('SAMPLE-PATH\n' + path.replace('\\', '/')).encode('utf-8')).hexdigest()[:20]
+
+
 def level_of(path):
     p = path.replace('\\', '/')
+    if C.exempt and path_fp(p) in C.exempt:
+        return 'sample'
     for v in VENDOR:
         if p == v or p.startswith(v + '/'):
             if p[len(v) + 1:] in VENDOR_OURS:
@@ -282,16 +295,19 @@ def level_of(path):
 
 
 def load_allow():
-    s = set()
+    s, ex = set(), set()
     try:
         with open(os.path.join(C.root, ALLOW_FILE), encoding='utf-8') as f:
             for line in f:
                 tok = line.split('#', 1)[0].split()
                 if tok and re.fullmatch(r'[0-9a-f]{20}', tok[0]):
                     s.add(tok[0])
+                elif tok and re.fullmatch(r'p:[0-9a-f]{20}', tok[0]):
+                    ex.add(tok[0][2:])
     except OSError:
         pass
     C.allow = frozenset(s)
+    C.exempt = frozenset(ex)
 
 
 def deny_candidates(explicit, source):
@@ -463,6 +479,8 @@ def scan_path(path, level, new=True):
     out = []
     p = path.replace('\\', '/')
     for rid, rx, _ in BLOCK_PATHS:
+        if level == 'sample' and rid not in SAMPLE_KEEP_RULES:
+            continue
         if rx.search(p):
             out.append(finding(rid, path, 0, p, 'PATH', level))
     if new and level == 'public':
@@ -559,7 +577,7 @@ def added_lines(patch):
 
 
 RENAMES = '-M100%'      # 내용이 완전히 같은 이름 바꿈만 인식 — 같은 수준 안에서 옮긴 파일은 내용을 다시 검사하지 않는다
-LEVEL_RANK = {'vendor': 0, 'private': 1, 'public': 2}
+LEVEL_RANK = {'vendor': 0, 'sample': 0, 'private': 1, 'public': 2}
 
 
 def parse_z_status(b):
@@ -859,6 +877,33 @@ def cmd_allow(args):
     return 0
 
 
+def cmd_exempt(args):
+    """샘플로 확인받은 파일을 가드에서 제외(토큰 · 개인키 검사는 유지). 경로 대신 경로 지문만 적는다"""
+    tracked = [p for p in u(git('ls-files', '-z')).split('\0') if p]
+    if args.list or not args.paths:
+        hit = [p for p in tracked if path_fp(p) in C.exempt]
+        print('샘플 예외 %d건(허용 목록) · 그중 지금 추적 중인 파일 %d개' % (len(C.exempt), len(hit)))
+        for p in hit:
+            print('  ' + p)
+        return 0
+    if not C.admin:
+        raise GuardError('샘플 예외 추가는 사용자(관리자) 확인 뒤에만 — 확인을 받았으면 GUARD_ADMIN=1 로 다시 실행')
+    add = []
+    for p in args.paths:
+        rel = os.path.relpath(os.path.abspath(p), C.root).replace('\\', '/')
+        if rel.startswith('..'):
+            raise GuardError('리포 밖 경로: %s' % p)
+        fp = path_fp(rel)
+        if fp not in C.exempt and fp not in add:
+            add.append(fp)
+    if add:
+        with open(os.path.join(C.root, ALLOW_FILE), 'a', encoding='utf-8', newline='\n') as f:
+            for x in add:
+                f.write('p:%s%s\n' % (x, ('  # ' + args.note) if args.note else ''))
+    print('샘플 예외 +%d건 (%s)' % (len(add), ALLOW_FILE))
+    return 0
+
+
 def cmd_doctor(args):
     ok = True
 
@@ -874,7 +919,7 @@ def cmd_doctor(args):
     for h in ('pre-commit', 'commit-msg', 'pre-push', '_guard.sh'):
         line(os.path.isfile(os.path.join(C.root, '.githooks', h)), '.githooks/%s' % h)
     line(C.deny is not None, '거부 목록: %s' % ('%d개 · %s' % (C.deny[1], C.deny_src) if C.deny else '찾지 못함'))
-    print('  허용 목록 지문 %d개' % len(C.allow))
+    print('  허용 목록 지문 %d개 · 샘플 예외 경로 %d개' % (len(C.allow), len(C.exempt)))
     for cand in (os.path.join(os.path.dirname(C.root), 'Share-Agent-Skill-dy'), C.root):
         ms = os.path.join(cand, 'share', 'mirror-from-source.sh')
         if os.path.isfile(ms):
@@ -948,6 +993,17 @@ def cmd_selftest(args):
         if ((want in got) if want else (not got)) is False:
             fails += 1
             print('✗ 경로 %s · 기대 %s · 결과 %s' % (p, want, got))
+    sample = 'agent/x/examples/고객_견적.html'
+    C.exempt = frozenset([path_fp(sample)])
+    other = 'agent/x/examples/다른_견적.html'
+    if (level_of(sample) != 'sample' or scan_path(sample, 'sample')
+            or scan_text(sample, 1, '가나다은행 견적 ' + mail, 'sample')
+            or 'S-GITHUB' not in [f['rule'] for f in scan_text(sample, 1, _b('gh', 'p_', rnd[:36]), 'sample')]
+            or [f['rule'] for f in scan_path(other, level_of(other))] != ['B-EXAMPLE']
+            or scan_blob('agent/x/examples/shot.png', b'\x89PNG\0', 'sample', True)):
+        fails += 1
+        print('✗ 샘플 예외 판정')
+    C.exempt = frozenset()
     patch = (b'diff --git a/a.md b/a.md\n--- a/a.md\n+++ b/a.md\n@@ -3,0 +4,2 @@\n+++ not a header\n+second\n'
              b'diff --git a/b.md b/b.md\n--- /dev/null\n+++ b/b.md\n@@ -0,0 +1 @@\n+only\n')
     got = list(added_lines(patch))
@@ -995,6 +1051,8 @@ def main():
     p = sub.add_parser('tree', parents=[common]); p.add_argument('--rev'); p.set_defaults(fn=cmd_tree)
     p = sub.add_parser('files', parents=[common]); p.add_argument('paths', nargs='+'); p.set_defaults(fn=cmd_files)
     p = sub.add_parser('allow', parents=[common]); p.add_argument('fps', nargs='+'); p.add_argument('--note', default=''); p.set_defaults(fn=cmd_allow)
+    p = sub.add_parser('exempt', parents=[common]); p.add_argument('paths', nargs='*'); p.add_argument('--note', default='')
+    p.set_defaults(fn=cmd_exempt)
     sub.add_parser('doctor', parents=[common]).set_defaults(fn=cmd_doctor)
     sub.add_parser('selftest', parents=[common]).set_defaults(fn=cmd_selftest)
     args = ap.parse_args()

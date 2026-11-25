@@ -18,11 +18,11 @@
 ### admin/ — 어드민 화면 본문 12장
 
 - KT AX 화면만 수록 · 원본 AX-Pilot의 타 고객 샘플 미포함
-- 새 어드민 화면 패턴 = `DEMO-AD-MN01-0000.src.html` (영역마다 `.adm-num` 배지 1:1)
+- 새 어드민 화면 패턴 = `KTAX-AD-MN01-0000.src.html` (영역마다 `.adm-num` 배지 1:1)
 
 | <div align="center"><sub>파일</sub></div> | <sub>내용</sub> |
 |:---|:---:|
-| <sub>`DEMO-AD-MN01-0000` ~ `DEMO-AD-MN02-2000` (9장)</sub> | <sub>메인 관리 화면(배너 목록 · 등록 · 수정 / 메인 콘텐츠 3종 / 메인 팝업 목록 · 등록 · 수정) · `build_admin_sb.py` 레지스트리 등록 화면 · 공통 어드민 템플릿(`--template common`) 기준</sub> |
+| <sub>`KTAX-AD-MN01-0000` ~ `KTAX-AD-MN02-2000` (9장)</sub> | <sub>메인 관리 화면(배너 목록 · 등록 · 수정 / 메인 콘텐츠 3종 / 메인 팝업 목록 · 등록 · 수정) · `build_admin_sb.py` 레지스트리 등록 화면 · 공통 어드민 템플릿(`--template common`) 기준</sub> |
 | <sub>`ADM-MAIN-001` ~ `ADM-MAIN-003` (3장)</sub> | <sub>2026.07.22 IA 재구성 전 구 채번 체계 화면 · 레지스트리 미등록</sub> |
 
 ### b2c/ — 범용 B2C 예시

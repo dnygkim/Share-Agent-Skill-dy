@@ -44,7 +44,7 @@ common_source/.claude/skills/feature-spec/
 │   └── admin-common-design-system.html  # 공통 어드민 디자인 시스템 사본
 └── samples/              # HTML로 추출된 화면설계 파일
     └── admin/
-        └── DEMO-AD-MN01-0000.src.html  # 어드민 화면 본문(템플릿 제외)
+        └── KTAX-AD-MN01-0000.src.html  # 어드민 화면 본문(템플릿 제외)
 ```
 
 ### 2.2 서버 (별도 GitHub repo + Vercel)
