@@ -4,6 +4,7 @@
 
 | 요약내용 | 업데이트 일자 | 소유자 |
 |---|---|---|
+| 원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 4건(0170613까지): PySide6 / Qt(qfluentwidgets) 스택 지원 추가 · ui-styling이 src/ 및 사용자 지정 별칭의 shadcn 컴포넌트 탐색 수정 · cip search.py의 --cip-brief가 비UTF-8 출력에서 중단되는 문제 수정 · 한국어 README 번역 갱신 | 2026-11-26 | 김단영 |
 | 원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 2건(8db3633까지): Antigravity 워크스페이스 안내(AGENTS.md)와 전역 설치 문서 추가 · 검색에서 정확한 헥스 색상 팔레트 조회 지원 · 한국어 README 번역 갱신 | 2026-11-25 | 김단영 |
 | 원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 4건(a4fc248까지): GitHub Copilot 워크스페이스 지침 및 전역 설치 문서 추가 · 로고 생성 스크립트의 비UTF-8 출력 충돌 수정 · 동의어 치환 불필요 시 건너뛰도록 검색 성능 개선 · 한국어 README 번역 갱신 | 2026-11-24 | 김단영 |
 | 원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 2건(7e935ad까지): GitHub CLI(gh skill install)로 스킬을 설치하는 방법 추가 · 아랍어 등 RTL 문자가 섞인 쿼리의 미리보기 방향 추론 수정 · 미리보기 언어 · 방향 지정 옵션(--lang, --direction) 안내 추가 · 한국어 README 번역 갱신 | 2026-11-23 | 김단영 |
@@ -30,9 +31,9 @@
   <a href="README.zh.md">🇨🇳 简体中文</a>
 </p>
 
-> **참고:** [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) 원본 리포(MIT 라이선스) 백업 · 기준 **v2.15.0 이후 최신** · 커밋 [`8db3633`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/commit/8db36338810d0942567b97ce439affd1619fcf31)(2026-11-25) · 매일 23:30 원본 깃허브 확인 후 바뀐 파일 1:1 반영 · 이 README = 원본 영문 README([README.en.md](README.en.md))의 한국어 번역, 원본 반영 때 함께 갱신 · 원본이 제공하는 다른 언어판(README.ko.md 등)은 그대로 보관
+> **참고:** [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) 원본 리포(MIT 라이선스) 백업 · 기준 **v2.15.0 이후 최신** · 커밋 [`0170613`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/commit/01706130e32f2af1d12923cce8d64a85fd76a3cd)(2026-11-26) · 매일 23:30 원본 깃허브 확인 후 바뀐 파일 1:1 반영 · 이 README = 원본 영문 README([README.en.md](README.en.md))의 한국어 번역, 원본 반영 때 함께 갱신 · 원본이 제공하는 다른 언어판(README.ko.md 등)은 그대로 보관
 
-<!-- upstream-sha: 8db36338810d0942567b97ce439affd1619fcf31 -->
+<!-- upstream-sha: 01706130e32f2af1d12923cce8d64a85fd76a3cd -->
 <!-- ko-body:start — 이 줄 아래 = 영문 README 번역 본문 (공유 리포 share/uiux-upstream-sync.sh 가 갱신) -->
 <p align="center">
   <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/releases"><img src="https://img.shields.io/github/v/release/nextlevelbuilder/ui-ux-pro-max-skill?style=for-the-badge&color=blue" alt="GitHub 릴리스"></a>
@@ -624,6 +625,13 @@ npm run sync:assets
 npm run check:assets
 npm run verify:data
 npm run typecheck
+
+# 4b. PR을 열기 전에 나머지 CI 게이트 실행
+# verify:data는 렌더링된 가이드 계약 테스트를 포함하지 않으므로, 활성화 설명이나
+# 스택 목록을 바꿨다면 이 단계가 여전히 필요합니다.
+cd .. && python3 -m pytest .claude/skills -q
+cd cli && npx playwright test   # 필요: npm ci && npx playwright install chromium
+cd ../gallery && npm test
 
 # 5. CLI 빌드 및 테스트
 # `npm run build`는 Bun이 있으면 사용하고, 없으면 `npm ci` 후 TypeScript 컴파일러 출력을 사용합니다.
