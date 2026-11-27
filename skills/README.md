@@ -55,7 +55,7 @@
 
 ### 외부 스킬 백업
 
-원본 그대로 보관 · 출처 `eli5` [anthropics/claude-plugins-community](https://github.com/anthropics/claude-plugins-community/blob/main/eli5/skills/eli5/SKILL.md) · `ui-ux-pro-max-skill` [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)(v2.15.0 · MIT) · `im-not-ai` [epoko77-ai/im-not-ai](https://github.com/epoko77-ai/im-not-ai)(v2.4.7 · MIT)
+원본 그대로 보관 · 출처 `eli5` [anthropics/claude-plugins-community](https://github.com/anthropics/claude-plugins-community/blob/main/eli5/skills/eli5/SKILL.md) · `ui-ux-pro-max-skill` [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)(v2.15.0 · MIT) · `im-not-ai` [epoko77-ai/im-not-ai](https://github.com/epoko77-ai/im-not-ai)(v2.4.8 · MIT)
 
 | <div align="center"><sub>스킬</sub></div> | <sub>용도</sub> | <sub>이렇게 요청</sub> |
 |:---|:---:|:---:|
