@@ -8,7 +8,7 @@
 | <sub>슬랙 알림</sub> | <sub>매일 09:10</sub> | <sub>전일 업데이트 내역을 채널에 한 건으로 묶어 게시 — 업데이트 없는 날은 생략</sub> |
 | <sub>내 PC 업데이트</sub> | <sub>매주 월 09:00</sub> | <sub>이 리포를 받아 내 Claude Code에 반영 — 아래 「처음 설치」 3)을 등록한 PC만</sub> |
 
-**현재 반영본** — 원본 `8817de3`(2026.11.27 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 183건(최신 2026.11.27)
+**현재 반영본** — 원본 `8817de3`(2026.11.27 커밋) · 하네스 7종 · 스킬 18종 · 릴리즈노트 184건(최신 2026.11.27)
 <!-- SYNC-STATUS:END -->
 
 김단영(dykim)의 Claude Code **스킬**과 **에이전트 하네스**를 받아 쓰는 공유용 리포. 원본 리포 `dykim-claude-agents-skills`에서 개인 전용 항목만 뺀 나머지를 1:1로 담고, 원본이 바뀌면 매주 함께 갱신
@@ -148,7 +148,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 <!-- RELEASE-NOTES:START — share/build-release-notes.sh 가 미러할 때마다 다시 만든다. 이 사이는 직접 고치지 않는다 -->
 ## 릴리즈노트
 
-원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 183건 · 최신 2026.11.27). 상세는 항목 이름을 눌러 해당 README 에서 확인
+원본 각 폴더 README 의 릴리즈노트를 일자별로 모은 기록 (총 184건 · 최신 2026.11.27). 상세는 항목 이름을 눌러 해당 README 에서 확인
 
 ### 공통 반영 사항
 
@@ -167,7 +167,7 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 
 | <sub>일자</sub> | <sub>공통</sub> | <sub>하네스</sub> | <sub>스킬</sub> |
 |:---:|:---|:---|:---|
-| <sub>2026.11.27</sub> |  | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>[im-not-ai](skills/im-not-ai/README.md)</sub> |
+| <sub>2026.11.27</sub> |  | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>[im-not-ai](skills/im-not-ai/README.md) · [ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.26</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.25</sub> |  | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
 | <sub>2026.11.24</sub> |  |  | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> |
@@ -208,12 +208,13 @@ QA        qa-master (TC 엑셀 설계) → agent/test-runner (브라우저 수�
 ### 상세 내역 (월별)
 
 <details open>
-<summary><b>2026.11</b> · 65건</summary>
+<summary><b>2026.11</b> · 66건</summary>
 
 | <sub>일자</sub> | <sub>구분</sub> | <sub>항목</sub> | <div align="center"><sub>내용</sub></div> | <sub>소유자</sub> |
 |:---:|:---:|:---:|:---|:---:|
 | <sub>2026.11.27</sub> | <sub>하네스</sub> | <sub>[sales-quotes](agent/sales-quotes/README.md)</sub> | <sub>`inline_css.py`에 정본 마커 `/*__HOUSE_STYLE_DOC__*/` 추가 — 로컬 설치 정본 `~/.claude/house-style/house-style.css`(→ 리포 `global-house-style`) 주입, 수기 렌더 골격 = 정본 문서형(topbar · lnb · cover · toc). `template/house-style.css` 마커는 build_report.py 레거시 전용으로 유지</sub> | <sub>—</sub> |
 |  | <sub>스킬</sub> | <sub>[im-not-ai](skills/im-not-ai/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.4.7 → v2.4.8 · 커밋 4건(e9793d7까지): 명사 연쇄와 긴 관형절을 만드는 F-5·E-5 처방 수정 · F-5 '-적' 탈락을 굳은 두 낱말 합성어로만 한정 · C-8 해체 예시 하나에 대조 표지를 남기도록 플레이북 정리</sub> | <sub>김단영</sub> |
+|  | <sub>스킬</sub> | <sub>[ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill/README.md)</sub> | <sub>원본 깃허브 업데이트 반영 — v2.15.0 · 커밋 6건(11ca2b3까지): 모션 스킬에 상시 · 연속 장식 효과 프리셋 추가 · 로고 · CIP · 아이콘 생성기의 .env 파일 UTF-8 읽기 수정 · Tailwind 설정 파일(.cts/.mts) 보호 처리와 다크모드 질의 인식 수정</sub> | <sub>김단영</sub> |
 | <sub>2026.11.26</sub> | <sub>공통</sub> | <sub>[global-house-style](global-house-style/README.md)</sub> | <sub>매거진 타이틀 — 토프바 · LNB · 맨위로 버튼은 그대로, 표지(머리글 줄 · 큰 제목 · 도입문 · 칸 나눈 정보 줄) · 목차(큰 제목 · 번호 열 · 헤어라인 행) · 섹션 첫머리(강조선 · Primary 번호 머리글 · 큰 제목 · 오른쪽 단 거버닝) · 소제목 헤어라인 · 요약 스탯 큰 숫자 신설. 거버닝 근거는 「·」로 잇지 않고 불릿(`ul.sub`), 장(PART)으로 나눈 문서는 계층 번호(1-1 · §1-4) · 참조 줄바꿈 방지(`span.nw`) 추가</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>S1 분석 보고서 매거진 타이틀 — PART 구분 면(Primary 짙은 단계 ↔ 밝은 단계 빛 번짐 · PART마다 위치 다르게 · 내용 위아래 가운데 · 큰 로마 숫자), 번호 = PART-섹션 계층(1-1 · 3-1, 머리글 · LNB · 목차 · 본문 참조 §1-4 · 출처 표 일치), 거버닝 근거 불릿(`ul.sub`), 목차 PART 행 강조색 머리글. 골격 「문서 전용」 블록 · `rfp-report-format` §3 · §4 · `rfp-insight-lenses` 넣는 곳 번호 반영</sub> | <sub>김단영</sub> |
 |  | <sub>하네스</sub> | <sub>[proposal](agent/proposal/README.md)</sub> | <sub>S1 중점 과제 표기 변경 — 분석 보고서 · `01_rfp.md`에서 `KT-1` 같은 코드 대신 「과제1 - 과제명」. 골격(목차 · LNB · PART Ⅲ 제목 · §5 표 견본 신설) · `rfp-report-format` §3 · §4 검수 · `rfp-analyst` 원칙 반영</sub> | <sub>김단영</sub> |
