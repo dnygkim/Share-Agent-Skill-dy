@@ -2,9 +2,12 @@
    하우스 스타일 (정본) — 하네스·스킬 밖 범용 HTML 산출물용
    ----------------------------------------------------------------------------
    기준본 : A세무법인-업무 AI 플래너_권한정책매트릭스_초안(260810).html
-   갱신일 : 2026-11-16 (컬러 3종 토큰 Primary · Secondary · Default — 추출 전 컬러 질문 답을 §2 토큰으로 받는 구조,
+   갱신일 : 2026-11-26 (매거진 타이틀 — 토프바 · LNB · 맨위로 버튼은 그대로, 영역별 주요 타이틀 강조 · 오너 지시 「좀 더 매거진스럽게」
+                        시안 3차 확인. 표지 §6 · 목차 §7 · 섹션 첫머리 §8(강조선 + 번호 머리글 + 큰 제목) ·
+                        거버닝 오른쪽 단 + 근거 불릿 §9 · 마무리 §16 · 요약 스탯 큰 숫자 §20. 색은 더하지 않는다 — 크기 대비 · 1px 선 · Primary)
+   이전   : 2026-11-16 (컬러 3종 토큰 Primary · Secondary · Default — 추출 전 컬러 질문 답을 §2 토큰으로 받는 구조,
                         반전 블록 · 강조선 = --accent 연결, 반전 글자 rgba = --on-primary-rgb 토큰화 · 기본 렌더 동일)
-   이전   : 2026-11-11 (막대 · 마일스톤 그래프 §23 추가 — 수치 비교 · 시점 추이 · 발주 일정 D-day, 오너 지시 「그래프로 표현」)
+           2026-11-11 (막대 · 마일스톤 그래프 §23 추가 — 수치 비교 · 시점 추이 · 발주 일정 D-day, 오너 지시 「그래프로 표현」)
            2026-11-10 (외부링크 아이콘 = 블랙 라인 · 투명도 제거, 본문 고유명사도 같은 a.ext 로 연결 — §22, 오너 지시)
            2026-10-22 (상세 텍스트 조금 크게 — 본문·표·노트·목록 글자 1px 확대, 오너 지시)
            2026-09-17 (어절 단위 줄바꿈 keep-all · 제목 text-wrap:balance)
@@ -80,6 +83,9 @@
   --accent:var(--primary);   /* 강조 = Primary */
   --warn:var(--secondary);   /* 주의 = Secondary */
   --navh:52px;          /* 상단 토프바 높이 */
+  --mag-display:clamp(30px,3.5vw,42px);   /* 섹션 · 목차 · PART 제목 (2026-11-26 매거진 타이틀) */
+  --mag-cover:clamp(40px,5.4vw,62px);     /* 표지 제목 */
+  --mag-kicker:12px;                      /* 머리글(eyebrow · PART 라벨) */
 
   --font-title:'Paperlogy','Pretendard Variable','Pretendard','Malgun Gothic',sans-serif;
   --font-body:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,system-ui,
@@ -107,7 +113,8 @@
    토큰만 바꾸면 따라오는 곳 (2026-11-16 연결 — 선택자별 덮기 불필요):
      --accent(= Primary) : .topbar · .lnb a.active · header.cover 선 · h2 선 · .tag.pick · .concept 선 ·
                            thead 선 · tr.grp 선 · .findings 점 · .node.key · .fnode.key · .thead ·
-                           .module .badge · .note.key 선 · .closing · .totop · a.ext hover · 그래프 .key
+                           .module .badge · .note.key 선 · .closing · .totop · a.ext hover · 그래프 .key ·
+                           (2026-11-26) 섹션 · 목차 · 표지 강조선 · 번호 머리글 · 근거 불릿 · 요약 스탯 숫자
      --on-primary-rgb    : .logo .divider · .logo .sub · .topbar-meta · .topbar-meta .divider ·
                            .lnb a.active b · .thead .no · .rb.inv · .closing .sub · 어두운 블록 안 a.ext 밑줄
      --paper-rgb         : 모바일 .lnb 반투명 바탕
@@ -181,8 +188,9 @@ h1,h2,h3,.concept p,.closing p,.cover .lead{text-wrap:balance;}
 .doc{flex:1;min-width:0;max-width:940px;padding:0 0 90px;}
 
 
-/* ===== 6. 표지 =========================================================== */
-header.cover{padding:52px 0 32px;border-bottom:2px solid var(--accent);margin-bottom:40px;}
+/* ===== 6. 표지 — 매거진 커버 (2026-11-26) ===============================
+   머리글 줄(강조선 + eyebrow) → 큰 제목 → 도입문(.lead — 마크업은 제목 앞, 화면은 제목 아래) → 요약 → 칸 나눈 정보 줄
+   ========================================================================= */
 .eyebrow{
   font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:.08em;
   color:var(--ink-2);margin:0 0 18px;
@@ -191,31 +199,48 @@ h1{font-family:var(--font-title);font-weight:900;font-size:32px;line-height:1.38
 h1 .lead{display:block;font-weight:400;font-size:17px;color:var(--ink-2);margin-bottom:9px;letter-spacing:-.01em;}
 .meta{display:flex;flex-wrap:wrap;gap:0 28px;font-size:13px;color:var(--ink-3);margin-top:24px;}
 .meta span b{font-family:var(--font-title);font-weight:600;color:var(--ink-2);}
-
-
-/* ===== 7. 목차 =========================================================== */
-.toc{border:1px solid var(--line);background:var(--surface);padding:22px 26px 18px;margin:0 0 44px;}
-.toc h2{
-  font-family:var(--font-title);font-weight:600;font-size:14px;margin:0 0 14px;
-  padding:0;border:0;letter-spacing:.06em;color:var(--ink-2);
+header.cover{padding:56px 0 0;margin-bottom:64px;}
+header.cover .eyebrow{font-size:var(--mag-kicker);margin:0 0 44px;padding-top:14px;border-top:1px solid var(--accent);}
+header.cover h1{
+  display:flex;flex-direction:column-reverse;   /* 큰 제목 먼저, .lead 는 그 아래 도입문 */
+  font-size:var(--mag-cover);font-weight:800;line-height:1.08;letter-spacing:-.045em;margin:0 0 30px;
 }
-.toc ol{list-style:none;margin:0;padding:0;columns:2;column-gap:40px;}
-.toc > ol > li{margin:0 0 11px;break-inside:avoid;page-break-inside:avoid;}
+header.cover h1 .lead{
+  margin:22px 0 0;max-width:700px;font-family:var(--font-title);font-weight:600;font-size:20px;
+  line-height:1.5;letter-spacing:-.025em;color:var(--ink);
+}
+header.cover > p{font-size:15px;line-height:1.75;color:var(--ink-2);}
+header.cover .meta{gap:0;margin-top:44px;border-top:1px solid var(--accent);border-bottom:1px solid var(--line);}
+header.cover .meta span{flex:1 1 130px;padding:12px 18px 14px;font-size:13px;line-height:1.55;color:var(--ink);border-left:1px solid var(--line);}
+header.cover .meta span:first-child{flex:2.4 1 280px;padding-left:0;border-left:0;}
+header.cover .meta span b{display:block;margin-bottom:3px;font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--ink-3);}
+
+
+/* ===== 7. 목차 — 매거진 차례 (2026-11-26) ===============================
+   강조선 + 큰 제목, 번호 열(가는 숫자 · 계층 번호 1-1 까지 들어가는 폭) + 헤어라인 행, 하위 항목은 「·」로 한 줄
+   ========================================================================= */
+.toc{border:0;border-top:1px solid var(--accent);background:none;padding:0;margin:0 0 80px;}
+.toc h2{
+  position:relative;font-family:var(--font-title);font-weight:800;font-size:var(--mag-display);line-height:1.18;
+  margin:0 0 30px;padding:38px 0 0;border:0;letter-spacing:-.04em;color:var(--ink);
+}
+.toc h2::before{content:"";position:absolute;top:16px;left:0;width:26px;height:2px;background:var(--accent);}
+.toc ol{list-style:none;margin:0;padding:0;columns:2;column-gap:52px;}
+.toc > ol > li{margin:0;padding:11px 0;border-top:1px solid var(--line);break-inside:avoid;page-break-inside:avoid;}
 .toc > ol > li > a{
-  font-family:var(--font-title);font-weight:700;font-size:14px;letter-spacing:-.015em;
+  font-family:var(--font-title);font-weight:700;font-size:15.5px;letter-spacing:-.02em;
   color:var(--ink);text-decoration:none;
 }
 .toc > ol > li > a:hover{text-decoration:underline;}
-.toc > ol > li > a .n{font-weight:500;color:var(--ink-3);margin-right:7px;}
-.toc ul{list-style:none;margin:3px 0 0;padding:0 0 0 21px;}
-.toc ul li{margin:0 0 1px;}
+.toc > ol > li > a .n{display:inline-block;min-width:42px;margin-right:4px;font-weight:300;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+.toc ul{list-style:none;margin:4px 0 0;padding:0 0 0 46px;}
+.toc ul li{display:inline;}
+.toc ul li + li::before{content:" · ";color:var(--ink-3);font-size:12.5px;}
 .toc ul li a{font-size:12.5px;color:var(--ink-2);text-decoration:none;line-height:1.6;}
 .toc ul li a:hover{color:var(--ink);text-decoration:underline;}
-.toc ul li a:before{content:"– ";color:var(--ink-3);}
 
 
 /* ===== 8. 섹션 · 인라인 ================================================== */
-section{margin:0 0 42px;}
 h2{
   font-family:var(--font-title);font-weight:800;font-size:20px;margin:0 0 16px;
   padding-bottom:9px;border-bottom:1px solid var(--accent);letter-spacing:-.025em;
@@ -226,6 +251,31 @@ h3{
   letter-spacing:-.02em;color:var(--ink);
 }
 h3:first-of-type{margin-top:16px;}
+/* 섹션 첫머리 — 매거진 타이틀 (2026-11-26)
+   강조선(섹션 위 1px) → 번호 머리글(h2 .num · 숫자만 · Primary) → 큰 제목(h2).
+   거버닝(.concept)이 바로 이어지면 왼쪽 큰 제목 · 오른쪽 거버닝 + 근거 불릿의 2단(§9).
+   장(PART)으로 나눈 문서는 번호를 PART-섹션 계층(1-1 · 3-1)으로 쓴다 — 머리글 · LNB · 목차 · 본문 참조(§1-4) 같은 번호 */
+section{margin:0 0 76px;}
+section:has(> h2){border-top:1px solid var(--accent);}
+section > h2{
+  position:relative;margin:0 0 30px;padding:42px 0 0;border:0;
+  font-size:var(--mag-display);font-weight:800;line-height:1.16;letter-spacing:-.04em;
+}
+section > h2 .num{
+  position:absolute;top:13px;left:0;margin:0;
+  font-size:13px;font-weight:800;letter-spacing:.06em;line-height:1;color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+section > h2#ssrc .num{display:none;}   /* 출처처럼 번호 없는 섹션(·)은 머리글 숫자 자리를 비운다 */
+section > h2:has(+ .concept){float:left;width:38%;margin-bottom:36px;}
+section > h2 + .concept + *{clear:both;}
+section::after{content:"";display:block;clear:both;}
+/* 소제목 — 헤어라인 행 머리 */
+section > h3{
+  margin:44px 0 14px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:20px;font-weight:700;line-height:1.4;letter-spacing:-.03em;
+}
+section > h3:first-of-type{margin-top:30px;}
 /* 앵커 이동 목적지 보정 (2026-08-27) — LNB·목차·본문 링크가 어디로 점프하든
    sticky 토프바(52px)가 제목을 덮지 않게 한다. h2/h3 에만 걸면 <section id="sN">
    처럼 래퍼가 id 를 갖는 문서에서 제목이 통째로 가려진다. id 를 가진 모든
@@ -256,6 +306,8 @@ a{color:var(--ink);}
 
 .jump{font-size:12.5px;color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line);}
 .jump:hover{color:var(--ink);border-bottom-color:var(--ink);}
+/* 계층 번호 참조(§1-4 · §3-1-2)가 줄 끝에서 「1- / 4」로 갈라지지 않게 — 이동 링크 .jump · 본문 참조 span.nw (2026-11-26) */
+.nw,.jump{white-space:nowrap;}
 
 
 /* ===== 9. 콘셉트 (섹션 두괄식 한 문장) =================================== */
@@ -268,6 +320,17 @@ a{color:var(--ink);}
   margin-top:11px;font-family:var(--font-body);font-size:15px;font-weight:400;
   line-height:1.7;letter-spacing:-.003em;color:var(--ink-2);
 }
+/* 섹션 첫머리 오른쪽 단 (2026-11-26) — h2 바로 뒤 .concept 는 박스 없이 거버닝 + 근거 */
+section > h2 + .concept{margin:0 0 36px 42%;padding:44px 0 0;border:0;background:none;}
+section > h2 + .concept p{font-size:19px;font-weight:700;line-height:1.55;letter-spacing:-.03em;}
+section > h2 + .concept .sub{margin-top:12px;font-size:14.5px;font-weight:400;line-height:1.75;letter-spacing:-.003em;}
+/* 근거 = 항목별 불릿 <ul class="sub"><li>…</li></ul> (2026-11-26 오너 지시 「애매하게 줄바꿈처리하지말고 블릿포인트로」)
+   「·」로 이어 붙인 한 문단은 좁은 단에서 항목 중간이 끊긴다. 한 항목 = 한 사실 · 한 줄 안, 2–4개. 불릿 = Primary 작은 사각 */
+.concept ul.sub{list-style:none;margin:16px 0 0;padding:0;font-family:var(--font-body);font-size:14.5px;font-weight:400;
+  line-height:1.6;letter-spacing:-.003em;color:var(--ink-2);}
+.concept ul.sub li{position:relative;margin:0 0 7px;padding-left:15px;text-wrap:balance;}   /* 두 줄이면 가운데 근처에서 나눈다 */
+.concept ul.sub li:last-child{margin-bottom:0;}
+.concept ul.sub li::before{content:"";position:absolute;left:0;top:.66em;width:5px;height:5px;background:var(--accent);}
 
 
 /* ===== 10. 표 =========================================================== */
@@ -401,8 +464,8 @@ table.src a{word-break:break-all;font-size:12.5px;color:var(--ink-2);}
 /* ===== 16. 마무리 · 푸터 · 맨위로 ======================================= */
 .closing{background:var(--accent);color:var(--paper);border:1px solid var(--accent);padding:38px 26px;text-align:center;}
 .closing p{
-  margin:0;font-family:var(--font-title);font-weight:900;font-size:22px;
-  line-height:1.5;letter-spacing:-.03em;
+  margin:0;font-family:var(--font-title);font-weight:900;font-size:26px;
+  line-height:1.45;letter-spacing:-.04em;
 }
 .closing .sub{
   margin-top:12px;font-family:var(--font-body);font-size:14px;font-weight:400;
@@ -456,9 +519,13 @@ pre.mermaid.mm-fail::before{
   h1{font-size:25px;}
   h2{font-size:18px;}
   .concept p{font-size:17.5px;}
-  .closing p{font-size:19px;}
-  .toc{padding:18px 18px 14px;}
+  .closing p{font-size:20px;}
   .toc ol{columns:1;}
+  /* 매거진 타이틀 — 좁은 화면은 2단을 풀어 위아래로 */
+  section{margin-bottom:56px;}
+  section > h2:has(+ .concept){float:none;width:auto;margin-bottom:18px;}
+  section > h2 + .concept{margin:0 0 26px;padding:0;}
+  header.cover .meta span,header.cover .meta span:first-child{flex:1 1 100%;padding-left:0;border-left:0;border-top:1px solid var(--line-2);}
   .tier{display:block;}
   .tier dt{margin-bottom:4px;}
   .node{min-width:0;width:100%;}
@@ -483,7 +550,12 @@ pre.mermaid.mm-fail::before{
   h3{font-size:11pt;}
   .concept p{font-size:13.5pt;}
   .closing p{font-size:15pt;}
-  section{margin-bottom:26px;}
+  section{margin-bottom:34px;}
+  /* 매거진 타이틀 인쇄 크기 */
+  header.cover h1{font-size:30pt;}
+  section > h2,.toc h2{font-size:20pt;}
+  section > h3{font-size:12.5pt;}
+  section > h2 + .concept{break-inside:avoid;}
   thead th{background:#f2f2f2;}
   table,.loop,.flow,.findings,.closing,.concept,.toc,.tree,.mmwrap{break-inside:avoid;page-break-inside:avoid;}
   tr,li,.module,.tier{break-inside:avoid;page-break-inside:avoid;}
@@ -502,15 +574,20 @@ pre.mermaid.mm-fail::before{
 }
 
 
-/* ===== 20. 요약 스탯 그리드 (Executive Header · prd 하네스) ============
-   섹션 0 "퀵 스탯" 등 핵심 수치를 카드 한 줄로 보여줄 때 쓴다.
-   색으로 구분하지 않는다 — 헤어라인(--line)으로 카드를 나눈 흰 격자.
+/* ===== 20. 요약 스탯 — 큰 숫자 + 헤어라인 열 (Executive Header · prd 하네스) =====
+   섹션 0 "퀵 스탯" 등 핵심 수치를 한 줄로 보여줄 때 쓴다.
+   2026-11-26 매거진 타이틀: 카드 격자 → 강조선 아래 큰 숫자(Primary) 열, 열 사이는 헤어라인(--line).
+   열 왼쪽 선은 box-shadow — 줄의 첫 열 선은 overflow:hidden 으로 잘려 보이지 않는다
    ========================================================================= */
-.stats{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);margin:10px 0 16px;}
-.stat{flex:1 1 150px;background:var(--surface);padding:14px 18px;}
-.stat .v{font-family:var(--font-title);font-weight:800;font-size:21px;letter-spacing:-.02em;color:var(--ink);white-space:nowrap;}
-.stat .v .u{font-family:var(--font-body);font-weight:400;font-size:11.5px;color:var(--ink-3);margin-left:2px;}
-.stat .l{font-size:12.5px;color:var(--ink-2);margin-top:4px;}
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;
+  border-top:1px solid var(--accent);border-bottom:1px solid var(--line);overflow:hidden;margin:20px 0 30px;
+}
+.stat{padding:18px;box-shadow:-1px 0 0 var(--line);}
+.stat .v{font-family:var(--font-title);font-weight:800;font-size:clamp(26px,2.7vw,34px);line-height:1.1;letter-spacing:-.045em;color:var(--accent);white-space:nowrap;}
+.stat .v .u{font-family:var(--font-body);font-weight:500;font-size:12.5px;letter-spacing:0;color:var(--ink-3);margin-left:4px;}
+.stat .l{font-size:12.5px;line-height:1.5;color:var(--ink-2);margin-top:12px;}
+@media print{.stat .v{font-size:18pt;}}
 
 
 /* ===== 21. 간트 · 타임라인 (WBS 시각화 · prd 하네스) ===================

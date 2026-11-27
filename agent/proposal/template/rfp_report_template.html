@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="revision" content="{YYYYMMDD}">
 <!-- ═══ 수정 이력 ═══
-[{YYYYMMDD}] {작성자} · 수정 페이지: 전체(§0 – §{N} · 출처) · 내역: 최초 작성 v0.1, {RFP 정본 파일} 요건 구조화(FR {n} · KT {n} · NFR {n} · CON {n}) + 공개 자료 리서치, 고객사 CI 적용 — Primary {#HEX}({출처})
+[{YYYYMMDD}] {작성자} · 수정 페이지: 전체(§0 – §{N} · 출처) · 내역: 최초 작성 v0.1, {RFP 정본 파일} 요건 구조화(FR {n} · 중점 과제 {n} · NFR {n} · CON {n}) + 공개 자료 리서치, 고객사 CI 적용 — Primary {#HEX}({출처})
 -->
 <meta name="author" content="{작성자}">
 <title>RFP 분석 · 리서치 보고서 — {클라이언트명}</title>
@@ -20,30 +20,76 @@
        (= ../../global-house-style/house-style.css) 전문을 그대로 붙여 넣는다. link 금지.
      ★ {중괄호}는 전부 치환한다. 남은 { } 자리표시자는 검수에서 0건이어야 한다.
      ★ 섹션 안 컴포넌트는 견본이다 — 내용 성격에 맞는 것만 골라 쓰고 통째로 나열하지 않는다.
+     ★ 번호 = PART-섹션 계층(2026-11-26) — PART 마다 1부터: 1-1 … 1-10 · 2-1 · 3-1 … · 4-1 …, 요약 = 0.
+       h2 .num · LNB · 목차 · 본문 참조(§1-4, 소항목 §1-7-4) · 출처 표 섹션 칸이 같은 번호. id 는 s01 … 순번 그대로(앵커용).
+       본문 참조는 a.jump 또는 span.nw 로 감싸 줄 끝에서 갈라지지 않게, 출처 표 섹션 칸은 묶음마다 <br> 로 한 줄씩.
+     ★ 거버닝 근거 = <ul class="sub"> 불릿 2–4개(2026-11-26) — 한 항목 = 한 사실 · 한 줄 안, 「·」로 이어 붙인 한 문단 금지.
      ============================================================================ -->
 <style>
 /* ▼▼▼ ~/.claude/house-style/house-style.css 전문 삽입 ▼▼▼ */
 @@HOUSE_STYLE@@
 /* ▲▲▲ 삽입 끝 ▲▲▲ */
 
-/* 문서 전용 — PART 구분 · LNB 2단 (RFP 분석 보고서 공통 구성) */
-.part-title{display:flex;align-items:center;gap:12px;margin:56px 0 26px;padding-bottom:12px;border-bottom:2px solid var(--ink);}
-.part-title .pno{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:0 0 38px;
-  background:var(--ink);color:var(--paper);font-family:var(--font-title);font-weight:800;font-size:18px;}
-.part-title h2{margin:0;padding:0;border:0;font-size:27px;font-weight:900;}
-.part-title .pdesc{margin-left:auto;font-family:var(--font-title);font-weight:500;font-size:12.5px;color:var(--ink-3);letter-spacing:.04em;}
+/* 문서 전용 — PART 구분 · LNB 2단 · 목차 PART 행 (RFP 분석 보고서 공통 구성)
+   2026-11-26 매거진 타이틀(오너 시안 3차 확인): PART 구분 = Primary 명도 대비 면 + 큰 로마 숫자, 내용 위아래 가운데.
+   바탕 3색은 모두 --accent(Primary)의 명도 · 채도 단계(짙은 단계 ↔ 밝고 선명한 단계 빛 번짐) — 새 색 없음,
+   무채색 Primary(하우스 기본 ink)는 검정 ↔ 회색. 빛 번짐 위치는 PART 마다 조금씩 다르게(#p2 – #p4) */
+.part-title{
+  --pt-deep:color-mix(in oklab,var(--accent) 52%,#000);   /* 짙은 단계 (상대 색 문법 미지원 브라우저 값) */
+  --pt-glow:color-mix(in oklab,var(--accent) 55%,#fff);   /* 밝은 단계 */
+  --gx:88%;--gy:0%;--dx:0%;--dy:100%;
+  display:grid;grid-template-columns:minmax(150px,auto) 1fr;align-items:center;align-content:center;gap:12px 48px;
+  min-height:264px;margin:104px 0 56px;padding:44px 52px;border:0;color:#fff;
+  background:
+    radial-gradient(72% 130% at var(--gx) var(--gy),var(--pt-glow) 0%,transparent 64%),
+    radial-gradient(62% 120% at var(--dx) var(--dy),var(--pt-deep) 0%,transparent 72%),
+    var(--accent);
+}
+@supports (color:oklch(from red l c h)){
+  .part-title{
+    --pt-deep:oklch(from var(--accent) calc(l * .52) c h);              /* 더 짙게 */
+    --pt-glow:oklch(from var(--accent) calc(l + .3) calc(c * 1.9) h);   /* 더 밝고 선명하게 */
+  }
+}
+#p2.part-title{--gx:100%;--gy:100%;--dx:0%;--dy:0%;}
+#p3.part-title{--gx:52%;--gy:0%;--dx:100%;--dy:100%;}
+#p4.part-title{--gx:0%;--gy:0%;--dx:100%;--dy:100%;}
+.part-title .pno{
+  grid-column:1;grid-row:1 / span 2;align-self:center;display:block;
+  font-family:var(--font-title);font-weight:800;font-size:128px;line-height:.78;letter-spacing:-.02em;color:#fff;
+}
+.part-title .pno::before{
+  content:"PART";display:block;margin-bottom:20px;font-size:var(--mag-kicker);font-weight:700;line-height:1;
+  letter-spacing:.18em;color:rgba(255,255,255,.82);
+}
+.part-title h2{grid-column:2;grid-row:2;align-self:start;margin:0;padding:0;border:0;color:#fff;
+  font-size:var(--mag-display);font-weight:800;line-height:1.16;letter-spacing:-.04em;}
+.part-title .pdesc{grid-column:2;grid-row:1;align-self:end;margin:0 0 14px;font-family:var(--font-title);
+  font-size:var(--mag-kicker);font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.86);}
+.part-title + section{border-top:0;}
 .lnb li.part{margin-top:8px;}
 .lnb li.part:first-child{margin-top:0;}
 .lnb li.part a{font-weight:700;color:var(--ink);}
 .lnb li.part a.active{color:var(--paper);}
-.lnb li.sub a{font-size:11.5px;font-weight:400;padding:5px 10px 5px 20px;}
-.lnb li.sub a b{font-weight:500;margin-right:6px;}
-.toc li.tpart{margin:4px 0 8px !important;}
-.toc li.tpart a{font-family:var(--font-title);font-weight:600 !important;font-size:11.5px !important;letter-spacing:.08em !important;color:var(--ink-3) !important;}
+/* 하위 항목 — 계층 번호(1-4 · 3-1) 폭과 관계없이 두 줄이 되면 둘째 줄을 글자 시작선에 맞춘다 */
+.lnb li.sub a{display:flex;gap:6px;font-size:11.5px;font-weight:400;padding:5px 10px 5px 20px;}
+.lnb li.sub a b{flex:none;font-weight:500;margin-right:0;font-variant-numeric:tabular-nums;}
+.toc li.tpart{margin:18px 0 0 !important;padding:12px 0 6px !important;border-top:1px solid var(--accent) !important;}
+.toc li.tpart:first-child{margin-top:0 !important;}
+.toc li.tpart a{font-family:var(--font-title);font-weight:700 !important;font-size:11.5px !important;letter-spacing:.14em !important;color:var(--accent) !important;}
 code{font-size:.9em;background:var(--paper-2);padding:0 4px;border-radius:2px;}
-@media print{.part-title .pno{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+@media print{
+  .part-title{margin:40px 0 28px;break-after:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .part-title .pno{font-size:54pt;}
+  .part-title h2{font-size:20pt;}
+}
 @media (max-width:960px){.lnb li.part{margin-top:0;} .lnb li.sub a{padding:6px 9px;}}
-@media (max-width:640px){.part-title h2{font-size:22px;} .part-title .pdesc{display:none;}}
+@media (max-width:640px){
+  .part-title{grid-template-columns:1fr;padding:26px 20px 22px;}
+  .part-title .pno{grid-row:auto;font-size:60px;margin-bottom:12px;}
+  .part-title .pdesc{grid-column:1;grid-row:auto;margin:10px 0 0;}
+  .part-title h2{grid-column:1;grid-row:auto;}
+}
 
 /* ===== 2b. CI 오버라이드 — {클라이언트명} ({YYYY-MM-DD} · 고객사 로고 Primary 기본 적용) =====
    값: {출처 — 예) 공식 사이트 {도메인} 공통 CSS :root --color-primary 실측 · 헤더 로고 SVG fill}
@@ -79,10 +125,9 @@ tr.grp td{border-top-color:var(--accent);}
 .lnb a.active{background:var(--accent);}
 a.ext:hover,a.ext:focus-visible{background:var(--accent);}
 .note.key{border-left-color:var(--accent);}
-.part-title{border-bottom-color:var(--accent);}
-.part-title .pno{background:var(--accent);}
+/* PART 구분 면은 위 「문서 전용」 블록이 --accent 를 읽는다 — 여기서 .part-title · .pno 를 다시 칠하지 않는다(2026-11-26) */
 .logo .lg{display:inline-block;height:17px;width:auto;vertical-align:-3px;margin-right:7px;}
-@media print{.topbar,.part-title .pno{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+@media print{.topbar,.part-title{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
 </style>
 </head>
 <body id="top">
@@ -103,29 +148,29 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
   <ul>
     <li><a href="#s00"><b>0</b>요약</a></li>
     <li class="part"><a href="#p1"><b>Ⅰ</b>RFP 분석</a></li>
-    <li class="sub"><a href="#s01"><b>1</b>사업 개요</a></li>
-    <li class="sub"><a href="#s02"><b>2</b>일정</a></li>
-    <li class="sub"><a href="#s03"><b>3</b>범위 · 시스템</a></li>
-    <li class="sub"><a href="#s04"><b>4</b>업무 · 기능 요건</a></li>
-    <li class="sub"><a href="#s05"><b>5</b>중점 요구 과제</a></li>
-    <li class="sub"><a href="#s06"><b>6</b>비기능 · 인력 · 계약</a></li>
-    <li class="sub"><a href="#s07"><b>7</b>평가 기준</a></li>
-    <li class="sub"><a href="#s08"><b>8</b>제안서 구성 · 제출</a></li>
-    <li class="sub"><a href="#s09"><b>9</b>리스크 요인</a></li>
-    <li class="sub"><a href="#s10"><b>10</b>보완 필요 · 질의</a></li>
+    <li class="sub"><a href="#s01"><b>1-1</b>사업 개요</a></li>
+    <li class="sub"><a href="#s02"><b>1-2</b>일정</a></li>
+    <li class="sub"><a href="#s03"><b>1-3</b>범위 · 시스템</a></li>
+    <li class="sub"><a href="#s04"><b>1-4</b>업무 · 기능 요건</a></li>
+    <li class="sub"><a href="#s05"><b>1-5</b>중점 요구 과제</a></li>
+    <li class="sub"><a href="#s06"><b>1-6</b>비기능 · 인력 · 계약</a></li>
+    <li class="sub"><a href="#s07"><b>1-7</b>평가 기준</a></li>
+    <li class="sub"><a href="#s08"><b>1-8</b>제안서 구성 · 제출</a></li>
+    <li class="sub"><a href="#s09"><b>1-9</b>리스크 요인</a></li>
+    <li class="sub"><a href="#s10"><b>1-10</b>보완 필요 · 질의</a></li>
     <li class="part"><a href="#p2"><b>Ⅱ</b>현황 · 시장</a></li>
-    <li class="sub"><a href="#s11"><b>11</b>클라이언트 현황</a></li>
-    <li class="sub"><a href="#s12"><b>12</b>산업 트렌드 · 규제</a></li>
+    <li class="sub"><a href="#s11"><b>2-1</b>클라이언트 현황</a></li>
+    <li class="sub"><a href="#s12"><b>2-2</b>산업 트렌드 · 규제</a></li>
     <li class="part"><a href="#p3"><b>Ⅲ</b>중점 과제 {N}종 심층</a></li>
-    <li class="sub"><a href="#s13"><b>13</b>KT-1 {과제명}</a></li>
+    <li class="sub"><a href="#s13"><b>3-1</b>과제1 - {과제명}</a></li>
     <!-- 과제 수만큼 반복 -->
     <li class="part"><a href="#p4"><b>Ⅳ</b>제안 전략 · 실행</a></li>
-    <li class="sub"><a href="#s{a}"><b>{a}</b>제안 시사점</a></li>
-    <li class="sub"><a href="#s{b}"><b>{b}</b>수행 이력 · 실적</a></li>
-    <li class="sub"><a href="#s{c}"><b>{c}</b>메시지 · 컨셉 후보</a></li>
-    <li class="sub"><a href="#s{d}"><b>{d}</b>실행 체계 초안</a></li>
-    <li class="sub"><a href="#s{e}"><b>{e}</b>{연도} 로드맵</a></li>
-    <li class="sub"><a href="#s{f}"><b>{f}</b>지면 배분 · 확정</a></li>
+    <li class="sub"><a href="#s{a}"><b>4-1</b>제안 시사점</a></li>
+    <li class="sub"><a href="#s{b}"><b>4-2</b>수행 이력 · 실적</a></li>
+    <li class="sub"><a href="#s{c}"><b>4-3</b>메시지 · 컨셉 후보</a></li>
+    <li class="sub"><a href="#s{d}"><b>4-4</b>실행 체계 초안</a></li>
+    <li class="sub"><a href="#s{e}"><b>4-5</b>{연도} 로드맵</a></li>
+    <li class="sub"><a href="#s{f}"><b>4-6</b>지면 배분 · 확정</a></li>
     <li><a href="#ssrc"><b>·</b>출처</a></li>
   </ul>
 </aside>
@@ -157,8 +202,8 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
   <ol>
     <li><a href="#s00"><span class="n">0</span>요약</a><ul><li><a href="#s00-1">핵심 판단 {n}가지</a></li><li><a href="#s00-2">바로 확인할 것</a></li></ul></li>
     <li class="tpart"><a href="#p1">PART Ⅰ · RFP 분석</a></li>
-    <li><a href="#s01"><span class="n">1</span>사업 개요</a></li>
-    <li><a href="#s02"><span class="n">2</span>일정</a><ul><li><a href="#s02-1">발주 일정 · D-day</a></li><li><a href="#s02-2">내부 작업 일정 초안</a></li></ul></li>
+    <li><a href="#s01"><span class="n">1-1</span>사업 개요</a></li>
+    <li><a href="#s02"><span class="n">1-2</span>일정</a><ul><li><a href="#s02-1">발주 일정 · D-day</a></li><li><a href="#s02-2">내부 작업 일정 초안</a></li></ul></li>
     <!-- … 섹션마다 h3 하위를 같은 방식으로 … -->
     <li class="tpart"><a href="#p2">PART Ⅱ · 현황 · 시장</a></li>
     <li class="tpart"><a href="#p3">PART Ⅲ · 중점 과제 {N}종 심층 분석 · 레퍼런스</a></li>
@@ -174,7 +219,7 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
   <h2 id="s00"><span class="num">0</span>요약</h2>
   <div class="concept">
     <p>{보고서 전체 결론 한 줄 — 「현상, 결론」 / 「A가 아니라 B」}</p>
-    <p class="sub">{배점 · 규모 등 근거 수치 한 줄}</p>
+    <ul class="sub"><li>{근거 수치 1 — 한 항목 = 한 사실 · 한 줄 안}</li><li>{근거 수치 2}</li></ul>
   </div>
   <div class="stats">
     <div class="stat"><div class="v">{12}<span class="u">개월</span></div><div class="l">{사업 기간}</div></div>
@@ -204,8 +249,8 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
 <div class="part-title" id="p1"><span class="pno">Ⅰ</span><h2>RFP 분석</h2><span class="pdesc">STEP 1 · 요건 구조화</span></div>
 
 <section>
-  <h2 id="s01"><span class="num">1</span>사업 개요</h2>
-  <div class="concept"><p>{거버닝}</p><p class="sub">{근거}</p></div>
+  <h2 id="s01"><span class="num">1-1</span>사업 개요</h2>
+  <div class="concept"><p>{거버닝}</p><ul class="sub"><li>{근거 1}</li><li>{근거 2}</li></ul></div>
   <div class="table-scroll">
     <table>
       <caption>{RFP 장 · 절}</caption>
@@ -217,8 +262,8 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
 
 <!-- 2. 일정 — 견본: 발주 일정 D-day 마일스톤(.ms) + 같은 수치 표 + 내부 작업 간트(§21 · .gbar.mk = 발주처 마감) -->
 <section>
-  <h2 id="s02"><span class="num">2</span>일정</h2>
-  <div class="concept"><p>{거버닝}</p><p class="sub">{제출까지 영업일 · 동시 마감 항목}</p></div>
+  <h2 id="s02"><span class="num">1-2</span>일정</h2>
+  <div class="concept"><p>{거버닝}</p><ul class="sub"><li>{제출까지 영업일}</li><li>{동시 마감 항목}</li></ul></div>
   <h3 id="s02-1">발주 일정 · D-day</h3>
   <div class="chart">
     <p class="chart-cap">{RFP 장 · 절} · D-day는 {YYYY-MM-DD(요일)} 기준</p>
@@ -242,9 +287,24 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
 </section>
 
 <!-- 3 – 10 : 같은 패턴(h2 + concept + 표/그래프 + h3). 견본 그래프 — 4. 업무 구성 2개(.chart-pair + .hbars) · 7. 배점 막대(.hbars, 최대 배점 .key) + 가격 시나리오 -->
+
+<!-- 5. 중점 요구 과제 — 과제 이름 = 「과제1 - 과제명」(2026-11-26 지시). KT-1 같은 코드 · 코드 열 금지,
+     PART Ⅲ 제목 · 목차 · LNB도 같은 표기. 본문에서 다시 가리킬 때는 「과제1」 -->
 <section>
-  <h2 id="s07"><span class="num">7</span>평가 기준</h2>
-  <div class="concept"><p>{거버닝}</p><p class="sub">{근거}</p></div>
+  <h2 id="s05"><span class="num">1-5</span>중점 요구 과제</h2>
+  <div class="concept"><p>{거버닝}</p><ul class="sub"><li>{근거 1}</li><li>{근거 2}</li></ul></div>
+  <div class="table-scroll">
+    <table>
+      <caption>{RFP 장 · 절 · 평가 항목 대조}</caption>
+      <thead><tr><th style="width:240px">과제</th><th>RFP 요구 핵심</th><th class="c" style="width:64px">배점</th><th class="c" style="width:70px">심층</th></tr></thead>
+      <tbody><tr><td><b>과제1 - {과제명}</b></td><td>{…}</td><td class="c">{n}</td><td class="c"><a class="jump" href="#s13">§3-1</a></td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2 id="s07"><span class="num">1-7</span>평가 기준</h2>
+  <div class="concept"><p>{거버닝}</p><ul class="sub"><li>{근거 1}</li><li>{근거 2}</li></ul></div>
   <div class="chart">
     <p class="chart-cap">{평가 항목별 배점 · 출처}</p>
     <div class="hbars">
@@ -256,7 +316,7 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
 </section>
 
 <section>
-  <h2 id="s10"><span class="num">10</span>보완 필요 · 질의 후보</h2>
+  <h2 id="s10"><span class="num">1-10</span>보완 필요 · 질의 후보</h2>
   <h3 id="s10-1">발주처 질의</h3>
   <div class="table-scroll">
     <table>
@@ -273,8 +333,8 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
 
 <!-- 11. 클라이언트 현황 · 12. 산업 트렌드 · 규제 — 견본: 시장 추이(.cols, 최대 · 최신 .key) · 점유율(.hbars) -->
 <section>
-  <h2 id="s12"><span class="num">12</span>산업 트렌드 · 규제</h2>
-  <div class="concept"><p>{거버닝}</p><p class="sub">{근거}</p></div>
+  <h2 id="s12"><span class="num">2-2</span>산업 트렌드 · 규제</h2>
+  <div class="concept"><p>{거버닝}</p><ul class="sub"><li>{근거 1}</li><li>{근거 2}</li></ul></div>
   <div class="chart">
     <p class="chart-cap">{지표 · 단위 · 기준일 · 출처 a.ext}</p>
     <div class="cols">
@@ -285,12 +345,12 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
   </div>
 </section>
 
-<!-- ===== PART Ⅲ — RFP 중점 과제 수만큼 섹션을 만든다 ======================= -->
+<!-- ===== PART Ⅲ — RFP 중점 과제 수만큼 섹션을 만든다 · 제목 = 「과제N - 과제명」 ===== -->
 <div class="part-title" id="p3"><span class="pno">Ⅲ</span><h2>중점 과제 {N}종 심층 분석 · 레퍼런스</h2><span class="pdesc">STEP 2 · 과제별 요구 해석 → 외부 근거 → 산출물 구성안</span></div>
 
 <section>
-  <h2 id="s13"><span class="num">13</span>KT-1 {과제명}</h2>
-  <div class="concept"><p>{과제별 거버닝}</p><p class="sub">{배점 · 평가 문항 · 중첩 요인}</p></div>
+  <h2 id="s13"><span class="num">3-1</span>과제1 - {과제명}</h2>
+  <div class="concept"><p>{과제별 거버닝}</p><ul class="sub"><li>{배점 · 동점 순위}</li><li>{평가 문항 인용}</li><li>{중첩 요인}</li></ul></div>
   <h3 id="s13-1">요구 해석 · 평가 포인트</h3>
   <div class="table-scroll">
     <table>
@@ -307,12 +367,12 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
 <!-- ===== PART Ⅳ ========================================================== -->
 <div class="part-title" id="p4"><span class="pno">Ⅳ</span><h2>제안 전략 · 실행 초안</h2><span class="pdesc">STEP 3 · 시사점에서 실적 · 메시지 · 실행 · 로드맵 · 지면까지</span></div>
 
-<section><h2 id="s{a}"><span class="num">{a}</span>제안 시사점</h2></section>
-<section><h2 id="s{b}"><span class="num">{b}</span>수행 이력 · 실적 연결</h2><!-- 이트라이브 실적표 → 평가 문항 연결 표 · 현 운영 구도별 전략 차이 --></section>
-<section><h2 id="s{c}"><span class="num">{c}</span>제안 메시지 · 컨셉 후보</h2><!-- 메시지 ↔ 배점 표 · 컨셉 한 문장 후보 3안(1안 추천) --></section>
-<section><h2 id="s{d}"><span class="num">{d}</span>실행 체계 초안</h2><!-- 선투입(인수) 간트 · 운영 절차 플로우 · 직무 구성 --></section>
-<section><h2 id="s{e}"><span class="num">{e}</span>{연도} 연간 로드맵 초안</h2><!-- 분기 · 월 간트 --></section>
-<section><h2 id="s{f}"><span class="num">{f}</span>제안서 지면 배분 · 확정할 것</h2><!-- 지면 배분 막대(.hbars) + 표 · 리뷰에서 확정할 것(번호 · 기한) --></section>
+<section><h2 id="s{a}"><span class="num">4-1</span>제안 시사점</h2></section>
+<section><h2 id="s{b}"><span class="num">4-2</span>수행 이력 · 실적 연결</h2><!-- 이트라이브 실적표 → 평가 문항 연결 표 · 현 운영 구도별 전략 차이 --></section>
+<section><h2 id="s{c}"><span class="num">4-3</span>제안 메시지 · 컨셉 후보</h2><!-- 메시지 ↔ 배점 표 · 컨셉 한 문장 후보 3안(1안 추천) --></section>
+<section><h2 id="s{d}"><span class="num">4-4</span>실행 체계 초안</h2><!-- 선투입(인수) 간트 · 운영 절차 플로우 · 직무 구성 --></section>
+<section><h2 id="s{e}"><span class="num">4-5</span>{연도} 연간 로드맵 초안</h2><!-- 분기 · 월 간트 --></section>
+<section><h2 id="s{f}"><span class="num">4-6</span>제안서 지면 배분 · 확정할 것</h2><!-- 지면 배분 막대(.hbars) + 표 · 리뷰에서 확정할 것(번호 · 기한) --></section>
 
 <!-- ===== 출처 — 증거로 인용한 URL만 · 본문에 모두 연결 ======================= -->
 <section>
@@ -320,10 +380,10 @@ a.ext:hover,a.ext:focus-visible{background:var(--accent);}
   <p class="small muted">외부 자료 확인일 {YYYY-MM-DD}. 표의 모든 URL은 본문 해당 항목에 연결</p>
   <div class="table-scroll">
     <table class="src">
-      <thead><tr><th class="col-n">#</th><th style="width:60px">섹션</th><th>자료</th><th>경로 · URL</th></tr></thead>
+      <thead><tr><th class="col-n">#</th><th style="width:96px">섹션</th><th>자료</th><th>경로 · URL</th></tr></thead>
       <tbody>
-        <tr><td class="col-n">1</td><td>§1 – 10</td><td>{제안요청서 정본 · 쪽수 · 작성일}</td><td class="path">{input/… 경로}</td></tr>
-        <tr><td class="col-n">2</td><td>§{n}</td><td><a class="ext" href="{URL}" target="_blank" rel="noopener">{매체 &#183; 제목(YYYY-MM-DD)}</a></td><td><a href="{URL}" target="_blank" rel="noopener">{URL}</a></td></tr>
+        <tr><td class="col-n">1</td><td><span class="nw">§1-1 – 1-10</span></td><td>{제안요청서 정본 · 쪽수 · 작성일}</td><td class="path">{input/… 경로}</td></tr>
+        <tr><td class="col-n">2</td><td><span class="nw">§{P-n}</span></td><td><a class="ext" href="{URL}" target="_blank" rel="noopener">{매체 &#183; 제목(YYYY-MM-DD)}</a></td><td><a href="{URL}" target="_blank" rel="noopener">{URL}</a></td></tr>
       </tbody>
     </table>
   </div>

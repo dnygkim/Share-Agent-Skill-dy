@@ -325,6 +325,7 @@ corpus 데이터는 별도 `corpus` 브랜치 — `corpus.py`가 git 미추적 `
 | <div align="center"><sub>날짜</sub></div> | <sub>변경</sub> | <sub>사유</sub> |
 |:---|:---:|:---:|
 | <sub>2026.11.19</sub> | <sub>이름 변경 — `harness_st-etribe` → **Sales & Quotes**(폴더 `agent/sales-quotes/`), 사용자 가이드 · 연계 하네스(prd · proposal) · 민감자료 정책 경로 갱신</sub> | <sub>하네스 이름을 영업 · 견적 용도로 정리(오너 지시)</sub> |
+| <sub>2026.11.27</sub> | <sub>`inline_css.py`에 정본 마커 `/*__HOUSE_STYLE_DOC__*/` 추가 — 로컬 설치 정본 `~/.claude/house-style/house-style.css`(→ 리포 `global-house-style`) 주입, 수기 렌더 골격 = 정본 문서형(topbar · lnb · cover · toc). `template/house-style.css` 마커는 build_report.py 레거시 전용으로 유지</sub> | <sub>건설사 앱 추가공수 산정 근거가 template/ 구세대 사본(11-16 컬러 토큰 · 11-26 매거진 타이틀 미반영)으로 렌더되어 「예전 버전」으로 보인 사고(오너 지적)</sub> |
 | <sub>2026.11.17</sub> | <sub>공수 방법론 §12 산정 함정 12 추가 — 견적 PDF 숨은 비율 셀(EQ 엑셀 상세내역 상단 흰 글자 · 인쇄 영역 안)을 인쇄 영역 밖으로 옮기고 `pdftotext`로 0 확인</sub> | <sub>제안 하네스 시각 확인에서 이트라이브 견적 PDF 46건 중 38건의 텍스트 층에 특급 · 고급 이하 제안단가 비율 잔존 확인</sub> |
 | <sub>2026.11.16</sub> | <sub>공수 방법론 §12 산정 함정 4건 추가 — 1 M/M 환산 20.8일 고정 · 정본 → 제출 견적 압축 시 항목별 브리지 기록 · 고객본은 월별 × 등급 표만 · AI 공수표는 총괄 = 상세 = 월별표 검증 전 정본 제외, §13에 제안서 인력 장 = 제출 견적 = 정본 3자 일치 점검</sub> | <sub>드라이브 견적 · 공수산정서 전수 학습(제안 하네스 2차 학습)에서 환산 일수 20 · 20.8 · 21 · 22 혼재, 사유 없는 압축(174 → 121 M/M 등), 제안서 ↔ 견적 불일치(A정유) 확인</sub> |
 | <sub>2026.11.13</sub> | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 변경 이력 맨 아래로 이동</sub> | <sub>README만 읽고 사용법을 이해하도록(오너 지시)</sub> |

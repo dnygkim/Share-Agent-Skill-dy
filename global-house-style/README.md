@@ -70,10 +70,10 @@
 | <div align="center"><sub>§</sub></div> | <sub>내용</sub> | <sub>비고</sub> |
 |:---|:---:|:---:|
 | <sub>1 · 2 · 2b</sub> | <sub>서체 · 토큰(컬러 3종 Primary · Secondary · Default) · 컬러 오버라이드</sub> | <sub>기본이 아닌 답일 때만 §2b로</sub> |
-| <sub>3 ~ 9</sub> | <sub>리셋 · 본문 · 토프바 · LNB 레이아웃 · 표지 · 목차 · 섹션 · 콘셉트 문장</sub> | <sub>고정 영역</sub> |
+| <sub>3 ~ 9</sub> | <sub>리셋 · 본문 · 토프바 · LNB 레이아웃 · 표지 · 목차 · 섹션 · 콘셉트 문장 — 표지 · 목차 · 섹션 첫머리는 매거진 타이틀(강조선 · 번호 머리글 · 큰 제목 · 오른쪽 단 거버닝 + 근거 불릿)</sub> | <sub>고정 영역</sub> |
 | <sub>10 ~ 17</sub> | <sub>표 · 진단 박스 · 루프 / 플로우 도식 · 계층 트리(IA) · 모듈 · 노트 · 등급 목록 · 마무리 · mermaid</sub> | <sub>콘텐츠 팔레트</sub> |
 | <sub>18 · 19</sub> | <sub>반응형 · A4 인쇄</sub> | <sub>공통</sub> |
-| <sub>20 · 21</sub> | <sub>요약 스탯 그리드 · 간트 / 타임라인</sub> | <sub>수치 리포트 확장</sub> |
+| <sub>20 · 21</sub> | <sub>요약 스탯(큰 숫자 · 헤어라인 열) · 간트 / 타임라인</sub> | <sub>수치 리포트 확장</sub> |
 | <sub>22</sub> | <sub>출처 · 고유명사 외부링크 `a.ext`</sub> | <sub>리서치 · 분석 문서</sub> |
 | <sub>23</sub> | <sub>막대 · 마일스톤 그래프(`.hbars` · `.cols` · `.ms` · 간트 마감 표시)</sub> | <sub>리서치 · 분석 문서</sub> |
 
@@ -134,6 +134,7 @@ global-house-style/
 
 | <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
 |:---|:---:|:---:|
+| <sub>매거진 타이틀 — 토프바 · LNB · 맨위로 버튼은 그대로, 표지(머리글 줄 · 큰 제목 · 도입문 · 칸 나눈 정보 줄) · 목차(큰 제목 · 번호 열 · 헤어라인 행) · 섹션 첫머리(강조선 · Primary 번호 머리글 · 큰 제목 · 오른쪽 단 거버닝) · 소제목 헤어라인 · 요약 스탯 큰 숫자 신설. 거버닝 근거는 「·」로 잇지 않고 불릿(`ul.sub`), 장(PART)으로 나눈 문서는 계층 번호(1-1 · §1-4) · 참조 줄바꿈 방지(`span.nw`) 추가</sub> | <sub>2026.11.26</sub> | <sub>김단영</sub> |
 | <sub>컬러 질문 단계 신설 — 하네스 · 스킬 추출 직전 Primary · Secondary · Default 3색을 한 질문으로 확인(기존 「기본 스타일로 추출할까요?」 대체), 답 해석 표 · 색 조건을 전역 규칙에 추가. `house-style.css` §2에 역할 토큰 `--primary` · `--secondary` · `--on-primary-rgb` · `--paper-rgb` 추가, 반전 블록 · 강조선을 `--accent`로 연결해 토큰만 바꾸면 따라오는 구조(웜 rgba 10곳 덮기 대체 · 기본 렌더 동일), `base_template_doc.html`에 「컬러 3종」 자리 추가</sub> | <sub>2026.11.16</sub> | <sub>김단영</sub> |
 | <sub>README 전면 개편 — 목적 · 넣는 것 · 산출물 형태 · 요청 예시 · 진행 단계 순으로 재구성, 릴리즈노트 맨 아래로 이동</sub> | <sub>2026.11.13</sub> | <sub>김단영</sub> |
 | <sub>막대 · 마일스톤 그래프 컴포넌트 추가(`house-style.css` §23) — 수치 비교 `.hbars` · 시점 추이 `.cols` · 발주 일정 D-day `.ms` · 간트 마감 표시 `.gbar.mk`. 계열 하나 · 강조 막대만 `.key`(CI 문서는 포인트 색) · 같은 수치는 표로도 남김 · 인쇄 시 막대 색 유지. `base_template_doc.html` 팔레트에 견본 추가 — 2026.11.11 「그래프로 표현」 지시, A자산운용 ETF 플랫폼 RFP 분석 v0.3에 첫 적용</sub> | <sub>2026.11.11</sub> | <sub>김단영</sub> |

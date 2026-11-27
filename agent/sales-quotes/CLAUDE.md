@@ -54,7 +54,7 @@
    ④ 보고에는 **짧은 주소 `http://<IP>:<포트>/`만** 적는다 — 파일명 인코딩 전체 주소는 쓰지 않는다(2026-10-22 지시). 맥 IP가 DHCP로 바뀔 수 있다는 점을 한 줄 덧붙인다.
    - 같은 프로젝트로 이미 띄운 서버가 있으면 새 서버를 띄우지 않고 심볼릭 링크만 새 파일로 바꾼다.
    - 실행이 막히면 재시도하지 말고 같은 명령을 `!` 한 줄로 드린다. 상세 절차·사용 중 포트 = 메모리 `internal-url-share`.
-4. **CSS는 직접 작성 금지** → `<style>`에 마커만 두고 `python scripts/inline_css.py <draft.html>`로 주입. 도식(개념도·AWS 인프라)은 기본 포함. 가이드 `references/architecture-infra-diagram.md`.
+4. **CSS는 직접 작성 금지** → `<style>`에 마커만 두고 `python scripts/inline_css.py <draft.html>`로 주입. **스타일 기준 = 로컬 설치 정본 `~/.claude/house-style/house-style.css`(마커 `/*__HOUSE_STYLE_DOC__*/` · 문서형 골격)** — `template/house-style.css`는 build_report.py 레거시 구조용 구세대 사본(2026-11-27). 도식(개념도·AWS 인프라)은 기본 포함. 가이드 `references/architecture-infra-diagram.md`.
 5. **정합 규칙 (a)-(h)** 준수 → `python scripts/check_consistency.py <html>`로 자동검증. 기준 `references/consistency-checklist.md`. **샘플 유출 검사** → `python scripts/check_leak.py <html> --allow {이번 고객명}` 0건(민감자료 정책 4).
 6. 산정 판단은 `references/effort-estimation-methodology.md`(측정단위·재스킨·재사용 비대칭·경계·함정). **★ 사용자가 투입공수표(이미지/표)를 주면 그게 최우선 정본** → 나머지는 역산.
 7. **`examples/`의 과거 완성본은 샘플로만 참고**한다(`examples/INDEX.md` 인덱스, 로컬 전용·미추적). 스타일·도식·구성·산정 방식을 보되, **고객명·수치·범위·IA·문장을 다른 문서에 재사용·적용하지 않는다**(민감자료 정책 2). 도식(AWS 인프라/개념도)은 `C레저` 예시가 정본 레퍼런스.

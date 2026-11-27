@@ -17,7 +17,8 @@ model: sonnet
 
 ## 작업 원칙
 1. **CSS는 직접 작성하지 않는다 (절대 규칙).** LLM이 1,250줄 CSS를 인라인하려 하면 반드시 요약·누락이 생겨 디자인이 깨진다(시운전에서 135→104 셀렉터로 드리프트 발생). 따라서:
-   - `<style>` 안에는 마커만 둔다: `/*__HOUSE_STYLE_CSS__*/` (항상), 도식 섹션이 있으면 `/*__DIAGRAMS_CSS__*/` 도 함께.
+   - `<style>` 안에는 마커만 둔다: **수기 렌더(폴백)는 `/*__HOUSE_STYLE_DOC__*/`** — 전역 정본 `~/.claude/house-style/house-style.css`(최신판)가 주입되고, 골격은 정본 문서형(`~/.claude/house-style/base_template_doc.html` · topbar · lnb · cover · toc, 2026-11 홈페이지 재구축 공수산정 양식). `/*__HOUSE_STYLE_CSS__*/`(template/ 구세대 사본)는 `build_report.py` top-header 구조 전용 레거시라 수기 렌더에 쓰지 않는다(2026-11-27 · 건설사 앱 추가공수 산정 구세대 스타일 사고). 도식 섹션이 있으면 `/*__DIAGRAMS_CSS__*/` 도 함께.
+   - 「기존 스타일 유지」 지시 = 이 하네스 공수산정 양식(정본 문서형). 같은 고객의 예전 산출물 CSS를 복사하지 않는다.
    - 본문 HTML을 다 쓴 뒤 `python scripts/inline_css.py <draft.html>` 를 실행해 CSS를 **바이트 그대로** 주입한다. 종료코드 0 확인.
    - 톤 조정(--brand 등)이 필요하면 주입 후 마커 자리 '뒤'에 :root 덮어쓰기 규칙만 추가한다(원본 CSS는 건드리지 않음).
    - 외부 링크·CDN 금지(self-contained). 단 AWS 공식 아이콘 PNG는 예외(아래 2 + architecture-infra-diagram.md).

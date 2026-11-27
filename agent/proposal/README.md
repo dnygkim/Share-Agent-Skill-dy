@@ -267,6 +267,8 @@ S5 피드백 대장 ─[GATE ③]─▶ S6 n차 추출 + 변경분 HTML ─▶ �
 - **사용자 할 일**: 자료 제공 · 인테이크 답변. 대표 사이트 · 로고 질문이 오면 URL이나 로고 파일 전달
 - **결과물**: 분석 보고서 HTML(`{업무명}-RFP분석리서치보고서-v0.1-YYYYMMDD.html`) · `01_rfp.md`
   - 보고서 양식 = A자산운용 ETF 플랫폼 v0.3(2026.11.11) 기준. PART Ⅰ RFP 분석 · Ⅱ 현황 · 시장 · Ⅲ 중점 과제 심층 · Ⅳ 제안 전략 · 실행 초안, 발주 일정 D-day · 작업 간트 · 배점 · 시장 추이 · 로드맵 · 지면 배분 등 그래프와 같은 수치 표
+  - 중점 과제 표기 = 「과제1 - 과제명」 · 「과제2 - 과제명」(`KT-1` 같은 코드 없음 · 2026.11.26)
+  - 번호 = PART-섹션 계층(1-1 … 1-10 · 2-1 · 3-1 · 4-1, 본문 참조 §1-4), 거버닝 근거는 불릿, PART 구분은 Primary 명도 대비 면 + 큰 로마 숫자(2026.11.26 매거진 타이틀)
   - 색은 고객사 로고의 Primary 컬러(토프바 · 강조선 · 반전 블록 · 강조 막대)와 흰색 로고. 정본 `references/rfp-report-format.md` · 골격 `template/rfp_report_template.html`
   - 출처와 본문 고유명사(사이트 · 서비스 · 기관 · 도구)에 외부링크(`a.ext`) 연결, 걸기 전 URL 열림 확인(`CLAUDE.md` 5a)
 
@@ -680,6 +682,8 @@ python3 -m pip install --user pymupdf pypdf pillow openpyxl
 
 | <div align="center"><sub>요약내용</sub><img width="1" height="1"></div> | <sub>업데이트 일자</sub><img width="1" height="1"> | <sub>소유자</sub><img width="45" height="1"> |
 |:---|:---:|:---:|
+| <sub>S1 분석 보고서 매거진 타이틀 — PART 구분 면(Primary 짙은 단계 ↔ 밝은 단계 빛 번짐 · PART마다 위치 다르게 · 내용 위아래 가운데 · 큰 로마 숫자), 번호 = PART-섹션 계층(1-1 · 3-1, 머리글 · LNB · 목차 · 본문 참조 §1-4 · 출처 표 일치), 거버닝 근거 불릿(`ul.sub`), 목차 PART 행 강조색 머리글. 골격 「문서 전용」 블록 · `rfp-report-format` §3 · §4 · `rfp-insight-lenses` 넣는 곳 번호 반영</sub> | <sub>2026.11.26</sub> | <sub>김단영</sub> |
+| <sub>S1 중점 과제 표기 변경 — 분석 보고서 · `01_rfp.md`에서 `KT-1` 같은 코드 대신 「과제1 - 과제명」. 골격(목차 · LNB · PART Ⅲ 제목 · §5 표 견본 신설) · `rfp-report-format` §3 · §4 검수 · `rfp-analyst` 원칙 반영</sub> | <sub>2026.11.26</sub> | <sub>김단영</sub> |
 | <sub>S1 분석 시각 확장 — 내부 제안 준비 브리핑 2건(손해보험사 마케팅 플랫폼 운영 · 앱 · 웹 UX전담반 도급)의 사고 틀을 인사이트 렌즈 12로 정리(`references/rfp-insight-lenses.md`): 사업의 본질 · 관문 판정(참가 자격 해석 시나리오 · 계약 상대방 기준 실적) · RFP 문장 ↔ 속뜻 · 점수가 갈리는 곳(가격 순위 ↔ 비가격 배점 환산 · 고정 조건 밖 차별화) · 경쟁 구도 · 이해상충 · 문서 간 불일치 · 일정 역산 · 통보일 시나리오 · 약속의 계약화 · 운영 실무 리스크 · 가격의 숨은 비용 · 현황 관찰 → 할 일 · 결정 · 질의 · 예상 질문. 보고서 양식 · 구성은 그대로, 결과는 기존 섹션 안에 · `01_rfp.md` 머리 블록 추가(사업의 본질 · 관문 판정 · 고객의 속뜻 · 차별화가 생기는 곳 · 오늘 정할 것 · 렌즈 점검). `rfp-analyst` · `ORCHESTRATOR` · `rfp-report-format` §3 · §4 · `concept-planner` 반영</sub> | <sub>2026.11.25</sub> | <sub>김단영</sub> |
 | <sub>제안서 레퍼런스 주간 학습 신설 — 드라이브 `! 사업제안&견적`(제외 `00. 공수 및 영업대응, 기타`)의 제안서를 매주 토 09:30 클라우드 예약 작업(Opus 5.5 · Google Drive 커넥터, 노트북 · Orca 무관)이 읽어 문장 표현 · 도식 · 인포그래픽 · 디자인 요소를 `deck-references/`(expressions · diagrams · infographics · design-elements · sources)에 쌓음. 절차 정본 `deck-references/ROUTINE.md`, 도구 `scripts/deckref_tool.py`(드라이브 읽기 결과 정리 · 학습 상태 · 공개 금지 패턴 점검 · 커밋 · 공유 반영), 학습 상태 `_state.json`은 공유 미러 제외. 작업 시작(Phase 0) · S2 컨셉 · S3 도식 후보 · S4 레이아웃 · qa 쏠림 점검에 연결, 형식 예시 4건 수동 학습</sub> | <sub>2026.11.20</sub> | <sub>김단영</sub> |
 | <sub>im-not-ai 1차 윤문 단계 신설 — 분석을 거쳐 쓴 제안서 문구(S4 초안 · S6 반영 장표)에 외부 스킬 im-not-ai(`humanize-korean`)를 먼저 걸어 AI 티를 걷고, 그 위에 하우스 문체(`writing-style.md` · `check_style.pl`)를 2차로 거는 순서로 변경. 절차 · 제안서 보존 지침 블록 · 어긋날 때 처리 · 폴백(`references/antiai-pass.md`), 장표 문구 추출 · 줄마다 검증 반영 스크립트(`scripts/antiai_units.py` — 04_content.md · 덱 HTML 둘 다, 표식 · 수치 · 영문 · ㅁ 어미 · 확정 문장 자동 원문 유지, 전 · 후 표 생성) 추가, slide-builder · qa · ORCHESTRATOR · CLAUDE.md · writing-style 연결</sub> | <sub>2026.11.20</sub> | <sub>김단영</sub> |

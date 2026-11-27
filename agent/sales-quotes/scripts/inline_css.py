@@ -9,7 +9,11 @@ inline_css.py — 하우스 스타일/도식 CSS를 HTML <style>에 '그대로(v
       바이트 그대로 마커 위치에 끼워넣는다.
 
 마커(HTML <style> 안에 둔다):
-    /*__HOUSE_STYLE_CSS__*/   → house-style.css 전체로 치환
+    /*__HOUSE_STYLE_DOC__*/   → ★ 기본(2026-11-27~). 전역 정본 house-style.css 전체로 치환
+                               (문서형 골격 topbar · lnb · cover · toc — 2026-11 홈페이지 재구축 공수산정 양식)
+                               탐색 순서: $HOUSE_STYLE_CSS → ~/.claude/house-style/house-style.css
+                                        → 리포 global-house-style/house-style.css
+    /*__HOUSE_STYLE_CSS__*/   → (레거시) template/house-style.css — build_report.py의 top-header 구조 전용
     /*__DIAGRAMS_CSS__*/      → diagrams.css 전체로 치환(도식 섹션이 있을 때만 마커를 둔다)
 
 사용:
@@ -24,6 +28,18 @@ import re
 import argparse
 
 HOUSE_MARKER = "/*__HOUSE_STYLE_CSS__*/"
+DOC_MARKER = "/*__HOUSE_STYLE_DOC__*/"
+
+
+def global_house_css(here):
+    """전역 정본 house-style.css 경로 — 로컬 설치본이 최신 기준."""
+    cands = [os.environ.get("HOUSE_STYLE_CSS", ""),
+             os.path.join(os.path.expanduser("~"), ".claude", "house-style", "house-style.css"),
+             os.path.join(here, "..", "..", "..", "global-house-style", "house-style.css")]
+    for c in cands:
+        if c and os.path.isfile(c):
+            return os.path.normpath(c)
+    return None
 DIAGRAMS_MARKER = "/*__DIAGRAMS_CSS__*/"
 
 
@@ -46,8 +62,17 @@ def main():
     with open(args.html, encoding="utf-8") as f:
         html = f.read()
 
-    if HOUSE_MARKER not in html:
-        print(f"[ERROR] 하우스 스타일 마커 없음: {HOUSE_MARKER}", file=sys.stderr)
+    if DOC_MARKER in html:
+        g = global_house_css(here)
+        if not g:
+            print("[ERROR] 전역 정본 house-style.css 없음 (~/.claude/house-style · global-house-style)", file=sys.stderr)
+            return 1
+        house_css = g
+        HM = DOC_MARKER
+    else:
+        HM = HOUSE_MARKER
+    if HM not in html:
+        print(f"[ERROR] 하우스 스타일 마커 없음: {DOC_MARKER} (또는 레거시 {HOUSE_MARKER})", file=sys.stderr)
         print("        <style> 안에 마커를 두고 CSS는 직접 작성하지 말 것.", file=sys.stderr)
         return 1
 
@@ -67,7 +92,7 @@ def main():
             return 1
 
     with open(house_css, encoding="utf-8") as f:
-        html = html.replace(HOUSE_MARKER, f.read())
+        html = html.replace(HM, f.read())
     if DIAGRAMS_MARKER in html:
         with open(diagrams_css, encoding="utf-8") as f:
             html = html.replace(DIAGRAMS_MARKER, f.read())
@@ -85,7 +110,7 @@ def main():
     with open(out, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print(f"[OK] CSS 주입 완료 → {out}  (house-style{' + diagrams' if used_diagrams else ''}, 중괄호 균형 검증 통과)")
+    print(f"[OK] CSS 주입 완료 → {out}  ({'정본 ' + house_css if HM == DOC_MARKER else '레거시 template/house-style.css'}{' + diagrams' if used_diagrams else ''}, 중괄호 균형 검증 통과)")
     return 0
 
 
